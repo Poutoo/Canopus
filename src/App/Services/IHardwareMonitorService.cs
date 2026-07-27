@@ -1,4 +1,4 @@
-namespace PCOptimizer.App.Services;
+namespace Canopus.App.Services;
 
 /// <summary>
 /// Instantané des métriques matérielles à un instant donné.

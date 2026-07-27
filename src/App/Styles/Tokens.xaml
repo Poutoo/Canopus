@@ -8,7 +8,7 @@
     Ne pas remplir maintenant — chantier explicitement mis de côté
     en attendant la finalisation du contenu du dashboard.
     Voir la page "Documentation technique" du Notion du projet pour
-    la liste des tokens consolidés (--accent, --radius-*, --fs-*, etc.)
+    la liste des tokens consolidés (accent, radius-*, fs-*, etc.)
     à traduire ici.
 -->
 <ResourceDictionary

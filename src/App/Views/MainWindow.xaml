@@ -1,0 +1,12 @@
+<Window
+    x:Class="Canopus.App.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid>
+        <TextBlock Text="PC Optimizer — En construction"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="24" />
+    </Grid>
+</Window>

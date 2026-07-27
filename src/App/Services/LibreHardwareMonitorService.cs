@@ -1,6 +1,6 @@
 using LibreHardwareMonitor.Hardware;
 
-namespace PCOptimizer.App.Services;
+namespace Canopus.App.Services;
 
 /// <summary>
 /// Implémentation basée sur LibreHardwareMonitorLib.
