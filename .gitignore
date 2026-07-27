@@ -26,3 +26,6 @@ Thumbs.db
 ## Logs / temp
 *.log
 *.tmp
+
+## others
+/maquettes

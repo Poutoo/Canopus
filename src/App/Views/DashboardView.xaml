@@ -4,17 +4,22 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:models="using:Canopus.App.Models">
 
-    <ScrollViewer Padding="24">
-        <Grid RowSpacing="20" ColumnSpacing="20">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+    <!--
+        Grid en étoile (pas de ScrollViewer) : une ScrollViewer offre une
+        hauteur "infinie" à son contenu sur l'axe de scroll, ce qui empêche
+        les RowDefinition en étoile de se répartir correctement — c'est ce
+        qui laissait un grand vide sous les cards.
+    -->
+    <Grid Padding="24" RowSpacing="20" ColumnSpacing="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
             <!-- ============================================================
                  Card Températures
@@ -118,7 +123,7 @@
             <!-- ============================================================
                  Card Charge système
                  ============================================================ -->
-            <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource GlassCardStyle}">
+            <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource GlassCardStyle}">
                 <StackPanel Spacing="16">
                     <TextBlock Text="Charge système" FontSize="{StaticResource FontSize4}"
                                FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" />
@@ -170,7 +175,7 @@
             <!-- ============================================================
                  Card Réseau
                  ============================================================ -->
-            <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource GlassCardStyle}">
+            <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource GlassCardStyle}">
                 <StackPanel Spacing="16">
                     <TextBlock Text="Réseau" FontSize="{StaticResource FontSize4}"
                                FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" />
@@ -210,7 +215,7 @@
             <!-- ============================================================
                  Card Stockage
                  ============================================================ -->
-            <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource GlassCardStyle}">
+            <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource GlassCardStyle}">
                 <StackPanel Spacing="12">
                     <TextBlock Text="Stockage" FontSize="{StaticResource FontSize4}"
                                FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" />
@@ -248,7 +253,7 @@
             <!-- ============================================================
                  Card Top processus
                  ============================================================ -->
-            <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource GlassCardStyle}">
+            <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource GlassCardStyle}">
                 <StackPanel Spacing="12">
                     <TextBlock Text="Top processus" FontSize="{StaticResource FontSize4}"
                                FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" />
@@ -274,6 +279,5 @@
                     </ItemsControl>
                 </StackPanel>
             </Border>
-        </Grid>
-    </ScrollViewer>
+    </Grid>
 </UserControl>

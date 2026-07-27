@@ -18,11 +18,20 @@
         <ResourceDictionary Source="Tokens.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <!-- Matériau "verre" pour les cards (fond translucide + teinte pastel bleue) -->
+    <!--
+        Matériau "verre" pour les cards (fond translucide + teinte pastel bleue).
+
+        TintLuminosityOpacity=0.85 (valeur de départ) était trop proche de 1.0 :
+        le flou du fond (sparkles + ligne ondulée ajoutés derrière) devenait
+        quasi invisible, d'où le rendu plat signalé. Baissé à 0.65/0.45 pour
+        laisser transparaître davantage de texture floutée.
+        Non vérifié visuellement dans cet environnement (pas de rendu GUI
+        possible ici) — à confirmer à l'écran, ajuster encore si besoin.
+    -->
     <AcrylicBrush x:Key="GlassCardBrush"
                   TintColor="{StaticResource BackgroundBlueColor}"
-                  TintOpacity="0.55"
-                  TintLuminosityOpacity="0.85"
+                  TintOpacity="0.45"
+                  TintLuminosityOpacity="0.65"
                   FallbackColor="{StaticResource BackgroundBlueColor}" />
 
     <!-- Style de base pour une card glass (Border) -->
