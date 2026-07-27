@@ -11,6 +11,10 @@ BundleArtifacts/
 *.appx
 *.msix
 
+## Velopack (dotnet publish + vpk pack output)
+publish/
+Releases/
+
 ## Rider / VS Code
 .idea/
 .vscode/

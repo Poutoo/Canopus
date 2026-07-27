@@ -1,0 +1,50 @@
+<!--
+    GlassStyles.xaml — style de card réutilisable ("verre" translucide)
+
+    Traduit l'esprit de notre glassmorphism CSS (backdrop-filter: blur(28px)
+    saturate(1.15) + fond semi-transparent + bordure claire fine) vers la
+    primitive native WinUI 3 : AcrylicBrush.
+
+    Valeurs de TintOpacity / TintLuminosityOpacity mises ici sont un point de
+    départ raisonnable, pas une transcription exacte du CSS (il n'y a pas
+    d'équivalent 1:1 — AcrylicBrush a son propre modèle de flou/luminosité).
+    À ajuster visuellement une fois affiché à l'écran.
+-->
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Tokens.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Matériau "verre" pour les cards (fond translucide + teinte pastel bleue) -->
+    <AcrylicBrush x:Key="GlassCardBrush"
+                  TintColor="{StaticResource BackgroundBlueColor}"
+                  TintOpacity="0.55"
+                  TintLuminosityOpacity="0.85"
+                  FallbackColor="{StaticResource BackgroundBlueColor}" />
+
+    <!-- Style de base pour une card glass (Border) -->
+    <Style x:Key="GlassCardStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource GlassCardBrush}" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusLg}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="White" />
+        <Setter Property="Padding" Value="20" />
+        <!--
+            Remarque : l'effet "reflet en haut / ombre douce en bas" du CSS
+            (box-shadow avec inset highlights) n'a pas d'équivalent simple ici.
+            Une vraie ombre portée native nécessite ThemeShadow + une Translation
+            en Z sur l'élément — à ajouter dans une itération dédiée, pas
+            bloquant pour un premier rendu fonctionnel.
+        -->
+    </Style>
+
+    <!-- Style pour le rail de la sidebar (même matériau, radius pilule) -->
+    <Style x:Key="SidebarRailStyle" TargetType="Border" BasedOn="{StaticResource GlassCardStyle}">
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusPill}" />
+        <Setter Property="Padding" Value="12" />
+    </Style>
+
+</ResourceDictionary>
