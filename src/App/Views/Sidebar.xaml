@@ -1,0 +1,89 @@
+<UserControl
+    x:Class="Canopus.App.Views.Sidebar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        Rail pleine hauteur, coins arrondis sur les 4 coins (SidebarRailStyle,
+        radius pilule). État actif = élévation seule (scale ~1.1 + ombre douce),
+        piloté depuis le code-behind : voir Sidebar.xaml.cs.
+    -->
+    <Border Style="{StaticResource SidebarRailStyle}"
+            Width="72"
+            Margin="0,16,0,16"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Stretch">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- Groupe haut : sparkle de marque, action "+", navigation -->
+            <StackPanel Grid.Row="0" HorizontalAlignment="Center" Spacing="20">
+                <!--
+                    Sparkle décoratif : caractère Unicode plutôt qu'un glyphe d'icône
+                    (Segoe Fluent "Sparkle" existe mais son point de code exact n'a pas
+                    pu être vérifié visuellement dans cet environnement ; un caractère
+                    Unicode standard s'affiche de façon fiable quelle que soit la police).
+                -->
+                <TextBlock Text="✦"
+                           FontSize="{StaticResource FontSize6}"
+                           Foreground="{StaticResource AccentBrush}"
+                           HorizontalAlignment="Center" />
+
+                <Button x:Name="AddButton"
+                        Width="40" Height="40"
+                        Padding="0"
+                        CornerRadius="{StaticResource RadiusPill}"
+                        Background="{StaticResource AccentBrush}"
+                        BorderThickness="0">
+                    <FontIcon Glyph="&#xE710;" FontSize="{StaticResource FontSize4}" Foreground="White" />
+                </Button>
+
+                <Grid x:Name="DashboardIconHost" Width="40" Height="40" Tapped="OnNavItemTapped" Tag="Dashboard">
+                    <Grid.RenderTransform>
+                        <ScaleTransform x:Name="DashboardScale" CenterX="20" CenterY="20" ScaleX="1" ScaleY="1" />
+                    </Grid.RenderTransform>
+                    <Grid.Shadow>
+                        <ThemeShadow />
+                    </Grid.Shadow>
+                    <FontIcon Glyph="&#xE80F;" FontSize="{StaticResource FontSize5}" Foreground="{StaticResource TextPrimaryBrush}" />
+                </Grid>
+
+                <Grid x:Name="HistoriqueIconHost" Width="40" Height="40" Tapped="OnNavItemTapped" Tag="Historique">
+                    <Grid.RenderTransform>
+                        <ScaleTransform x:Name="HistoriqueScale" CenterX="20" CenterY="20" ScaleX="1" ScaleY="1" />
+                    </Grid.RenderTransform>
+                    <Grid.Shadow>
+                        <ThemeShadow />
+                    </Grid.Shadow>
+                    <FontIcon Glyph="&#xE823;" FontSize="{StaticResource FontSize5}" Foreground="{StaticResource TextPrimaryBrush}" />
+                </Grid>
+
+                <Grid x:Name="DocumentationIconHost" Width="40" Height="40" Tapped="OnNavItemTapped" Tag="Documentation">
+                    <Grid.RenderTransform>
+                        <ScaleTransform x:Name="DocumentationScale" CenterX="20" CenterY="20" ScaleX="1" ScaleY="1" />
+                    </Grid.RenderTransform>
+                    <Grid.Shadow>
+                        <ThemeShadow />
+                    </Grid.Shadow>
+                    <FontIcon Glyph="&#xE8A5;" FontSize="{StaticResource FontSize5}" Foreground="{StaticResource TextPrimaryBrush}" />
+                </Grid>
+            </StackPanel>
+
+            <!-- Groupe bas : Paramètres, poussé en bas par la ligne extensible ci-dessus -->
+            <Grid x:Name="SettingsIconHost" Grid.Row="2" Width="40" Height="40"
+                  HorizontalAlignment="Center" Tapped="OnNavItemTapped" Tag="Parametres">
+                <Grid.RenderTransform>
+                    <ScaleTransform x:Name="SettingsScale" CenterX="20" CenterY="20" ScaleX="1" ScaleY="1" />
+                </Grid.RenderTransform>
+                <Grid.Shadow>
+                    <ThemeShadow />
+                </Grid.Shadow>
+                <FontIcon Glyph="&#xE713;" FontSize="{StaticResource FontSize5}" Foreground="{StaticResource TextPrimaryBrush}" />
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

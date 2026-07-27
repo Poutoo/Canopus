@@ -1,0 +1,30 @@
+using Microsoft.UI.Xaml.Controls;
+using Canopus.App.Services;
+using Canopus.App.ViewModels;
+
+namespace Canopus.App.Views;
+
+public sealed partial class DashboardView : UserControl
+{
+    private readonly LibreHardwareMonitorService _hardwareMonitorService;
+
+    public DashboardViewModel ViewModel { get; }
+
+    public DashboardView()
+    {
+        InitializeComponent();
+
+        _hardwareMonitorService = new LibreHardwareMonitorService();
+        ViewModel = new DashboardViewModel(
+            _hardwareMonitorService,
+            new DriveInfoStorageService(),
+            new PingNetworkService(),
+            new ProcessMonitorService());
+
+        Unloaded += (_, _) =>
+        {
+            ViewModel.Dispose();
+            _hardwareMonitorService.Dispose();
+        };
+    }
+}
