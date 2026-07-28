@@ -19,6 +19,15 @@
             sinon les cards en verre n'ont rien à flouter.
         -->
         <Grid Grid.Column="0" Grid.ColumnSpan="2" IsHitTestVisible="False">
+            <!--
+                Assombrit le fond pour que les cards/sidebar (matériau clair)
+                ressortent davantage par contraste. Ne touche pas aux tokens
+                de fond (BackgroundBlueColor etc.) ni au TintColor des cards :
+                ceux-ci sont partagés, les assombrir aurait aussi assombri
+                le verre des cards et annulé le gain de contraste recherché.
+            -->
+            <Border Background="{StaticResource TextPrimaryBrush}" Opacity="0.14" />
+
             <Path Stretch="Fill" Height="70" VerticalAlignment="Top" Margin="0,260,0,0"
                   Opacity="0.35" Stroke="{StaticResource AccentLightBrush}" StrokeThickness="1.5"
                   Data="M 0,20 C 50,0 100,40 150,20 C 200,0 250,40 300,20 C 350,0 400,40 450,20
