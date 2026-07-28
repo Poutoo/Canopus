@@ -50,9 +50,13 @@
         -->
     </Style>
 
-    <!-- Style pour le rail de la sidebar (même matériau, radius pilule) -->
+    <!--
+        Style pour le rail de la sidebar (même matériau, radius pilule).
+        36 = moitié de la largeur réelle du rail (72px, voir Sidebar.xaml) —
+        valeur exacte plutôt que RadiusPill(999), voir la note dans Tokens.xaml.
+    -->
     <Style x:Key="SidebarRailStyle" TargetType="Border" BasedOn="{StaticResource GlassCardStyle}">
-        <Setter Property="CornerRadius" Value="{StaticResource RadiusPill}" />
+        <Setter Property="CornerRadius" Value="36" />
         <Setter Property="Padding" Value="12" />
     </Style>
 

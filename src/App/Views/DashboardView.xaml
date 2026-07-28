@@ -43,14 +43,14 @@
                             </Grid.ColumnDefinitions>
 
                             <Border Grid.Column="0" Width="10" Height="64" VerticalAlignment="Top"
-                                    CornerRadius="{StaticResource RadiusPill}"
+                                    CornerRadius="{StaticResource RadiusBarPill}"
                                     Background="{StaticResource TextDisabledBrush}">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="{x:Bind ViewModel.CpuThermometerEmptyRow, Mode=OneWay}" />
                                         <RowDefinition Height="{x:Bind ViewModel.CpuThermometerFilledRow, Mode=OneWay}" />
                                     </Grid.RowDefinitions>
-                                    <Border Grid.Row="1" CornerRadius="{StaticResource RadiusPill}"
+                                    <Border Grid.Row="1" CornerRadius="{StaticResource RadiusBarPill}"
                                             Background="{x:Bind ViewModel.CpuThermometerBrush, Mode=OneWay}" />
                                 </Grid>
                             </Border>
@@ -84,14 +84,14 @@
                             </Grid.ColumnDefinitions>
 
                             <Border Grid.Column="0" Width="10" Height="64" VerticalAlignment="Top"
-                                    CornerRadius="{StaticResource RadiusPill}"
+                                    CornerRadius="{StaticResource RadiusBarPill}"
                                     Background="{StaticResource TextDisabledBrush}">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="{x:Bind ViewModel.GpuThermometerEmptyRow, Mode=OneWay}" />
                                         <RowDefinition Height="{x:Bind ViewModel.GpuThermometerFilledRow, Mode=OneWay}" />
                                     </Grid.RowDefinitions>
-                                    <Border Grid.Row="1" CornerRadius="{StaticResource RadiusPill}"
+                                    <Border Grid.Row="1" CornerRadius="{StaticResource RadiusBarPill}"
                                             Background="{x:Bind ViewModel.GpuThermometerBrush, Mode=OneWay}" />
                                 </Grid>
                             </Border>
@@ -142,13 +142,13 @@
                             <TextBlock Text="{x:Bind ViewModel.CpuLoadText, Mode=OneWay}" FontSize="{StaticResource FontSize3}"
                                        Foreground="{StaticResource TextSecondaryBrush}" />
                         </StackPanel>
-                        <Border Height="10" CornerRadius="{StaticResource RadiusPill}" Background="{StaticResource TextDisabledBrush}">
+                        <Border Height="10" CornerRadius="{StaticResource RadiusBarPill}" Background="{StaticResource TextDisabledBrush}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="{x:Bind ViewModel.CpuLoadFilledColumn, Mode=OneWay}" />
                                     <ColumnDefinition Width="{x:Bind ViewModel.CpuLoadEmptyColumn, Mode=OneWay}" />
                                 </Grid.ColumnDefinitions>
-                                <Border Grid.Column="0" CornerRadius="{StaticResource RadiusPill}" Background="{StaticResource AccentBrush}" />
+                                <Border Grid.Column="0" CornerRadius="{StaticResource RadiusBarPill}" Background="{StaticResource AccentBrush}" />
                             </Grid>
                         </Border>
                     </StackPanel>
@@ -159,13 +159,13 @@
                             <TextBlock Text="{x:Bind ViewModel.GpuLoadText, Mode=OneWay}" FontSize="{StaticResource FontSize3}"
                                        Foreground="{StaticResource TextSecondaryBrush}" />
                         </StackPanel>
-                        <Border Height="10" CornerRadius="{StaticResource RadiusPill}" Background="{StaticResource TextDisabledBrush}">
+                        <Border Height="10" CornerRadius="{StaticResource RadiusBarPill}" Background="{StaticResource TextDisabledBrush}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="{x:Bind ViewModel.GpuLoadFilledColumn, Mode=OneWay}" />
                                     <ColumnDefinition Width="{x:Bind ViewModel.GpuLoadEmptyColumn, Mode=OneWay}" />
                                 </Grid.ColumnDefinitions>
-                                <Border Grid.Column="0" CornerRadius="{StaticResource RadiusPill}" Background="{StaticResource AccentBrush}" />
+                                <Border Grid.Column="0" CornerRadius="{StaticResource RadiusBarPill}" Background="{StaticResource AccentBrush}" />
                             </Grid>
                         </Border>
                     </StackPanel>
@@ -232,13 +232,13 @@
                                     <TextBlock Grid.Column="0" Text="{x:Bind Name}" VerticalAlignment="Center"
                                                FontSize="{StaticResource FontSize3}" Foreground="{StaticResource TextSecondaryBrush}" />
                                     <Border Grid.Column="1" Height="10" VerticalAlignment="Center"
-                                            CornerRadius="{StaticResource RadiusPill}" Background="{StaticResource TextDisabledBrush}">
+                                            CornerRadius="{StaticResource RadiusBarPill}" Background="{StaticResource TextDisabledBrush}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="{x:Bind FilledColumnWidth}" />
                                                 <ColumnDefinition Width="{x:Bind EmptyColumnWidth}" />
                                             </Grid.ColumnDefinitions>
-                                            <Border Grid.Column="0" CornerRadius="{StaticResource RadiusPill}" Background="{StaticResource AccentBrush}" />
+                                            <Border Grid.Column="0" CornerRadius="{StaticResource RadiusBarPill}" Background="{StaticResource AccentBrush}" />
                                         </Grid>
                                     </Border>
                                     <TextBlock Grid.Column="2" Text="{x:Bind UsageText}" VerticalAlignment="Center"

@@ -36,7 +36,7 @@
                 <Button x:Name="AddButton"
                         Width="40" Height="40"
                         Padding="0"
-                        CornerRadius="{StaticResource RadiusPill}"
+                        CornerRadius="20"
                         Background="{StaticResource AccentBrush}"
                         BorderThickness="0">
                     <FontIcon Glyph="&#xE710;" FontSize="{StaticResource FontSize4}" Foreground="White" />

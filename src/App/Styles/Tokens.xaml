@@ -82,7 +82,23 @@
     <CornerRadius x:Key="RadiusSm">10</CornerRadius>
     <CornerRadius x:Key="RadiusMd">16</CornerRadius>
     <CornerRadius x:Key="RadiusLg">20</CornerRadius>
+
+    <!--
+        ATTENTION : WinUI 3 a des bugs de rendu documentés (issues GitHub
+        microsoft-ui-xaml #6207, #8313, #6475) quand un CornerRadius déclaré
+        est très disproportionné par rapport à la taille réelle de l'élément
+        (ex. 999 sur un élément large de 10-70px) — le clamp automatique vers
+        la moitié de la plus petite dimension ne se fait pas proprement et
+        produit des arcs en pointe plutôt qu'un arrondi plein.
+        Ne pas réutiliser RadiusPill tel quel pour un nouveau composant "pilule" :
+        calculer et déclarer la valeur exacte (moitié de la plus petite
+        dimension réelle) à la place. Voir RadiusBarPill ci-dessous pour
+        l'exemple (barres/capsules de 10px de haut).
+    -->
     <CornerRadius x:Key="RadiusPill">999</CornerRadius>
+
+    <!-- Radius exact pour les barres/capsules de 10px (Stockage, Charge, Températures) -->
+    <CornerRadius x:Key="RadiusBarPill">5</CornerRadius>
 
     <!-- ============================================================
          ÉCHELLE TYPOGRAPHIQUE
