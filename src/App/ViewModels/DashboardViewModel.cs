@@ -27,25 +27,35 @@ public sealed class DashboardViewModel : INotifyPropertyChanged, IDisposable
     private readonly IStorageService _storageService;
     private readonly INetworkService _networkService;
     private readonly IProcessMonitorService _processMonitorService;
+    private readonly IAuditService _auditService;
     private readonly DispatcherTimer _timer;
 
     public DashboardViewModel(
         IHardwareMonitorService hardwareMonitorService,
         IStorageService storageService,
         INetworkService networkService,
-        IProcessMonitorService processMonitorService)
+        IProcessMonitorService processMonitorService,
+        IAuditService auditService)
     {
         _hardwareMonitorService = hardwareMonitorService;
         _storageService = storageService;
         _networkService = networkService;
         _processMonitorService = processMonitorService;
+        _auditService = auditService;
+
+        _auditIconBackgroundBrush = GetBrush("StatusNeutralBgBrush");
+        _auditIconForegroundBrush = GetBrush("StatusNeutralTextBrush");
 
         _timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(TickIntervalSeconds) };
         _timer.Tick += async (_, _) => await RefreshAsync();
         _timer.Start();
 
-        // Premier rafraîchissement immédiat, sans attendre le premier tick.
+        // Refresh once immediately instead of waiting for the first tick.
         _ = RefreshAsync();
+
+        // The audit is far heavier than the sensors, so it runs once in the
+        // background rather than on every timer tick.
+        _ = RefreshAuditSummaryAsync();
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -364,6 +374,45 @@ public sealed class DashboardViewModel : INotifyPropertyChanged, IDisposable
         TopProcesses = processes
             .Select(p => new ProcessDisplayItem(p.Name, $"{p.CpuPercent:F0} %", $"{p.MemoryMegabytes:F0} Mo"))
             .ToList();
+    }
+
+    // ------------------------------------------------------------------
+    // Audit CTA card
+    // ------------------------------------------------------------------
+
+    private const string WarningGlyph = "";
+    private const string OkGlyph = "";
+
+    private string _auditSummaryText = "Analyse du système en cours…";
+    public string AuditSummaryText { get => _auditSummaryText; private set => SetProperty(ref _auditSummaryText, value); }
+
+    private string _auditIconGlyph = WarningGlyph;
+    public string AuditIconGlyph { get => _auditIconGlyph; private set => SetProperty(ref _auditIconGlyph, value); }
+
+    private Brush? _auditIconBackgroundBrush;
+    public Brush? AuditIconBackgroundBrush { get => _auditIconBackgroundBrush; private set => SetProperty(ref _auditIconBackgroundBrush, value); }
+
+    private Brush? _auditIconForegroundBrush;
+    public Brush? AuditIconForegroundBrush { get => _auditIconForegroundBrush; private set => SetProperty(ref _auditIconForegroundBrush, value); }
+
+    public async Task RefreshAuditSummaryAsync()
+    {
+        IReadOnlyList<AuditItem> items = await _auditService.GetOrRunAuditAsync();
+        int toCheck = items.Count(i => i.Status is AuditStatus.Warning or AuditStatus.Problem);
+
+        if (toCheck == 0)
+        {
+            AuditSummaryText = "Tout est optimal";
+            AuditIconGlyph = OkGlyph;
+            AuditIconBackgroundBrush = GetBrush("StatusGoodBgBrush");
+            AuditIconForegroundBrush = GetBrush("StatusGoodTextBrush");
+            return;
+        }
+
+        AuditSummaryText = toCheck == 1 ? "1 optimisation à vérifier" : $"{toCheck} optimisations à vérifier";
+        AuditIconGlyph = WarningGlyph;
+        AuditIconBackgroundBrush = GetBrush("StatusWarnBgBrush");
+        AuditIconForegroundBrush = GetBrush("StatusWarnTextBrush");
     }
 
     // ------------------------------------------------------------------

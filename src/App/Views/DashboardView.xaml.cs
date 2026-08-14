@@ -1,3 +1,4 @@
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Canopus.App.Services;
 using Canopus.App.ViewModels;
@@ -10,6 +11,8 @@ public sealed partial class DashboardView : UserControl
 
     public DashboardViewModel ViewModel { get; }
 
+    public event EventHandler? AuditRequested;
+
     public DashboardView()
     {
         InitializeComponent();
@@ -19,7 +22,8 @@ public sealed partial class DashboardView : UserControl
             _hardwareMonitorService,
             new DriveInfoStorageService(),
             new PingNetworkService(),
-            new ProcessMonitorService());
+            new ProcessMonitorService(),
+            App.AuditService);
 
         Unloaded += (_, _) =>
         {
@@ -27,4 +31,7 @@ public sealed partial class DashboardView : UserControl
             _hardwareMonitorService.Dispose();
         };
     }
+
+    private void OnAuditDetailClick(object sender, RoutedEventArgs e) =>
+        AuditRequested?.Invoke(this, EventArgs.Empty);
 }

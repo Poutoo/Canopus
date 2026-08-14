@@ -15,6 +15,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -278,6 +279,44 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </StackPanel>
+            </Border>
+
+            <!-- Audit CTA card -->
+            <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource GlassCardStyle}">
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Width="40" Height="40" VerticalAlignment="Center"
+                            CornerRadius="{StaticResource RadiusSm}"
+                            Background="{x:Bind ViewModel.AuditIconBackgroundBrush, Mode=OneWay}">
+                        <FontIcon Glyph="{x:Bind ViewModel.AuditIconGlyph, Mode=OneWay}"
+                                  FontSize="{StaticResource FontSize4}"
+                                  Foreground="{x:Bind ViewModel.AuditIconForegroundBrush, Mode=OneWay}" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                        <TextBlock Text="{x:Bind ViewModel.AuditSummaryText, Mode=OneWay}"
+                                   FontSize="{StaticResource FontSize4}" FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextPrimaryBrush}" />
+                        <TextBlock Text="Voir l'audit complet du système"
+                                   FontSize="{StaticResource FontSize2}"
+                                   Foreground="{StaticResource TextTertiaryBrush}" />
+                    </StackPanel>
+
+                    <Button Grid.Column="2" VerticalAlignment="Center" Click="OnAuditDetailClick"
+                            Background="{StaticResource AccentBrush}" BorderThickness="0"
+                            CornerRadius="{StaticResource RadiusSm}" Padding="16,8">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="Voir le détail" Foreground="White"
+                                       FontSize="{StaticResource FontSize3}" />
+                            <FontIcon Glyph="&#xE76C;" FontSize="{StaticResource FontSize1}" Foreground="White" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
             </Border>
     </Grid>
 </UserControl>

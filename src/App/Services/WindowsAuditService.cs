@@ -42,15 +42,25 @@ public sealed class WindowsAuditService : IAuditService
         ["obs64"] = "OBS Studio"
     };
 
-    public Task<IReadOnlyList<AuditItem>> RunAuditAsync() => Task.Run<IReadOnlyList<AuditItem>>(() =>
-    [
-        DetectPowerPlan(),
-        DetectGameMode(),
-        DetectMemoryProfile(),
-        DetectOverlays(),
-        DetectDefenderExclusions(),
-        ReadGpuDriverInfo()
-    ]);
+    private IReadOnlyList<AuditItem>? _lastResult;
+
+    public async Task<IReadOnlyList<AuditItem>> RunAuditAsync()
+    {
+        _lastResult = await Task.Run<IReadOnlyList<AuditItem>>(() =>
+        [
+            DetectPowerPlan(),
+            DetectGameMode(),
+            DetectMemoryProfile(),
+            DetectOverlays(),
+            DetectDefenderExclusions(),
+            ReadGpuDriverInfo()
+        ]);
+
+        return _lastResult;
+    }
+
+    public Task<IReadOnlyList<AuditItem>> GetOrRunAuditAsync() =>
+        _lastResult is not null ? Task.FromResult(_lastResult) : RunAuditAsync();
 
     private static AuditItem DetectPowerPlan()
     {

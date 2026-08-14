@@ -52,16 +52,6 @@
                     <FontIcon Glyph="&#xE80F;" FontSize="{StaticResource FontSize5}" Foreground="{StaticResource TextPrimaryBrush}" />
                 </Grid>
 
-                <Grid x:Name="AuditIconHost" Width="40" Height="40" Tapped="OnNavItemTapped" Tag="Audit">
-                    <Grid.RenderTransform>
-                        <ScaleTransform x:Name="AuditScale" CenterX="20" CenterY="20" ScaleX="1" ScaleY="1" />
-                    </Grid.RenderTransform>
-                    <Grid.Shadow>
-                        <ThemeShadow />
-                    </Grid.Shadow>
-                    <FontIcon Glyph="&#xE73E;" FontSize="{StaticResource FontSize5}" Foreground="{StaticResource TextPrimaryBrush}" />
-                </Grid>
-
                 <Grid x:Name="HistoriqueIconHost" Width="40" Height="40" Tapped="OnNavItemTapped" Tag="Historique">
                     <Grid.RenderTransform>
                         <ScaleTransform x:Name="HistoriqueScale" CenterX="20" CenterY="20" ScaleX="1" ScaleY="1" />
