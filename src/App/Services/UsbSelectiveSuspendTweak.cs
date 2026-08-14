@@ -42,7 +42,7 @@ public sealed class UsbSelectiveSuspendTweak : IReversibleTweak
 
     public Task<TweakSnapshot> CaptureAsync()
     {
-        Guid scheme = GetActiveScheme() ?? throw new InvalidOperationException("Impossible de lire le plan d'alimentation actif.");
+        Guid scheme = PowerSchemeInterop.GetActiveScheme() ?? throw new InvalidOperationException("Impossible de lire le plan d'alimentation actif.");
         _schemeGuid = scheme;
 
         uint originalValue = ReadAcValue(scheme);
@@ -89,8 +89,7 @@ public sealed class UsbSelectiveSuspendTweak : IReversibleTweak
         // scheme switch, since this tweak applies right after it using the scheme
         // captured *before* the power plan changed. Only reapply when `scheme` is the
         // one actually active, otherwise this would incorrectly switch the system to it.
-        Guid current = GetActiveScheme() ?? Guid.Empty;
-        if (current == scheme && PowerSetActiveScheme(IntPtr.Zero, ref scheme) != 0)
+        if (PowerSchemeInterop.GetActiveScheme() == scheme && !PowerSchemeInterop.SetActiveScheme(scheme))
             throw new InvalidOperationException("Impossible de réappliquer le plan d'alimentation après l'écriture du réglage USB.");
     }
 
@@ -104,29 +103,6 @@ public sealed class UsbSelectiveSuspendTweak : IReversibleTweak
         return value;
     }
 
-    private static Guid? GetActiveScheme()
-    {
-        IntPtr schemeGuidPtr = IntPtr.Zero;
-        try
-        {
-            if (PowerGetActiveScheme(IntPtr.Zero, out schemeGuidPtr) != 0 || schemeGuidPtr == IntPtr.Zero)
-                return null;
-
-            return Marshal.PtrToStructure<Guid>(schemeGuidPtr);
-        }
-        finally
-        {
-            if (schemeGuidPtr != IntPtr.Zero)
-                LocalFree(schemeGuidPtr);
-        }
-    }
-
-    [DllImport("powrprof.dll")]
-    private static extern uint PowerGetActiveScheme(IntPtr userRootPowerKey, out IntPtr activePolicyGuid);
-
-    [DllImport("powrprof.dll")]
-    private static extern uint PowerSetActiveScheme(IntPtr userRootPowerKey, ref Guid schemeGuid);
-
     [DllImport("powrprof.dll")]
     private static extern uint PowerReadACValueIndex(IntPtr rootPowerKey, ref Guid schemeGuid,
         ref Guid subGroupOfPowerSettingsGuid, ref Guid powerSettingGuid, out uint acValueIndex);
@@ -136,12 +112,9 @@ public sealed class UsbSelectiveSuspendTweak : IReversibleTweak
     // "powercfg /q" -- once PowerSetActiveScheme is reapplied on that same scheme
     // afterward. The value otherwise sits in the registry unused. Applies to
     // PowerWriteDCValueIndex too, and to any future tweak in this codebase that
-    // writes a power sub-setting, not just this one -- see WriteAcValue below for
+    // writes a power sub-setting, not just this one -- see WriteAcValue above for
     // why that reapply must be conditional on the target actually being active.
     [DllImport("powrprof.dll")]
     private static extern uint PowerWriteACValueIndex(IntPtr rootPowerKey, ref Guid schemeGuid,
         ref Guid subGroupOfPowerSettingsGuid, ref Guid powerSettingGuid, uint acValueIndex);
-
-    [DllImport("kernel32.dll")]
-    private static extern IntPtr LocalFree(IntPtr hMem);
 }
