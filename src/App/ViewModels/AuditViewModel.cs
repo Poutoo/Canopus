@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Canopus.App.Models;
@@ -7,17 +5,20 @@ using Canopus.App.Services;
 
 namespace Canopus.App.ViewModels;
 
-public sealed class AuditViewModel : INotifyPropertyChanged
+public sealed class AuditViewModel : ViewModelBase
 {
     private readonly IAuditService _auditService;
 
     public AuditViewModel(IAuditService auditService)
     {
         _auditService = auditService;
-        _ = RefreshAsync();
-    }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
+        // Cache-or-run-once: the dashboard already triggers the first audit in the
+        // background at startup, and AuditView is constructed eagerly (declared in
+        // MainWindow.xaml) even while hidden -- forcing a fresh run here too would
+        // sweep WMI twice concurrently for no reason.
+        _ = LoadAsync(forceRefresh: false);
+    }
 
     private IReadOnlyList<AuditDisplayItem> _items = [];
     public IReadOnlyList<AuditDisplayItem> Items { get => _items; private set => SetProperty(ref _items, value); }
@@ -28,12 +29,18 @@ public sealed class AuditViewModel : INotifyPropertyChanged
     private Visibility _runningVisibility = Visibility.Visible;
     public Visibility RunningVisibility { get => _runningVisibility; private set => SetProperty(ref _runningVisibility, value); }
 
-    public async Task RefreshAsync()
+    // Forces a fresh detection pass -- used when the user explicitly navigates to
+    // this screen, so they always see current data rather than a stale cache.
+    public Task RefreshAsync() => LoadAsync(forceRefresh: true);
+
+    private async Task LoadAsync(bool forceRefresh)
     {
         IsRunning = true;
         RunningVisibility = Visibility.Visible;
 
-        IReadOnlyList<AuditItem> items = await _auditService.RunAuditAsync();
+        IReadOnlyList<AuditItem> items = forceRefresh
+            ? await _auditService.RunAuditAsync()
+            : await _auditService.GetOrRunAuditAsync();
         Items = items.Select(ToDisplayItem).ToList();
 
         IsRunning = false;
@@ -62,13 +69,4 @@ public sealed class AuditViewModel : INotifyPropertyChanged
         string.IsNullOrWhiteSpace(item.DetailNote) ? Visibility.Collapsed : Visibility.Visible);
 
     private static Brush GetBrush(string resourceKey) => (Brush)Application.Current.Resources[resourceKey];
-
-    private void SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (Equals(field, value))
-            return;
-
-        field = value;
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
 }
