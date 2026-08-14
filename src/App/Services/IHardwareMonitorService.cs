@@ -8,7 +8,12 @@ public record HardwareSnapshot(
     double? GpuTemperatureCelsius,
     double? CpuLoadPercent,
     double? GpuLoadPercent,
-    double? FanSpeedRpm
+    double? FanSpeedRpm,
+    double? CpuFrequencyMhz,
+    double? GpuFrequencyMhz,
+    double? MemoryUsedPercent,
+    double? MemoryUsedGigabytes,
+    double? MemoryAvailableGigabytes
 );
 
 public interface IHardwareMonitorService

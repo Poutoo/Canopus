@@ -1,12 +1,58 @@
 <Window
     x:Class="Canopus.App.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Canopus.App.Views">
 
-    <Grid>
-        <TextBlock Text="PC Optimizer — En construction"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   FontSize="24" />
+    <Grid Background="{StaticResource AppBackgroundBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!--
+            Décor d'arrière-plan (sparkles + ligne ondulée), en dessous de la
+            sidebar et du dashboard dans l'arbre visuel. WinUI 3 AcrylicBrush
+            ne flou que le contenu XAML derrière lui dans la MÊME fenêtre
+            (pas de mode "HostBackdrop" comme en UWP) : ce calque doit donc
+            être un vrai élément de la fenêtre, pas juste un pinceau de fond,
+            sinon les cards en verre n'ont rien à flouter.
+        -->
+        <Grid Grid.Column="0" Grid.ColumnSpan="2" IsHitTestVisible="False">
+            <!--
+                Assombrit le fond pour que les cards/sidebar (matériau clair)
+                ressortent davantage par contraste. Ne touche pas aux tokens
+                de fond (BackgroundBlueColor etc.) ni au TintColor des cards :
+                ceux-ci sont partagés, les assombrir aurait aussi assombri
+                le verre des cards et annulé le gain de contraste recherché.
+            -->
+            <Border Background="{StaticResource TextPrimaryBrush}" Opacity="0.14" />
+
+            <Path Stretch="Fill" Height="70" VerticalAlignment="Top" Margin="0,260,0,0"
+                  Opacity="0.35" Stroke="{StaticResource AccentLightBrush}" StrokeThickness="1.5"
+                  Data="M 0,20 C 50,0 100,40 150,20 C 200,0 250,40 300,20 C 350,0 400,40 450,20
+                        C 500,0 550,40 600,20 C 650,0 700,40 750,20 C 800,0 850,40 900,20" />
+
+            <Path Stretch="Fill" Height="70" VerticalAlignment="Bottom" Margin="0,0,0,120"
+                  Opacity="0.25" Stroke="{StaticResource AccentBrush}" StrokeThickness="1.5"
+                  Data="M 0,20 C 50,40 100,0 150,20 C 200,40 250,0 300,20 C 350,40 400,0 450,20
+                        C 500,40 550,0 600,20 C 650,40 700,0 750,20 C 800,40 850,0 900,20" />
+
+            <TextBlock Text="✦" FontSize="16" Opacity="0.30" Foreground="{StaticResource AccentBrush}"
+                       HorizontalAlignment="Left" VerticalAlignment="Top" Margin="160,50,0,0" />
+            <TextBlock Text="✦" FontSize="22" Opacity="0.25" Foreground="{StaticResource AccentLightBrush}"
+                       HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,90,90,0" />
+            <TextBlock Text="✦" FontSize="14" Opacity="0.30" Foreground="{StaticResource AccentBrush}"
+                       HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,60,0" />
+            <TextBlock Text="✦" FontSize="18" Opacity="0.25" Foreground="{StaticResource AccentLightBrush}"
+                       HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="240,0,0,80" />
+            <TextBlock Text="✦" FontSize="20" Opacity="0.30" Foreground="{StaticResource AccentBrush}"
+                       HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,160,60" />
+            <TextBlock Text="✦" FontSize="14" Opacity="0.20" Foreground="{StaticResource AccentLightBrush}"
+                       HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,180,0,0" />
+        </Grid>
+
+        <local:Sidebar Grid.Column="0" />
+        <local:DashboardView Grid.Column="1" />
     </Grid>
 </Window>
