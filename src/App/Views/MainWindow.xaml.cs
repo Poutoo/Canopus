@@ -14,6 +14,16 @@ public sealed partial class MainWindow : Window
         _ = CheckForUpdatesAsync();
     }
 
+    private void OnNavigationRequested(object sender, string destination)
+    {
+        bool showAudit = destination == "Audit";
+        AuditPage.Visibility = showAudit ? Visibility.Visible : Visibility.Collapsed;
+        DashboardPage.Visibility = showAudit ? Visibility.Collapsed : Visibility.Visible;
+
+        if (showAudit)
+            _ = AuditPage.ViewModel.RefreshAsync();
+    }
+
     // Flux de mise à jour minimal, temporaire : juste de quoi prouver que
     // check -> dialogue -> install fonctionne bout en bout. L'habillage
     // visuel définitif viendra dans une itération séparée.

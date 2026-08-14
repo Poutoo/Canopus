@@ -25,6 +25,7 @@ public sealed partial class Sidebar : UserControl
         _navItems =
         [
             (DashboardIconHost, DashboardScale),
+            (AuditIconHost, AuditScale),
             (HistoriqueIconHost, HistoriqueScale),
             (DocumentationIconHost, DocumentationScale),
             (SettingsIconHost, SettingsScale)

@@ -26,6 +26,8 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4654" />
     <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.6" />
     <PackageReference Include="Velopack" Version="1.2.0" />
+    <!-- WMI (Win32_PhysicalMemory, Win32_VideoController, MSFT_MpPreference) -->
+    <PackageReference Include="System.Management" Version="10.0.2" />
   </ItemGroup>
 
   <ItemGroup>

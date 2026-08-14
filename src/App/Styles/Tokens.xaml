@@ -76,6 +76,19 @@
     <SolidColorBrush x:Key="StatusBadMidBrush" Color="{StaticResource StatusBadMidColor}" />
     <SolidColorBrush x:Key="StatusBadBgBrush" Color="{StaticResource StatusBadBgColor}" />
 
+    <!--
+        Neutre / informatif — 4e palier volontairement SANS couleur sémantique.
+        Pour les informations purement factuelles qui ne portent aucun jugement
+        (version de driver, nombre d'exclusions), à ne pas confondre avec un
+        verdict. Dérivé de la rampe de texte pour rester dans la palette.
+    -->
+    <Color x:Key="StatusNeutralTextColor">#5A6B85</Color>
+    <Color x:Key="StatusNeutralMidColor">#8593AB</Color>
+    <Color x:Key="StatusNeutralBgColor">#D8DFEA</Color>
+    <SolidColorBrush x:Key="StatusNeutralTextBrush" Color="{StaticResource StatusNeutralTextColor}" />
+    <SolidColorBrush x:Key="StatusNeutralMidBrush" Color="{StaticResource StatusNeutralMidColor}" />
+    <SolidColorBrush x:Key="StatusNeutralBgBrush" Color="{StaticResource StatusNeutralBgColor}" />
+
     <!-- ============================================================
          RAYONS DE BORDURE
          ============================================================ -->
