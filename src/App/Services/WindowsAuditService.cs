@@ -13,6 +13,13 @@ public sealed class WindowsAuditService : IAuditService
     private static readonly Guid PowerSaverScheme = new("a1841308-3541-4fab-bc81-f71556f20b4a");
     private static readonly Guid UltimatePerformanceScheme = new("e9a42b02-d5df-448d-aa00-03f14749eb61");
 
+    // Windows 11's Power Mode slider only exists when the classic scheme is
+    // Balanced; it layers an overlay on top that PowerGetActiveScheme never sees.
+    // Confirmed on a real machine: classic scheme stayed Balanced after switching
+    // the slider to "Best performance", only the overlay GUID changed.
+    private static readonly Guid OverlayBestPerformance = new("ded574b5-45a0-4f42-8737-46345c09c238");
+    private static readonly Guid OverlayBetterBattery = new("961cc777-2547-4f9d-8174-7d86181b8a7a");
+
     private const string OverlayCoverageNote =
         "Détection basée sur une liste connue, un overlay non répertorié peut passer inaperçu.";
 
@@ -87,8 +94,7 @@ public sealed class WindowsAuditService : IAuditService
                     $"Plan actif : {name}. L'économie d'énergie limite fortement les performances CPU.");
 
             if (active == BalancedScheme)
-                return new AuditItem(title, AuditStatus.Warning, "À vérifier",
-                    $"Plan actif : {name}. Un plan équilibré peut brider le CPU en jeu.");
+                return ClassifyBalancedScheme(title, name);
 
             return new AuditItem(title, AuditStatus.Info, "Informatif",
                 $"Plan actif : {name}.",
@@ -103,6 +109,24 @@ public sealed class WindowsAuditService : IAuditService
             if (schemeGuidPtr != IntPtr.Zero)
                 LocalFree(schemeGuidPtr);
         }
+    }
+
+    private static AuditItem ClassifyBalancedScheme(string title, string schemeName)
+    {
+        if (PowerGetEffectiveOverlayScheme(out Guid overlay) != 0)
+            return new AuditItem(title, AuditStatus.Warning, "À vérifier",
+                $"Plan actif : {schemeName}. Un plan équilibré peut brider le CPU en jeu.");
+
+        if (overlay == OverlayBestPerformance)
+            return new AuditItem(title, AuditStatus.Confirmed, "Optimal",
+                $"Plan actif : {schemeName}, mode de performance \"Meilleures performances\". Le CPU n'est pas bridé.");
+
+        if (overlay == OverlayBetterBattery)
+            return new AuditItem(title, AuditStatus.Problem, "Problème",
+                $"Plan actif : {schemeName}, mode de performance \"Économie d'énergie\". Bride fortement les performances CPU.");
+
+        return new AuditItem(title, AuditStatus.Warning, "À vérifier",
+            $"Plan actif : {schemeName}. Un plan équilibré peut brider le CPU en jeu.");
     }
 
     private static string? ReadPowerSchemeFriendlyName(Guid scheme)
@@ -326,6 +350,9 @@ public sealed class WindowsAuditService : IAuditService
 
     [DllImport("powrprof.dll")]
     private static extern uint PowerGetActiveScheme(IntPtr userRootPowerKey, out IntPtr activePolicyGuid);
+
+    [DllImport("powrprof.dll")]
+    private static extern uint PowerGetEffectiveOverlayScheme(out Guid effectiveOverlayGuid);
 
     [DllImport("powrprof.dll", CharSet = CharSet.Unicode)]
     private static extern uint PowerReadFriendlyName(IntPtr rootPowerKey, ref Guid schemeGuid,
