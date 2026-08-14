@@ -380,8 +380,8 @@ public sealed class DashboardViewModel : INotifyPropertyChanged, IDisposable
     // Audit CTA card
     // ------------------------------------------------------------------
 
-    private const string WarningGlyph = "";
-    private const string OkGlyph = "";
+    private const string WarningGlyph = "\uE7BA";
+    private const string OkGlyph = "\uE73E";
 
     private string _auditSummaryText = "Analyse du système en cours…";
     public string AuditSummaryText { get => _auditSummaryText; private set => SetProperty(ref _auditSummaryText, value); }
