@@ -9,4 +9,7 @@ public record TweakStatusDisplayItem(
     Brush StatusTextBrush,
     Brush StatusBgBrush,
     string Note,
-    Visibility NoteVisibility);
+    Visibility NoteVisibility,
+    Visibility ExcludeToggleVisibility,
+    bool IsExcluded,
+    bool IsExcludeToggleEnabled);

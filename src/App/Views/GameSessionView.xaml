@@ -74,6 +74,14 @@
                                     </Border>
                                 </Grid>
 
+                                <CheckBox Content="Exclure de la session"
+                                          Visibility="{x:Bind ExcludeToggleVisibility}"
+                                          IsChecked="{x:Bind IsExcluded}"
+                                          IsEnabled="{x:Bind IsExcludeToggleEnabled}"
+                                          Checked="OnMousePrecisionExcludeToggled"
+                                          Unchecked="OnMousePrecisionExcludeToggled"
+                                          FontSize="{StaticResource FontSize2}" />
+
                                 <TextBlock Text="{x:Bind Note}"
                                            Visibility="{x:Bind NoteVisibility}"
                                            TextWrapping="Wrap"
