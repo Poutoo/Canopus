@@ -55,8 +55,9 @@
         <local:Sidebar x:Name="NavSidebar" Grid.Column="0" NavigationRequested="OnNavigationRequested" />
 
         <Grid Grid.Column="1">
-            <local:DashboardView x:Name="DashboardPage" AuditRequested="OnAuditRequested" />
+            <local:DashboardView x:Name="DashboardPage" AuditRequested="OnAuditRequested" GameSessionRequested="OnGameSessionRequested" />
             <local:AuditView x:Name="AuditPage" Visibility="Collapsed" />
+            <local:GameSessionView x:Name="GameSessionPage" Visibility="Collapsed" />
         </Grid>
     </Grid>
 </Window>

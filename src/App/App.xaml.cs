@@ -19,8 +19,12 @@ public partial class App : Application
         InitializeComponent();
     }
 
-    protected override void OnLaunched(LaunchActivatedEventArgs args)
+    protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
+        // If a session-snapshot.json is still on disk, the app crashed mid-session
+        // last run: revert those tweaks before anything else runs.
+        await GameSessionService.RevertStaleSessionIfAnyAsync();
+
         _window = new MainWindow();
         _window.Activate();
     }

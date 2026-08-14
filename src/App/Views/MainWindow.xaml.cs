@@ -14,20 +14,25 @@ public sealed partial class MainWindow : Window
         _ = CheckForUpdatesAsync();
     }
 
-    // Audit is a secondary screen reached from the dashboard CTA, not a sidebar
-    // destination, so any sidebar navigation brings the dashboard back.
-    private void OnNavigationRequested(object sender, string destination) => ShowAudit(false);
+    private enum Page { Dashboard, Audit, GameSession }
 
-    private void OnAuditRequested(object sender, EventArgs e) => ShowAudit(true);
+    // Audit and game session are secondary screens reached from dashboard CTAs,
+    // not sidebar destinations, so any sidebar navigation brings the dashboard back.
+    private void OnNavigationRequested(object sender, string destination) => ShowPage(Page.Dashboard);
 
-    private void ShowAudit(bool showAudit)
+    private void OnAuditRequested(object sender, EventArgs e) => ShowPage(Page.Audit);
+
+    private void OnGameSessionRequested(object sender, EventArgs e) => ShowPage(Page.GameSession);
+
+    private void ShowPage(Page page)
     {
-        AuditPage.Visibility = showAudit ? Visibility.Visible : Visibility.Collapsed;
-        DashboardPage.Visibility = showAudit ? Visibility.Collapsed : Visibility.Visible;
+        DashboardPage.Visibility = page == Page.Dashboard ? Visibility.Visible : Visibility.Collapsed;
+        AuditPage.Visibility = page == Page.Audit ? Visibility.Visible : Visibility.Collapsed;
+        GameSessionPage.Visibility = page == Page.GameSession ? Visibility.Visible : Visibility.Collapsed;
 
-        if (showAudit)
+        if (page == Page.Audit)
             _ = AuditPage.ViewModel.RefreshAsync();
-        else
+        else if (page == Page.Dashboard)
             _ = DashboardPage.ViewModel.RefreshAuditSummaryAsync();
     }
 
