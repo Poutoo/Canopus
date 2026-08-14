@@ -17,6 +17,9 @@
     <SolidColorBrush x:Key="AccentLightBrush" Color="{StaticResource AccentLightColor}" />
     <SolidColorBrush x:Key="AccentDarkBrush" Color="{StaticResource AccentDarkColor}" />
 
+    <!-- Text/icon color for content placed directly on AccentBrush (CTA buttons). -->
+    <SolidColorBrush x:Key="TextOnAccentBrush" Color="White" />
+
     <!-- ============================================================
          COULEURS — Fond (dégradé principal de l'app)
          Reproduit linear-gradient(135deg, #DDEFF7 0%, #DDEFF7 52%, #E6ECF9 74%, #EFE8F5 100%)
