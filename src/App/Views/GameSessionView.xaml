@@ -1,0 +1,89 @@
+<UserControl
+    x:Class="Canopus.App.Views.GameSessionView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:models="using:Canopus.App.Models">
+
+    <ScrollViewer Padding="24">
+        <StackPanel Spacing="16">
+            <StackPanel Spacing="4">
+                <TextBlock Text="SESSION DE JEU"
+                           FontSize="{StaticResource FontSize1}"
+                           Foreground="{StaticResource TextTertiaryBrush}" />
+                <TextBlock Text="Optimisez vos réglages pour jouer"
+                           FontSize="{StaticResource FontSize6}"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource TextPrimaryBrush}" />
+            </StackPanel>
+
+            <Border Style="{StaticResource GlassCardStyle}">
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                               Text="{x:Bind ViewModel.FeedbackMessage, Mode=OneWay}"
+                               TextWrapping="Wrap"
+                               VerticalAlignment="Center"
+                               FontSize="{StaticResource FontSize3}"
+                               Foreground="{StaticResource TextSecondaryBrush}" />
+
+                    <Button Grid.Column="1"
+                            Click="OnToggleSessionClick"
+                            IsEnabled="{x:Bind ViewModel.CanToggle, Mode=OneWay}"
+                            Background="{StaticResource AccentBrush}"
+                            BorderThickness="0"
+                            CornerRadius="{StaticResource RadiusSm}"
+                            Padding="20,10">
+                        <TextBlock Text="{x:Bind ViewModel.ToggleButtonText, Mode=OneWay}"
+                                   Foreground="White"
+                                   FontSize="{StaticResource FontSize4}"
+                                   FontWeight="SemiBold" />
+                    </Button>
+                </Grid>
+            </Border>
+
+            <ItemsControl ItemsSource="{x:Bind ViewModel.TweakStatuses, Mode=OneWay}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="models:TweakStatusDisplayItem">
+                        <Border Style="{StaticResource GlassCardStyle}" Margin="0,0,0,12">
+                            <StackPanel Spacing="8">
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Text="{x:Bind Name}"
+                                               VerticalAlignment="Center"
+                                               FontSize="{StaticResource FontSize4}"
+                                               FontWeight="SemiBold"
+                                               Foreground="{StaticResource TextPrimaryBrush}" />
+
+                                    <Border Grid.Column="1"
+                                            VerticalAlignment="Center"
+                                            Background="{x:Bind StatusBgBrush}"
+                                            CornerRadius="{StaticResource RadiusSm}"
+                                            Padding="10,3">
+                                        <TextBlock Text="{x:Bind StatusLabel}"
+                                                   FontSize="{StaticResource FontSize1}"
+                                                   Foreground="{x:Bind StatusTextBrush}" />
+                                    </Border>
+                                </Grid>
+
+                                <TextBlock Text="{x:Bind Note}"
+                                           Visibility="{x:Bind NoteVisibility}"
+                                           TextWrapping="Wrap"
+                                           FontSize="{StaticResource FontSize1}"
+                                           Foreground="{StaticResource TextTertiaryBrush}" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
