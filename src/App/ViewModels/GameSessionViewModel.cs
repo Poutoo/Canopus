@@ -73,8 +73,8 @@ public sealed class GameSessionViewModel : ViewModelBase
 
         TweakStatuses = _tweaks
             .Select(t => outcomes.FirstOrDefault(o => o.TweakName == t.Name) is { } outcome
-                ? (outcome.Succeeded ? ActiveItem(t.Name) : FailedItem(t.Name))
-                : FailedItem(t.Name))
+                ? (outcome.Succeeded ? ActiveItem(t.Name) : FailedItem(t.Name, outcome.FailureReason))
+                : FailedItem(t.Name, null))
             .ToList();
 
         IsSessionActive = true;
@@ -102,12 +102,12 @@ public sealed class GameSessionViewModel : ViewModelBase
     private static TweakStatusDisplayItem ActiveItem(string name) =>
         Build(name, "Actif", GetBrush("StatusGoodTextBrush"), GetBrush("StatusGoodBgBrush"));
 
-    private static TweakStatusDisplayItem FailedItem(string name) =>
-        Build(name, "Échec", GetBrush("StatusBadTextBrush"), GetBrush("StatusBadBgBrush"));
+    private static TweakStatusDisplayItem FailedItem(string name, string? failureReason) =>
+        Build(name, "Échec", GetBrush("StatusBadTextBrush"), GetBrush("StatusBadBgBrush"), failureReason);
 
-    private static TweakStatusDisplayItem Build(string name, string statusLabel, Brush statusTextBrush, Brush statusBgBrush)
+    private static TweakStatusDisplayItem Build(string name, string statusLabel, Brush statusTextBrush, Brush statusBgBrush, string? noteOverride = null)
     {
-        string note = TweakNotes.GetValueOrDefault(name, string.Empty);
+        string note = noteOverride ?? TweakNotes.GetValueOrDefault(name, string.Empty);
         return new TweakStatusDisplayItem(name, statusLabel, statusTextBrush, statusBgBrush, note,
             string.IsNullOrEmpty(note) ? Visibility.Collapsed : Visibility.Visible);
     }
