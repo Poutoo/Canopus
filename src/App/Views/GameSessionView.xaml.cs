@@ -16,4 +16,10 @@ public sealed partial class GameSessionView : UserControl
 
     private async void OnToggleSessionClick(object sender, RoutedEventArgs e) =>
         await ViewModel.ToggleSessionAsync();
+
+    private async void OnMousePrecisionExcludeToggled(object sender, RoutedEventArgs e)
+    {
+        if (sender is CheckBox checkBox)
+            await ViewModel.SetMousePrecisionTweakEnabledAsync(checkBox.IsChecked != true);
+    }
 }
