@@ -49,11 +49,15 @@ public sealed class WindowsAuditService : IAuditService
         ["obs64"] = "OBS Studio"
     };
 
-    private IReadOnlyList<AuditItem>? _lastResult;
+    // Holds the in-flight or last-completed run, not just its result: this makes
+    // GetOrRunAuditAsync single-flight, so two callers racing at startup (the
+    // dashboard's background trigger and AuditViewModel's constructor) await the
+    // same sweep instead of each starting their own.
+    private Task<IReadOnlyList<AuditItem>>? _auditTask;
 
-    public async Task<IReadOnlyList<AuditItem>> RunAuditAsync()
+    public Task<IReadOnlyList<AuditItem>> RunAuditAsync()
     {
-        _lastResult = await Task.Run<IReadOnlyList<AuditItem>>(() =>
+        Task<IReadOnlyList<AuditItem>> task = Task.Run<IReadOnlyList<AuditItem>>(() =>
         [
             DetectPowerPlan(),
             DetectGameMode(),
@@ -63,11 +67,11 @@ public sealed class WindowsAuditService : IAuditService
             ReadGpuDriverInfo()
         ]);
 
-        return _lastResult;
+        _auditTask = task;
+        return task;
     }
 
-    public Task<IReadOnlyList<AuditItem>> GetOrRunAuditAsync() =>
-        _lastResult is not null ? Task.FromResult(_lastResult) : RunAuditAsync();
+    public Task<IReadOnlyList<AuditItem>> GetOrRunAuditAsync() => _auditTask ?? RunAuditAsync();
 
     private static AuditItem DetectPowerPlan()
     {

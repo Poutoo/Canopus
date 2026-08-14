@@ -1,5 +1,4 @@
 using Microsoft.UI.Xaml.Controls;
-using Canopus.App.Services;
 using Canopus.App.ViewModels;
 
 namespace Canopus.App.Views;
@@ -11,6 +10,6 @@ public sealed partial class AuditView : UserControl
     public AuditView()
     {
         InitializeComponent();
-        ViewModel = new AuditViewModel(new WindowsAuditService());
+        ViewModel = new AuditViewModel(App.AuditService);
     }
 }

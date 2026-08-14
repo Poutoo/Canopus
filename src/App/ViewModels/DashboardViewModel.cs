@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Canopus.App.Models;
@@ -13,7 +11,7 @@ namespace Canopus.App.ViewModels;
 /// Les seuils de classification (température, RAM, latence, gigue) sont des
 /// valeurs raisonnables par défaut, pas des seuils produit validés.
 /// </summary>
-public sealed class DashboardViewModel : INotifyPropertyChanged, IDisposable
+public sealed class DashboardViewModel : ViewModelBase, IDisposable
 {
     private const double TickIntervalSeconds = 1.5;
 
@@ -56,17 +54,6 @@ public sealed class DashboardViewModel : INotifyPropertyChanged, IDisposable
         // The audit is far heavier than the sensors, so it runs once in the
         // background rather than on every timer tick.
         _ = RefreshAuditSummaryAsync();
-    }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    private void SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (Equals(field, value))
-            return;
-
-        field = value;
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
     private async Task RefreshAsync()
@@ -380,8 +367,8 @@ public sealed class DashboardViewModel : INotifyPropertyChanged, IDisposable
     // Audit CTA card
     // ------------------------------------------------------------------
 
-    private const string WarningGlyph = "";
-    private const string OkGlyph = "";
+    private const string WarningGlyph = "\uE7BA";
+    private const string OkGlyph = "\uE73E";
 
     private string _auditSummaryText = "Analyse du système en cours…";
     public string AuditSummaryText { get => _auditSummaryText; private set => SetProperty(ref _auditSummaryText, value); }
