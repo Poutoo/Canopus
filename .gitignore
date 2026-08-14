@@ -28,5 +28,6 @@ Thumbs.db
 *.tmp
 
 ## others
+/docs/
 /docs/maquettes
 .claude
