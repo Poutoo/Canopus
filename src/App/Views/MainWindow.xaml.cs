@@ -14,6 +14,23 @@ public sealed partial class MainWindow : Window
         _ = CheckForUpdatesAsync();
     }
 
+    // Audit is a secondary screen reached from the dashboard CTA, not a sidebar
+    // destination, so any sidebar navigation brings the dashboard back.
+    private void OnNavigationRequested(object sender, string destination) => ShowAudit(false);
+
+    private void OnAuditRequested(object sender, EventArgs e) => ShowAudit(true);
+
+    private void ShowAudit(bool showAudit)
+    {
+        AuditPage.Visibility = showAudit ? Visibility.Visible : Visibility.Collapsed;
+        DashboardPage.Visibility = showAudit ? Visibility.Collapsed : Visibility.Visible;
+
+        if (showAudit)
+            _ = AuditPage.ViewModel.RefreshAsync();
+        else
+            _ = DashboardPage.ViewModel.RefreshAuditSummaryAsync();
+    }
+
     // Flux de mise à jour minimal, temporaire : juste de quoi prouver que
     // check -> dialogue -> install fonctionne bout en bout. L'habillage
     // visuel définitif viendra dans une itération séparée.

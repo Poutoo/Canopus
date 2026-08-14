@@ -1,0 +1,70 @@
+<UserControl
+    x:Class="Canopus.App.Views.AuditView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:models="using:Canopus.App.Models">
+
+    <ScrollViewer Padding="24">
+        <StackPanel Spacing="16">
+            <StackPanel Spacing="4">
+                <TextBlock Text="AUDIT SYSTÈME"
+                           FontSize="{StaticResource FontSize1}"
+                           Foreground="{StaticResource TextTertiaryBrush}" />
+                <TextBlock Text="Leviers vérifiés sur votre configuration"
+                           FontSize="{StaticResource FontSize6}"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource TextPrimaryBrush}" />
+            </StackPanel>
+
+            <TextBlock Text="Analyse en cours…"
+                       Visibility="{x:Bind ViewModel.RunningVisibility, Mode=OneWay}"
+                       FontSize="{StaticResource FontSize3}"
+                       Foreground="{StaticResource TextTertiaryBrush}" />
+
+            <ItemsControl ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="models:AuditDisplayItem">
+                        <Border Style="{StaticResource GlassCardStyle}" Margin="0,0,0,12">
+                            <StackPanel Spacing="8">
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Text="{x:Bind Title}"
+                                               VerticalAlignment="Center"
+                                               FontSize="{StaticResource FontSize4}"
+                                               FontWeight="SemiBold"
+                                               Foreground="{StaticResource TextPrimaryBrush}" />
+
+                                    <Border Grid.Column="1"
+                                            VerticalAlignment="Center"
+                                            Background="{x:Bind StatusBgBrush}"
+                                            CornerRadius="{StaticResource RadiusSm}"
+                                            Padding="10,3">
+                                        <TextBlock Text="{x:Bind StatusLabel}"
+                                                   FontSize="{StaticResource FontSize1}"
+                                                   Foreground="{x:Bind StatusTextBrush}" />
+                                    </Border>
+                                </Grid>
+
+                                <TextBlock Text="{x:Bind Description}"
+                                           TextWrapping="Wrap"
+                                           FontSize="{StaticResource FontSize3}"
+                                           Foreground="{StaticResource TextSecondaryBrush}" />
+
+                                <TextBlock Text="{x:Bind DetailNote}"
+                                           Visibility="{x:Bind DetailNoteVisibility}"
+                                           TextWrapping="Wrap"
+                                           FontSize="{StaticResource FontSize1}"
+                                           Foreground="{StaticResource TextTertiaryBrush}" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -52,7 +52,11 @@
                        HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,180,0,0" />
         </Grid>
 
-        <local:Sidebar Grid.Column="0" />
-        <local:DashboardView Grid.Column="1" />
+        <local:Sidebar x:Name="NavSidebar" Grid.Column="0" NavigationRequested="OnNavigationRequested" />
+
+        <Grid Grid.Column="1">
+            <local:DashboardView x:Name="DashboardPage" AuditRequested="OnAuditRequested" />
+            <local:AuditView x:Name="AuditPage" Visibility="Collapsed" />
+        </Grid>
     </Grid>
 </Window>
