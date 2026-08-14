@@ -312,9 +312,9 @@
                             Background="{StaticResource AccentBrush}" BorderThickness="0"
                             CornerRadius="{StaticResource RadiusSm}" Padding="16,8">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Text="Voir le détail" Foreground="White"
+                            <TextBlock Text="Voir le détail" Foreground="{StaticResource TextOnAccentBrush}"
                                        FontSize="{StaticResource FontSize3}" />
-                            <FontIcon Glyph="&#xE76C;" FontSize="{StaticResource FontSize1}" Foreground="White" />
+                            <FontIcon Glyph="&#xE76C;" FontSize="{StaticResource FontSize1}" Foreground="{StaticResource TextOnAccentBrush}" />
                         </StackPanel>
                     </Button>
                 </Grid>
@@ -349,9 +349,9 @@
                             Background="{StaticResource AccentBrush}" BorderThickness="0"
                             CornerRadius="{StaticResource RadiusSm}" Padding="16,8">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Text="Configurer" Foreground="White"
+                            <TextBlock Text="Configurer" Foreground="{StaticResource TextOnAccentBrush}"
                                        FontSize="{StaticResource FontSize3}" />
-                            <FontIcon Glyph="&#xE76C;" FontSize="{StaticResource FontSize1}" Foreground="White" />
+                            <FontIcon Glyph="&#xE76C;" FontSize="{StaticResource FontSize1}" Foreground="{StaticResource TextOnAccentBrush}" />
                         </StackPanel>
                     </Button>
                 </Grid>

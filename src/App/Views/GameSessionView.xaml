@@ -38,7 +38,7 @@
                             CornerRadius="{StaticResource RadiusSm}"
                             Padding="20,10">
                         <TextBlock Text="{x:Bind ViewModel.ToggleButtonText, Mode=OneWay}"
-                                   Foreground="White"
+                                   Foreground="{StaticResource TextOnAccentBrush}"
                                    FontSize="{StaticResource FontSize4}"
                                    FontWeight="SemiBold" />
                     </Button>
