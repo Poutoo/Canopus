@@ -1,7 +1,8 @@
 <Application
     x:Class="Canopus.App.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:tb="using:H.NotifyIcon">
 
     <Application.Resources>
         <ResourceDictionary>
@@ -9,6 +10,41 @@
                 <ResourceDictionary Source="Styles/Tokens.xaml" />
                 <ResourceDictionary Source="Styles/GlassStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <!--
+                Icône de zone de notification, déclarée comme ressource (pas d'élément visuel,
+                pas de fenêtre) : voir App.xaml.cs pour ForceCreate()/Dispose().
+
+                IconSource = GeneratedIconSource (texte "✦" généré, pas un fichier .ico chargé via
+                ms-appx://) : volontaire, pas juste faute d'asset. Un bug connu de H.NotifyIcon fait
+                planter le clic droit sur l'icône dans une app *unpackaged* (notre configuration
+                exacte, WindowsPackageType=None) quand l'icône est chargée depuis un ms-appx URI,
+                voir https://github.com/HavenDV/H.NotifyIcon/issues/23 et /issues/37. Le sample
+                officiel pour app unpackaged (H.NotifyIcon.Apps.WinUI.Windowless) confirme ce pattern.
+            -->
+            <!--
+                Application.xaml n'autorise pas les attributs Click="..." (XamlCompiler
+                WMC1005 "Events cannot be set in the Application class XAML file") : le
+                menu s'appuie donc sur des XamlUICommand, câblés via ExecuteRequested
+                dans App.xaml.cs plutôt que sur des event handlers XAML classiques.
+            -->
+            <XamlUICommand x:Key="TrayOpenCommand" />
+            <XamlUICommand x:Key="TrayExitCommand" />
+
+            <tb:TaskbarIcon x:Key="TrayIcon"
+                             ToolTipText="Canopus"
+                             ContextMenuMode="SecondWindow">
+                <tb:TaskbarIcon.IconSource>
+                    <tb:GeneratedIconSource Text="✦" Foreground="{StaticResource AccentBrush}" />
+                </tb:TaskbarIcon.IconSource>
+                <tb:TaskbarIcon.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="Ouvrir" Command="{StaticResource TrayOpenCommand}" />
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem Text="Quitter" Command="{StaticResource TrayExitCommand}" />
+                    </MenuFlyout>
+                </tb:TaskbarIcon.ContextFlyout>
+            </tb:TaskbarIcon>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

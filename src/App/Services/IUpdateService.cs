@@ -19,4 +19,10 @@ public interface IUpdateService
     /// Ne fait rien si aucune mise à jour n'a été détectée au préalable.
     /// </summary>
     Task DownloadAndApplyUpdateAsync();
+
+    /// <summary>
+    /// Version actuellement installée, telle que packagée par Velopack (<c>vpk pack --packVersion</c>).
+    /// Distincte de la version d'assembly .NET, qui n'est pas renseignée dans le csproj.
+    /// </summary>
+    string GetCurrentVersionText();
 }

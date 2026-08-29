@@ -1,0 +1,174 @@
+<UserControl
+    x:Class="Canopus.App.Views.ParametresView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer Padding="24">
+        <StackPanel Spacing="16">
+            <StackPanel Spacing="4">
+                <TextBlock Text="PARAMÈTRES"
+                           FontSize="{StaticResource FontSize1}"
+                           Foreground="{StaticResource TextTertiaryBrush}" />
+                <TextBlock Text="Configurez Canopus"
+                           FontSize="{StaticResource FontSize6}"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource TextPrimaryBrush}" />
+            </StackPanel>
+
+            <!-- ============================================================
+                 Précision du pointeur — même réglage que sur l'écran Session
+                 de jeu (ISettingsService), relu à chaque affichage de cet écran.
+                 ============================================================ -->
+            <Border Style="{StaticResource GlassCardStyle}">
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
+                        <TextBlock Text="Précision du pointeur"
+                                   FontSize="{StaticResource FontSize4}"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextPrimaryBrush}" />
+                        <TextBlock Text="Désactive l'accélération souris pendant une session de jeu."
+                                   TextWrapping="Wrap"
+                                   FontSize="{StaticResource FontSize2}"
+                                   Foreground="{StaticResource TextTertiaryBrush}" />
+                    </StackPanel>
+
+                    <ToggleSwitch Grid.Column="1"
+                                  OnContent=""
+                                  OffContent=""
+                                  IsOn="{x:Bind ViewModel.MousePrecisionEnabled, Mode=OneWay}"
+                                  Toggled="OnMousePrecisionToggled" />
+                </Grid>
+            </Border>
+
+            <!-- ============================================================
+                 Démarrage
+                 ============================================================ -->
+            <Border Style="{StaticResource GlassCardStyle}">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Démarrage"
+                               FontSize="{StaticResource FontSize4}"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource TextPrimaryBrush}" />
+
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0"
+                                   VerticalAlignment="Center"
+                                   Text="Lancer Canopus au démarrage de Windows"
+                                   TextWrapping="Wrap"
+                                   FontSize="{StaticResource FontSize3}"
+                                   Foreground="{StaticResource TextSecondaryBrush}" />
+
+                        <ToggleSwitch Grid.Column="1"
+                                      OnContent=""
+                                      OffContent=""
+                                      IsOn="{x:Bind ViewModel.LaunchAtStartupEnabled, Mode=OneWay}"
+                                      Toggled="OnLaunchAtStartupToggled" />
+                    </Grid>
+
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0"
+                                   VerticalAlignment="Center"
+                                   Text="Réduire dans la zone de notification au lieu de fermer"
+                                   TextWrapping="Wrap"
+                                   FontSize="{StaticResource FontSize3}"
+                                   Foreground="{StaticResource TextSecondaryBrush}" />
+
+                        <ToggleSwitch Grid.Column="1"
+                                      OnContent=""
+                                      OffContent=""
+                                      IsOn="{x:Bind ViewModel.MinimizeToTrayEnabled, Mode=OneWay}"
+                                      Toggled="OnMinimizeToTrayToggled" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- ============================================================
+                 Mises à jour
+                 ============================================================ -->
+            <Border Style="{StaticResource GlassCardStyle}">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Mises à jour"
+                               FontSize="{StaticResource FontSize4}"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource TextPrimaryBrush}" />
+
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
+                            <TextBlock Text="{x:Bind ViewModel.VersionText, Mode=OneWay}"
+                                       FontSize="{StaticResource FontSize3}"
+                                       Foreground="{StaticResource TextSecondaryBrush}" />
+                            <TextBlock Text="{x:Bind ViewModel.UpdateStatusText, Mode=OneWay}"
+                                       TextWrapping="Wrap"
+                                       FontSize="{StaticResource FontSize2}"
+                                       Foreground="{StaticResource TextTertiaryBrush}" />
+                        </StackPanel>
+
+                        <Button Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Click="OnCheckForUpdatesClick"
+                                IsEnabled="{x:Bind ViewModel.CanCheckForUpdates, Mode=OneWay}"
+                                Background="{StaticResource AccentBrush}"
+                                BorderThickness="0"
+                                CornerRadius="{StaticResource RadiusSm}"
+                                Padding="16,8">
+                            <TextBlock Text="Vérifier maintenant"
+                                       Foreground="{StaticResource TextOnAccentBrush}"
+                                       FontSize="{StaticResource FontSize3}" />
+                        </Button>
+                    </Grid>
+
+                    <Button Click="OnInstallUpdateClick"
+                            Visibility="{x:Bind ViewModel.InstallButtonVisibility, Mode=OneWay}"
+                            HorizontalAlignment="Left"
+                            Background="{StaticResource AccentBrush}"
+                            BorderThickness="0"
+                            CornerRadius="{StaticResource RadiusSm}"
+                            Padding="16,8">
+                        <TextBlock Text="Installer la mise à jour"
+                                   Foreground="{StaticResource TextOnAccentBrush}"
+                                   FontSize="{StaticResource FontSize3}" />
+                    </Button>
+                </StackPanel>
+            </Border>
+
+            <!-- ============================================================
+                 À propos
+                 ============================================================ -->
+            <Border Style="{StaticResource GlassCardStyle}">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="À propos"
+                               FontSize="{StaticResource FontSize4}"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource TextPrimaryBrush}" />
+                    <TextBlock Text="{x:Bind ViewModel.VersionText, Mode=OneWay}"
+                               FontSize="{StaticResource FontSize3}"
+                               Foreground="{StaticResource TextSecondaryBrush}" />
+                    <HyperlinkButton NavigateUri="https://github.com/Poutoo/Canopus"
+                                     Content="Poutoo/Canopus sur GitHub"
+                                     Padding="0"
+                                     FontSize="{StaticResource FontSize3}" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

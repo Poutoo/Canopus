@@ -28,6 +28,14 @@
     <PackageReference Include="Velopack" Version="1.2.0" />
     <!-- WMI (Win32_PhysicalMemory, Win32_VideoController, MSFT_MpPreference) -->
     <PackageReference Include="System.Management" Version="10.0.2" />
+    <!-- Zone de notification (system tray). 2.3.2, pas 2.4.1 : la 2.4.x relève son TFM minimum
+         à net10.0-windows, incompatible avec notre net8.0-windows, donc 2.3.2 est la plus
+         récente version stable (pas -dev/-beta) que ce projet puisse réellement consommer.
+         IconSource utilise GeneratedIconSource (texte, pas un fichier .ico chargé via ms-appx://) :
+         un bug connu de la lib fait planter le clic droit sur l'icône dans une app unpackaged
+         quand l'icône est chargée depuis un ms-appx URI
+         (https://github.com/HavenDV/H.NotifyIcon/issues/23, /issues/37). -->
+    <PackageReference Include="H.NotifyIcon.WinUI" Version="2.3.2" />
   </ItemGroup>
 
   <ItemGroup>

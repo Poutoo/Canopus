@@ -22,6 +22,7 @@ public sealed class GameSessionViewModel : ViewModelBase
     private readonly IReadOnlyList<IReversibleTweak> _allTweaks;
 
     private GameSessionService? _sessionService;
+    private AppSettings _settings = new();
 
     public GameSessionViewModel()
     {
@@ -56,10 +57,13 @@ public sealed class GameSessionViewModel : ViewModelBase
     private bool _mousePrecisionTweakEnabled = true;
     public bool MousePrecisionTweakEnabled { get => _mousePrecisionTweakEnabled; private set => SetProperty(ref _mousePrecisionTweakEnabled, value); }
 
-    private async Task LoadSettingsAsync()
+    // Public so MainWindow can re-trigger it each time this view is navigated to -- this
+    // view instance is never recreated, so without this a change made on ParametresView
+    // (same ISettingsService-backed value) wouldn't show up here until an app restart.
+    public async Task LoadSettingsAsync()
     {
-        AppSettings settings = await _settingsService.LoadAsync();
-        MousePrecisionTweakEnabled = settings.MousePrecisionTweakEnabled;
+        _settings = await _settingsService.LoadAsync();
+        MousePrecisionTweakEnabled = _settings.MousePrecisionTweakEnabled;
         RefreshIdleStatuses();
     }
 
@@ -69,7 +73,10 @@ public sealed class GameSessionViewModel : ViewModelBase
             return;
 
         MousePrecisionTweakEnabled = enabled;
-        await _settingsService.SaveAsync(new AppSettings(enabled));
+        // `with`, not `new AppSettings(enabled)` -- a positional constructor call would silently
+        // reset every other setting (e.g. MinimizeToTray) back to its default on each toggle here.
+        _settings = _settings with { MousePrecisionTweakEnabled = enabled };
+        await _settingsService.SaveAsync(_settings);
         RefreshIdleStatuses();
     }
 
@@ -163,7 +170,7 @@ public sealed class GameSessionViewModel : ViewModelBase
         return new TweakStatusDisplayItem(name, statusLabel, statusTextBrush, statusBgBrush, note,
             string.IsNullOrEmpty(note) ? Visibility.Collapsed : Visibility.Visible,
             isMouseTweak ? Visibility.Visible : Visibility.Collapsed,
-            !MousePrecisionTweakEnabled,
+            MousePrecisionTweakEnabled,
             !IsSessionActive);
     }
 
