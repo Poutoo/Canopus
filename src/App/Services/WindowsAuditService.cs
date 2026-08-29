@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Management;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
+using Canopus.App.Localization;
 using Canopus.App.Models;
 
 namespace Canopus.App.Services;
@@ -19,19 +20,6 @@ public sealed class WindowsAuditService : IAuditService
     // the slider to "Best performance", only the overlay GUID changed.
     private static readonly Guid OverlayBestPerformance = new("ded574b5-45a0-4f42-8737-46345c09c238");
     private static readonly Guid OverlayBetterBattery = new("961cc777-2547-4f9d-8174-7d86181b8a7a");
-
-    private const string OverlayCoverageNote =
-        "Détection basée sur une liste connue, un overlay non répertorié peut passer inaperçu.";
-
-    private const string DefenderScopeNote =
-        "Vérification générique Windows Defender — les antivirus tiers ne sont pas couverts, "
-        + "et aucun jeu spécifique n'est encore ciblé.";
-
-    private const string MemoryMethodNote =
-        "Détection par comparaison WMI ConfiguredClockSpeed / Speed. De nombreuses cartes mères "
-        + "renseignent la même valeur dans les deux champs : l'absence d'écart ne prouve donc pas "
-        + "que le profil est actif, elle indique seulement qu'aucun bridage n'est visible ici. "
-        + "À confirmer dans le BIOS en cas de doute.";
 
     private static readonly Dictionary<string, string> KnownOverlays = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -75,13 +63,13 @@ public sealed class WindowsAuditService : IAuditService
 
     private static AuditItem DetectPowerPlan()
     {
-        const string title = "Plan d'alimentation";
+        string title = Strings.Get("Audit.PowerPlan.Title");
         IntPtr schemeGuidPtr = IntPtr.Zero;
 
         try
         {
             if (PowerGetActiveScheme(IntPtr.Zero, out schemeGuidPtr) != 0 || schemeGuidPtr == IntPtr.Zero)
-                return ReadFailed(title, "Impossible de lire le plan d'alimentation actif.");
+                return ReadFailed(title, Strings.Get("Audit.PowerPlan.ReadFailed"));
 
             Guid active = Marshal.PtrToStructure<Guid>(schemeGuidPtr);
 
@@ -90,23 +78,23 @@ public sealed class WindowsAuditService : IAuditService
             string name = ReadPowerSchemeFriendlyName(active) ?? active.ToString();
 
             if (active == HighPerformanceScheme || active == UltimatePerformanceScheme)
-                return new AuditItem(title, AuditStatus.Confirmed, "Optimal",
-                    $"Plan actif : {name}. Le CPU n'est pas bridé par la gestion d'énergie.");
+                return new AuditItem(title, AuditStatus.Confirmed, Strings.Get("Audit.Status.Optimal"),
+                    Strings.Format("Audit.PowerPlan.HighPerf", name));
 
             if (active == PowerSaverScheme)
-                return new AuditItem(title, AuditStatus.Problem, "Problème",
-                    $"Plan actif : {name}. L'économie d'énergie limite fortement les performances CPU.");
+                return new AuditItem(title, AuditStatus.Problem, Strings.Get("Audit.Status.Problem"),
+                    Strings.Format("Audit.PowerPlan.PowerSaver", name));
 
             if (active == BalancedScheme)
                 return ClassifyBalancedScheme(title, name);
 
-            return new AuditItem(title, AuditStatus.Info, "Informatif",
-                $"Plan actif : {name}.",
-                "Plan personnalisé ou constructeur, non reconnu parmi les plans Windows standard — impossible de le classer automatiquement.");
+            return new AuditItem(title, AuditStatus.Info, Strings.Get("Audit.Status.Info"),
+                Strings.Format("Audit.PowerPlan.Custom", name),
+                Strings.Get("Audit.PowerPlan.CustomNote"));
         }
         catch (Exception ex)
         {
-            return ReadFailed(title, $"Lecture impossible ({ex.GetType().Name}).");
+            return ReadFailed(title, Strings.Format("Audit.PowerPlan.ReadException", ex.GetType().Name));
         }
         finally
         {
@@ -118,19 +106,19 @@ public sealed class WindowsAuditService : IAuditService
     private static AuditItem ClassifyBalancedScheme(string title, string schemeName)
     {
         if (PowerGetEffectiveOverlayScheme(out Guid overlay) != 0)
-            return new AuditItem(title, AuditStatus.Warning, "À vérifier",
-                $"Plan actif : {schemeName}. Un plan équilibré peut brider le CPU en jeu.");
+            return new AuditItem(title, AuditStatus.Warning, Strings.Get("Audit.Status.ToCheck"),
+                Strings.Format("Audit.PowerPlan.Balanced.Default", schemeName));
 
         if (overlay == OverlayBestPerformance)
-            return new AuditItem(title, AuditStatus.Confirmed, "Optimal",
-                $"Plan actif : {schemeName}, mode de performance \"Meilleures performances\". Le CPU n'est pas bridé.");
+            return new AuditItem(title, AuditStatus.Confirmed, Strings.Get("Audit.Status.Optimal"),
+                Strings.Format("Audit.PowerPlan.Balanced.BestPerf", schemeName));
 
         if (overlay == OverlayBetterBattery)
-            return new AuditItem(title, AuditStatus.Problem, "Problème",
-                $"Plan actif : {schemeName}, mode de performance \"Économie d'énergie\". Bride fortement les performances CPU.");
+            return new AuditItem(title, AuditStatus.Problem, Strings.Get("Audit.Status.Problem"),
+                Strings.Format("Audit.PowerPlan.Balanced.BetterBattery", schemeName));
 
-        return new AuditItem(title, AuditStatus.Warning, "À vérifier",
-            $"Plan actif : {schemeName}. Un plan équilibré peut brider le CPU en jeu.");
+        return new AuditItem(title, AuditStatus.Warning, Strings.Get("Audit.Status.ToCheck"),
+            Strings.Format("Audit.PowerPlan.Balanced.Default", schemeName));
     }
 
     private static string? ReadPowerSchemeFriendlyName(Guid scheme)
@@ -151,13 +139,13 @@ public sealed class WindowsAuditService : IAuditService
 
     private static AuditItem DetectGameMode()
     {
-        const string title = "Mode Jeu Windows";
+        string title = Strings.Get("Audit.GameMode.Title");
 
         try
         {
             using RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\GameBar");
             if (key is null)
-                return ReadFailed(title, @"Clé de registre HKCU\SOFTWARE\Microsoft\GameBar introuvable.");
+                return ReadFailed(title, Strings.Get("Audit.GameMode.KeyMissing"));
 
             // Les deux valeurs coexistent sur Windows 11 : AutoGameModeEnabled porte l'état
             // du Mode Jeu, AllowAutoGameMode l'autorisation globale.
@@ -165,23 +153,23 @@ public sealed class WindowsAuditService : IAuditService
                         ?? key.GetValue("AllowAutoGameMode") as int?;
 
             if (enabled is null)
-                return ReadFailed(title, "Ni AutoGameModeEnabled ni AllowAutoGameMode n'existent sous cette clé.");
+                return ReadFailed(title, Strings.Get("Audit.GameMode.ValueMissing"));
 
             return enabled != 0
-                ? new AuditItem(title, AuditStatus.Confirmed, "Activé",
-                    "Le Mode Jeu Windows est activé.")
-                : new AuditItem(title, AuditStatus.Warning, "Désactivé",
-                    "Le Mode Jeu Windows est désactivé. Il priorise les ressources vers le jeu au premier plan.");
+                ? new AuditItem(title, AuditStatus.Confirmed, Strings.Get("Audit.Status.Enabled"),
+                    Strings.Get("Audit.GameMode.Enabled"))
+                : new AuditItem(title, AuditStatus.Warning, Strings.Get("Audit.Status.Disabled"),
+                    Strings.Get("Audit.GameMode.Disabled"));
         }
         catch (Exception ex)
         {
-            return ReadFailed(title, $"Lecture impossible ({ex.GetType().Name}).");
+            return ReadFailed(title, Strings.Format("Audit.GameMode.ReadException", ex.GetType().Name));
         }
     }
 
     private static AuditItem DetectMemoryProfile()
     {
-        const string title = "Profil mémoire XMP / EXPO";
+        string title = Strings.Get("Audit.MemoryProfile.Title");
 
         try
         {
@@ -202,7 +190,7 @@ public sealed class WindowsAuditService : IAuditService
             }
 
             if (modules.Count == 0)
-                return ReadFailed(title, "Aucune barrette mémoire exploitable retournée par WMI.");
+                return ReadFailed(title, Strings.Get("Audit.MemoryProfile.NoModules"));
 
             uint nominalMax = modules.Max(m => m.Nominal);
             uint configuredMin = modules.Min(m => m.Configured);
@@ -210,26 +198,24 @@ public sealed class WindowsAuditService : IAuditService
             // Tolérance de 5 % : les valeurs WMI sont souvent arrondies (5999 vs 6000).
             if (configuredMin < nominalMax * 0.95)
             {
-                return new AuditItem(title, AuditStatus.Warning, "À vérifier",
-                    $"Mémoire cadencée à {configuredMin} MT/s alors que les barrettes annoncent {nominalMax} MT/s — "
-                    + "le profil XMP/EXPO ne semble pas activé.",
-                    MemoryMethodNote);
+                return new AuditItem(title, AuditStatus.Warning, Strings.Get("Audit.Status.ToCheck"),
+                    Strings.Format("Audit.MemoryProfile.NotActive", configuredMin, nominalMax),
+                    Strings.Get("Audit.MemoryProfile.MethodNote"));
             }
 
-            return new AuditItem(title, AuditStatus.Confirmed, "Optimal",
-                $"Mémoire cadencée à {configuredMin} MT/s, conforme à la fréquence annoncée par les barrettes "
-                + $"({modules.Count} barrette(s) détectée(s)).",
-                MemoryMethodNote);
+            return new AuditItem(title, AuditStatus.Confirmed, Strings.Get("Audit.Status.Optimal"),
+                Strings.Format("Audit.MemoryProfile.Active", configuredMin, modules.Count),
+                Strings.Get("Audit.MemoryProfile.MethodNote"));
         }
         catch (Exception ex)
         {
-            return ReadFailed(title, $"Lecture WMI impossible ({ex.GetType().Name}).");
+            return ReadFailed(title, Strings.Format("Audit.MemoryProfile.ReadException", ex.GetType().Name));
         }
     }
 
     private static AuditItem DetectOverlays()
     {
-        const string title = "Overlays actifs";
+        string title = Strings.Get("Audit.Overlays.Title");
 
         try
         {
@@ -244,23 +230,22 @@ public sealed class WindowsAuditService : IAuditService
             }
 
             if (detected.Count == 0)
-                return new AuditItem(title, AuditStatus.Confirmed, "Aucun détecté",
-                    "Aucun overlay connu en cours d'exécution.", OverlayCoverageNote);
+                return new AuditItem(title, AuditStatus.Confirmed, Strings.Get("Audit.Status.NoneDetected"),
+                    Strings.Get("Audit.Overlays.None"), Strings.Get("Audit.Overlays.CoverageNote"));
 
-            return new AuditItem(title, AuditStatus.Warning, "Overlay actif",
-                $"{detected.Count} overlay(s) en cours d'exécution : {string.Join(", ", detected)}. "
-                + "Un overlay s'injecte dans le jeu et peut coûter quelques FPS.",
-                OverlayCoverageNote);
+            return new AuditItem(title, AuditStatus.Warning, Strings.Get("Audit.Status.OverlayActive"),
+                Strings.Format("Audit.Overlays.Detected", detected.Count, string.Join(", ", detected)),
+                Strings.Get("Audit.Overlays.CoverageNote"));
         }
         catch (Exception ex)
         {
-            return ReadFailed(title, $"Énumération des process impossible ({ex.GetType().Name}).");
+            return ReadFailed(title, Strings.Format("Audit.Overlays.EnumException", ex.GetType().Name));
         }
     }
 
     private static AuditItem DetectDefenderExclusions()
     {
-        const string title = "Exclusions antivirus";
+        string title = Strings.Get("Audit.Defender.Title");
 
         try
         {
@@ -279,30 +264,28 @@ public sealed class WindowsAuditService : IAuditService
                     // afficherait "1 exclusion configurée", ce qui serait faux.
                     if (paths.Any(p => p.Contains("Must be an administrator", StringComparison.OrdinalIgnoreCase)))
                     {
-                        return new AuditItem(title, AuditStatus.Info, "Informatif",
-                            "Lecture des exclusions impossible : droits administrateur requis.",
-                            DefenderScopeNote);
+                        return new AuditItem(title, AuditStatus.Info, Strings.Get("Audit.Status.Info"),
+                            Strings.Get("Audit.Defender.RequiresAdmin"),
+                            Strings.Get("Audit.Defender.ScopeNote"));
                     }
 
-                    return new AuditItem(title, AuditStatus.Info, "Informatif",
-                        $"{paths.Length} exclusion(s) configurée(s).", DefenderScopeNote);
+                    return new AuditItem(title, AuditStatus.Info, Strings.Get("Audit.Status.Info"),
+                        Strings.Format("Audit.Defender.Configured", paths.Length), Strings.Get("Audit.Defender.ScopeNote"));
                 }
             }
 
-            return new AuditItem(title, AuditStatus.Info, "Informatif",
-                "Aucune exclusion configurée.", DefenderScopeNote);
+            return new AuditItem(title, AuditStatus.Info, Strings.Get("Audit.Status.Info"),
+                Strings.Get("Audit.Defender.None"), Strings.Get("Audit.Defender.ScopeNote"));
         }
         catch (Exception ex)
         {
-            return ReadFailed(title,
-                $"Lecture WMI Defender impossible ({ex.GetType().Name}) — Defender est peut-être "
-                + "désactivé ou remplacé par un antivirus tiers.");
+            return ReadFailed(title, Strings.Format("Audit.Defender.ReadException", ex.GetType().Name));
         }
     }
 
     private static AuditItem ReadGpuDriverInfo()
     {
-        const string title = "Version du driver GPU";
+        string title = Strings.Get("Audit.GpuDriver.Title");
 
         try
         {
@@ -314,22 +297,22 @@ public sealed class WindowsAuditService : IAuditService
             {
                 using (controller)
                 {
-                    string name = controller["Name"] as string ?? "GPU inconnu";
-                    string version = controller["DriverVersion"] as string ?? "version inconnue";
-                    lines.Add($"{name} — Version {version}{FormatDriverDate(controller["DriverDate"] as string)}");
+                    string name = controller["Name"] as string ?? Strings.Get("Audit.GpuDriver.UnknownGpu");
+                    string version = controller["DriverVersion"] as string ?? Strings.Get("Audit.GpuDriver.UnknownVersion");
+                    lines.Add(Strings.Format("Audit.GpuDriver.Line", name, version, FormatDriverDate(controller["DriverDate"] as string)));
                 }
             }
 
             if (lines.Count == 0)
-                return ReadFailed(title, "Aucun contrôleur vidéo retourné par WMI.");
+                return ReadFailed(title, Strings.Get("Audit.GpuDriver.NoController"));
 
-            return new AuditItem(title, AuditStatus.Info, "Informatif",
+            return new AuditItem(title, AuditStatus.Info, Strings.Get("Audit.Status.Info"),
                 string.Join(Environment.NewLine, lines),
-                "Information factuelle uniquement : aucune comparaison avec la dernière version publiée par le constructeur n'est effectuée.");
+                Strings.Get("Audit.GpuDriver.Note"));
         }
         catch (Exception ex)
         {
-            return ReadFailed(title, $"Lecture WMI impossible ({ex.GetType().Name}).");
+            return ReadFailed(title, Strings.Format("Audit.GpuDriver.ReadException", ex.GetType().Name));
         }
     }
 
@@ -340,7 +323,7 @@ public sealed class WindowsAuditService : IAuditService
 
         try
         {
-            return $", installé le {ManagementDateTimeConverter.ToDateTime(cimDate):dd/MM/yyyy}";
+            return Strings.Format("Audit.GpuDriver.InstalledOn", ManagementDateTimeConverter.ToDateTime(cimDate));
         }
         catch (Exception ex) when (ex is ArgumentOutOfRangeException or FormatException)
         {
@@ -349,8 +332,8 @@ public sealed class WindowsAuditService : IAuditService
     }
 
     private static AuditItem ReadFailed(string title, string reason) =>
-        new(title, AuditStatus.Info, "Non vérifié", reason,
-            "Ce levier n'a pas pu être évalué : le résultat ci-dessus n'est pas un verdict.");
+        new(title, AuditStatus.Info, Strings.Get("Audit.Status.NotChecked"), reason,
+            Strings.Get("Audit.ReadFailed.Note"));
 
     [DllImport("powrprof.dll")]
     private static extern uint PowerGetActiveScheme(IntPtr userRootPowerKey, out IntPtr activePolicyGuid);

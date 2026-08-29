@@ -1,5 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
+using Canopus.App.Localization;
 using Canopus.App.Models;
 using Canopus.App.Services;
 
@@ -9,13 +10,11 @@ public sealed class GameSessionViewModel : ViewModelBase
 {
     // Honest limits worth surfacing rather than letting "Actif" overclaim what a
     // tweak actually guarantees -- same treatment as the audit's DetailNote.
-    private static readonly Dictionary<string, string> TweakNotes = new()
+    // Keyed by IReversibleTweak.Name (stable identifier, not localized) -> translation key.
+    private static readonly Dictionary<string, string> TweakNoteKeys = new()
     {
-        ["Précision du pointeur"] =
-            "Désactive l'accélération souris — les mouvements rapides peuvent sembler moins réactifs, c'est normal et réversible à l'arrêt de la session. "
-            + "Peut aussi être repris par un logiciel tiers (souris gaming, pilote fabricant, etc.) — non garanti pendant toute la session.",
-        ["Suspension sélective USB"] =
-            "Cible le plan d'alimentation actif avant le démarrage de la session. Si le plan d'alimentation bascule vers un plan de performance, ce réglage ne s'applique pas au nouveau plan actif."
+        ["Précision du pointeur"] = "GameSession.Notes.MousePrecision",
+        ["Suspension sélective USB"] = "GameSession.Notes.UsbSuspend"
     };
 
     private readonly ISettingsService _settingsService;
@@ -29,7 +28,7 @@ public sealed class GameSessionViewModel : ViewModelBase
         _settingsService = new JsonSettingsService();
         _allTweaks = GameSessionService.CreateDefaultTweaks();
 
-        _tweakStatuses = _allTweaks.Select(t => IdleItem(t.Name)).ToList();
+        _tweakStatuses = _allTweaks.Select(IdleItem).ToList();
         _ = LoadSettingsAsync();
     }
 
@@ -42,13 +41,13 @@ public sealed class GameSessionViewModel : ViewModelBase
     private bool _canToggle = true;
     public bool CanToggle { get => _canToggle; private set => SetProperty(ref _canToggle, value); }
 
-    private string _toggleButtonText = "Démarrer la session";
+    private string _toggleButtonText = Strings.Get("GameSession.StartButton");
     public string ToggleButtonText { get => _toggleButtonText; private set => SetProperty(ref _toggleButtonText, value); }
 
     private IReadOnlyList<TweakStatusDisplayItem> _tweakStatuses;
     public IReadOnlyList<TweakStatusDisplayItem> TweakStatuses { get => _tweakStatuses; private set => SetProperty(ref _tweakStatuses, value); }
 
-    private string _feedbackMessage = "Applique les réglages ci-dessus et les restaure automatiquement à l'arrêt.";
+    private string _feedbackMessage = Strings.Get("GameSession.DefaultFeedback");
     public string FeedbackMessage { get => _feedbackMessage; private set => SetProperty(ref _feedbackMessage, value); }
 
     // Excluding a tweak only takes effect on the next session start, so the
@@ -112,22 +111,22 @@ public sealed class GameSessionViewModel : ViewModelBase
 
         TweakStatuses = _allTweaks
             .Select(t => !activeTweaks.Contains(t)
-                ? ExcludedItem(t.Name)
+                ? ExcludedItem(t)
                 : outcomes.FirstOrDefault(o => o.TweakName == t.Name) is { } outcome
-                    ? (outcome.Succeeded ? ActiveItem(t.Name) : FailedItem(t.Name, outcome.FailureReason))
-                    : FailedItem(t.Name, null))
+                    ? (outcome.Succeeded ? ActiveItem(t) : FailedItem(t, outcome.FailureReason))
+                    : FailedItem(t, null))
             .ToList();
 
         IsSessionActive = true;
-        ToggleButtonText = "Arrêter la session";
+        ToggleButtonText = Strings.Get("GameSession.StopButton");
 
         int failedCount = outcomes.Count(o => !o.Succeeded);
         int excludedCount = _allTweaks.Count - activeTweaks.Count;
         FeedbackMessage = (failedCount, excludedCount) switch
         {
-            (0, 0) => "Session démarrée : les 3 réglages sont actifs.",
-            (0, > 0) => $"Session démarrée : {activeTweaks.Count} réglage(s) actif(s), {excludedCount} exclu(s) volontairement.",
-            _ => $"Session démarrée avec {failedCount} échec(s) — les autres réglages restent actifs."
+            (0, 0) => Strings.Get("GameSession.Feedback.AllActive"),
+            (0, > 0) => Strings.Format("GameSession.Feedback.SomeExcluded", activeTweaks.Count, excludedCount),
+            _ => Strings.Format("GameSession.Feedback.SomeFailed", failedCount)
         };
     }
 
@@ -138,8 +137,8 @@ public sealed class GameSessionViewModel : ViewModelBase
 
         RefreshIdleStatuses();
         IsSessionActive = false;
-        ToggleButtonText = "Démarrer la session";
-        FeedbackMessage = "Session arrêtée, réglages d'origine restaurés.";
+        ToggleButtonText = Strings.Get("GameSession.StartButton");
+        FeedbackMessage = Strings.Get("GameSession.Feedback.Stopped");
     }
 
     private void RefreshIdleStatuses()
@@ -147,27 +146,28 @@ public sealed class GameSessionViewModel : ViewModelBase
         if (IsSessionActive)
             return;
 
-        TweakStatuses = _allTweaks.Select(t => IdleItem(t.Name)).ToList();
+        TweakStatuses = _allTweaks.Select(IdleItem).ToList();
     }
 
-    private TweakStatusDisplayItem IdleItem(string name) =>
-        Build(name, "Inactif", GetBrush("TextTertiaryBrush"), GetBrush("StatusNeutralBgBrush"));
+    private TweakStatusDisplayItem IdleItem(IReversibleTweak tweak) =>
+        Build(tweak, Strings.Get("GameSession.Status.Idle"), GetBrush("TextTertiaryBrush"), GetBrush("StatusNeutralBgBrush"));
 
-    private TweakStatusDisplayItem ActiveItem(string name) =>
-        Build(name, "Actif", GetBrush("StatusGoodTextBrush"), GetBrush("StatusGoodBgBrush"));
+    private TweakStatusDisplayItem ActiveItem(IReversibleTweak tweak) =>
+        Build(tweak, Strings.Get("GameSession.Status.Active"), GetBrush("StatusGoodTextBrush"), GetBrush("StatusGoodBgBrush"));
 
-    private TweakStatusDisplayItem FailedItem(string name, string? failureReason) =>
-        Build(name, "Échec", GetBrush("StatusBadTextBrush"), GetBrush("StatusBadBgBrush"), failureReason);
+    private TweakStatusDisplayItem FailedItem(IReversibleTweak tweak, string? failureReason) =>
+        Build(tweak, Strings.Get("GameSession.Status.Failed"), GetBrush("StatusBadTextBrush"), GetBrush("StatusBadBgBrush"), failureReason);
 
-    private TweakStatusDisplayItem ExcludedItem(string name) =>
-        Build(name, "Exclu", GetBrush("StatusNeutralTextBrush"), GetBrush("StatusNeutralBgBrush"));
+    private TweakStatusDisplayItem ExcludedItem(IReversibleTweak tweak) =>
+        Build(tweak, Strings.Get("GameSession.Status.Excluded"), GetBrush("StatusNeutralTextBrush"), GetBrush("StatusNeutralBgBrush"));
 
-    private TweakStatusDisplayItem Build(string name, string statusLabel, Brush statusTextBrush, Brush statusBgBrush, string? noteOverride = null)
+    private TweakStatusDisplayItem Build(IReversibleTweak tweak, string statusLabel, Brush statusTextBrush, Brush statusBgBrush, string? noteOverride = null)
     {
-        string note = noteOverride ?? TweakNotes.GetValueOrDefault(name, string.Empty);
-        bool isMouseTweak = name == "Précision du pointeur";
+        string note = noteOverride
+            ?? (TweakNoteKeys.TryGetValue(tweak.Name, out string? noteKey) ? Strings.Get(noteKey) : string.Empty);
+        bool isMouseTweak = tweak is MousePrecisionTweak;
 
-        return new TweakStatusDisplayItem(name, statusLabel, statusTextBrush, statusBgBrush, note,
+        return new TweakStatusDisplayItem(tweak.DisplayName, statusLabel, statusTextBrush, statusBgBrush, note,
             string.IsNullOrEmpty(note) ? Visibility.Collapsed : Visibility.Visible,
             isMouseTweak ? Visibility.Visible : Visibility.Collapsed,
             MousePrecisionTweakEnabled,

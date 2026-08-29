@@ -1,5 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Canopus.App.Models;
 using Canopus.App.ViewModels;
 
 namespace Canopus.App.Views;
@@ -42,4 +43,12 @@ public sealed partial class ParametresView : UserControl
 
     private async void OnInstallUpdateClick(object sender, RoutedEventArgs e) =>
         await ViewModel.InstallUpdateAsync();
+
+    private void OnLanguageSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (sender is ComboBox comboBox)
+            _ = ViewModel.SetLanguageAsync(comboBox.SelectedIndex == 1 ? AppLanguage.En : AppLanguage.Fr);
+    }
+
+    private void OnRestartNowClick(object sender, RoutedEventArgs e) => ViewModel.RestartApp();
 }

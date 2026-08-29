@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Canopus.App.Localization;
 
 namespace Canopus.App.Services;
 
@@ -33,7 +34,7 @@ public sealed class WindowsStartupService : IStartupService
         }
 
         string exePath = Environment.ProcessPath
-            ?? throw new InvalidOperationException("Impossible de déterminer le chemin de l'exécutable.");
+            ?? throw new InvalidOperationException(Strings.Get("Startup.ExePathUnavailable"));
         string currentUser = $"{Environment.UserDomainName}\\{Environment.UserName}";
 
         int exitCode = RunSchtasks(
@@ -45,7 +46,7 @@ public sealed class WindowsStartupService : IStartupService
             "/F");
 
         if (exitCode != 0)
-            throw new InvalidOperationException("Impossible de créer la tâche planifiée de démarrage.");
+            throw new InvalidOperationException(Strings.Get("Startup.TaskCreationFailed"));
     }
 
     private static int RunSchtasks(params string[] arguments)

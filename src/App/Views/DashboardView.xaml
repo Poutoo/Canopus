@@ -2,7 +2,8 @@
     x:Class="Canopus.App.Views.DashboardView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:models="using:Canopus.App.Models">
+    xmlns:models="using:Canopus.App.Models"
+    xmlns:loc="using:Canopus.App.Localization">
 
     <!--
         Grid en étoile (pas de ScrollViewer) : une ScrollViewer offre une
@@ -28,7 +29,7 @@
                  ============================================================ -->
             <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource GlassCardStyle}">
                 <StackPanel Spacing="16">
-                    <TextBlock Text="Températures" FontSize="{StaticResource FontSize4}"
+                    <TextBlock Text="{loc:Loc Key=Dashboard.Temperatures.Title}" FontSize="{StaticResource FontSize4}"
                                FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" />
 
                     <Grid ColumnSpacing="20">
@@ -127,7 +128,7 @@
                  ============================================================ -->
             <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource GlassCardStyle}">
                 <StackPanel Spacing="16">
-                    <TextBlock Text="Charge système" FontSize="{StaticResource FontSize4}"
+                    <TextBlock Text="{loc:Loc Key=Dashboard.SystemLoad.Title}" FontSize="{StaticResource FontSize4}"
                                FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" />
 
                     <StackPanel Orientation="Horizontal" Spacing="8">
@@ -179,12 +180,12 @@
                  ============================================================ -->
             <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource GlassCardStyle}">
                 <StackPanel Spacing="16">
-                    <TextBlock Text="Réseau" FontSize="{StaticResource FontSize4}"
+                    <TextBlock Text="{loc:Loc Key=Dashboard.Network.Title}" FontSize="{StaticResource FontSize4}"
                                FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" />
 
                     <StackPanel Spacing="6">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Text="Latence" FontSize="{StaticResource FontSize3}" Foreground="{StaticResource TextTertiaryBrush}" />
+                            <TextBlock Text="{loc:Loc Key=Dashboard.Network.Latency}" FontSize="{StaticResource FontSize3}" Foreground="{StaticResource TextTertiaryBrush}" />
                             <TextBlock Text="{x:Bind ViewModel.LatencyText, Mode=OneWay}" FontSize="{StaticResource FontSize3}"
                                        Foreground="{StaticResource TextSecondaryBrush}" />
                         </StackPanel>
@@ -199,7 +200,7 @@
 
                     <StackPanel Spacing="6">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Text="Gigue" FontSize="{StaticResource FontSize3}" Foreground="{StaticResource TextTertiaryBrush}" />
+                            <TextBlock Text="{loc:Loc Key=Dashboard.Network.Jitter}" FontSize="{StaticResource FontSize3}" Foreground="{StaticResource TextTertiaryBrush}" />
                             <TextBlock Text="{x:Bind ViewModel.JitterText, Mode=OneWay}" FontSize="{StaticResource FontSize3}"
                                        Foreground="{StaticResource TextSecondaryBrush}" />
                         </StackPanel>
@@ -219,7 +220,7 @@
                  ============================================================ -->
             <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource GlassCardStyle}">
                 <StackPanel Spacing="12">
-                    <TextBlock Text="Stockage" FontSize="{StaticResource FontSize4}"
+                    <TextBlock Text="{loc:Loc Key=Dashboard.Storage.Title}" FontSize="{StaticResource FontSize4}"
                                FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" />
 
                     <ItemsControl ItemsSource="{x:Bind ViewModel.Drives, Mode=OneWay}">
@@ -257,7 +258,7 @@
                  ============================================================ -->
             <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource GlassCardStyle}">
                 <StackPanel Spacing="12">
-                    <TextBlock Text="Top processus" FontSize="{StaticResource FontSize4}"
+                    <TextBlock Text="{loc:Loc Key=Dashboard.Processes.Title}" FontSize="{StaticResource FontSize4}"
                                FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" />
 
                     <ItemsControl ItemsSource="{x:Bind ViewModel.TopProcesses, Mode=OneWay}">
@@ -303,7 +304,7 @@
                         <TextBlock Text="{x:Bind ViewModel.AuditSummaryText, Mode=OneWay}"
                                    FontSize="{StaticResource FontSize4}" FontWeight="SemiBold"
                                    Foreground="{StaticResource TextPrimaryBrush}" />
-                        <TextBlock Text="Voir l'audit complet du système"
+                        <TextBlock Text="{loc:Loc Key=Dashboard.Audit.ViewDetail}"
                                    FontSize="{StaticResource FontSize2}"
                                    Foreground="{StaticResource TextTertiaryBrush}" />
                     </StackPanel>
@@ -312,7 +313,7 @@
                             Background="{StaticResource AccentBrush}" BorderThickness="0"
                             CornerRadius="{StaticResource RadiusSm}" Padding="16,8">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Text="Voir le détail" Foreground="{StaticResource TextOnAccentBrush}"
+                            <TextBlock Text="{loc:Loc Key=Dashboard.Audit.ViewDetailButton}" Foreground="{StaticResource TextOnAccentBrush}"
                                        FontSize="{StaticResource FontSize3}" />
                             <FontIcon Glyph="&#xE76C;" FontSize="{StaticResource FontSize1}" Foreground="{StaticResource TextOnAccentBrush}" />
                         </StackPanel>
@@ -337,10 +338,10 @@
                     </Border>
 
                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                        <TextBlock Text="Session de jeu"
+                        <TextBlock Text="{loc:Loc Key=Dashboard.GameSession.Title}"
                                    FontSize="{StaticResource FontSize4}" FontWeight="SemiBold"
                                    Foreground="{StaticResource TextPrimaryBrush}" />
-                        <TextBlock Text="Optimisez vos réglages pour jouer, restaurés automatiquement à l'arrêt"
+                        <TextBlock Text="{loc:Loc Key=Dashboard.GameSession.Description}"
                                    FontSize="{StaticResource FontSize2}"
                                    Foreground="{StaticResource TextTertiaryBrush}" />
                     </StackPanel>
@@ -349,7 +350,7 @@
                             Background="{StaticResource AccentBrush}" BorderThickness="0"
                             CornerRadius="{StaticResource RadiusSm}" Padding="16,8">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Text="Configurer" Foreground="{StaticResource TextOnAccentBrush}"
+                            <TextBlock Text="{loc:Loc Key=Dashboard.GameSession.ConfigureButton}" Foreground="{StaticResource TextOnAccentBrush}"
                                        FontSize="{StaticResource FontSize3}" />
                             <FontIcon Glyph="&#xE76C;" FontSize="{StaticResource FontSize1}" Foreground="{StaticResource TextOnAccentBrush}" />
                         </StackPanel>

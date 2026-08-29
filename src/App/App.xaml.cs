@@ -1,7 +1,9 @@
+using System.Diagnostics;
 using System.Windows.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using H.NotifyIcon;
+using Canopus.App.Localization;
 using Canopus.App.Models;
 using Canopus.App.Services;
 using Canopus.App.Views;
@@ -42,6 +44,11 @@ public partial class App : Application
 
         AppSettings settings = await _settingsService.LoadAsync();
         MinimizeToTrayEnabled = settings.MinimizeToTray;
+
+        // Must run before MainWindow (and everything it constructs -- Sidebar, DashboardView,
+        // AuditView, GameSessionView, ParametresView) is created: their XAML resolves
+        // {loc:Loc ...} at InitializeComponent() time, which needs Strings already loaded.
+        Strings.Initialize(settings.Language);
 
         _window = new MainWindow();
         _window.Closed += OnWindowClosed;
@@ -88,6 +95,20 @@ public partial class App : Application
     {
         _window?.Show();
         _window?.Activate();
+    }
+
+    // Only called for a deliberate settings-driven restart (language change), not a real
+    // exit: spawns the next instance first, then reuses the same real-quit path as the tray
+    // "Quitter" so it isn't swallowed by the minimize-to-tray interception.
+    public void RestartApp()
+    {
+        string? exePath = Environment.ProcessPath;
+        if (exePath is not null)
+            Process.Start(exePath);
+
+        _handleWindowClosed = false;
+        _trayIcon?.Dispose();
+        _window?.Close();
     }
 
     private sealed class RelayCommand(Action execute) : ICommand
