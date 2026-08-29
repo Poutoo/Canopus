@@ -1,12 +1,12 @@
 namespace Canopus.App.Models;
 
 /// <summary>
-/// <see cref="Info"/> est un palier neutre (gris, sans couleur sémantique)
-/// pour les informations factuelles qui ne portent pas de jugement.
+/// <see cref="Info"/> is a neutral tier (grey, no semantic color) for factual
+/// information that carries no judgment.
 /// </summary>
 public enum AuditStatus { Confirmed, Warning, Problem, Info }
 
-/// <param name="DetailNote">Limite de détection à afficher honnêtement à l'utilisateur.</param>
+/// <param name="DetailNote">Detection limit to surface honestly to the user.</param>
 public record AuditItem(
     string Title,
     AuditStatus Status,

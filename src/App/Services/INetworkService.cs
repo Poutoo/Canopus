@@ -1,16 +1,16 @@
 namespace Canopus.App.Services;
 
 /// <summary>
-/// Mesure réseau à un instant donné.
-/// Nulle si la dernière requête réseau a échoué (hors ligne, hôte injoignable, etc.).
+/// Network measurement at a given instant.
+/// Null if the last network request failed (offline, host unreachable, etc.).
 /// </summary>
 public record NetworkSnapshot(double? LatencyMs, double? JitterMs);
 
 public interface INetworkService
 {
     /// <summary>
-    /// Effectue une mesure de latence (ping) et calcule la gigue par rapport
-    /// aux mesures précédentes.
+    /// Performs a latency measurement (ping) and computes jitter against the
+    /// previous measurements.
     /// </summary>
     Task<NetworkSnapshot> GetSnapshotAsync();
 }

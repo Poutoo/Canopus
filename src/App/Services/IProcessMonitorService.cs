@@ -1,16 +1,16 @@
 namespace Canopus.App.Services;
 
 /// <summary>
-/// Consommation d'un process à un instant donné.
+/// A process's resource usage at a given instant.
 /// </summary>
 public record ProcessSnapshot(string Name, double CpuPercent, double MemoryMegabytes);
 
 public interface IProcessMonitorService
 {
     /// <summary>
-    /// Retourne les processus les plus consommateurs de CPU depuis le dernier appel.
-    /// Le premier appel retourne une liste vide : le calcul du %CPU nécessite un
-    /// écart entre deux mesures (pas de valeur instantanée fournie par Windows).
+    /// Returns the most CPU-hungry processes since the last call.
+    /// The first call returns an empty list: computing %CPU needs a delta between
+    /// two measurements (Windows provides no instantaneous value).
     /// </summary>
     IReadOnlyList<ProcessSnapshot> GetTopProcesses(int count = 3);
 }

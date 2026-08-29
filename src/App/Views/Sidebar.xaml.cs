@@ -6,8 +6,8 @@ using Microsoft.UI.Xaml.Media;
 namespace Canopus.App.Views;
 
 /// <summary>
-/// État actif = élévation uniquement (scale ~1.1 + <see cref="ThemeShadow"/> via
-/// une translation Z), jamais de cercle/badge/fond contrasté.
+/// Active state = elevation only (scale ~1.1 + <see cref="ThemeShadow"/> via a
+/// Z translation), never a circle/badge/contrasting background.
 /// </summary>
 public sealed partial class Sidebar : UserControl
 {

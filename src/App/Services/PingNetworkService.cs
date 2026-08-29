@@ -3,8 +3,8 @@ using System.Net.NetworkInformation;
 namespace Canopus.App.Services;
 
 /// <summary>
-/// Mesure la latence par ping vers un hôte public fixe et dérive la gigue
-/// (moyenne des écarts absolus entre pings successifs) sur une fenêtre glissante.
+/// Measures latency by pinging a fixed public host and derives jitter
+/// (mean of absolute deltas between successive pings) over a sliding window.
 /// </summary>
 public sealed class PingNetworkService : INetworkService, IDisposable
 {
@@ -27,7 +27,7 @@ public sealed class PingNetworkService : INetworkService, IDisposable
         }
         catch (PingException)
         {
-            // Hors ligne, DNS/hôte injoignable, etc. : pas de mesure pour ce tick.
+            // Offline, DNS/host unreachable, etc.: no measurement for this tick.
         }
 
         if (latency is null)

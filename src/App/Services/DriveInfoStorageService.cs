@@ -1,8 +1,8 @@
 namespace Canopus.App.Services;
 
 /// <summary>
-/// Implémentation basée sur <see cref="DriveInfo"/> — pas besoin de
-/// LibreHardwareMonitor pour de la simple occupation disque.
+/// <see cref="DriveInfo"/>-based implementation — no need for
+/// LibreHardwareMonitor for plain disk usage.
 /// </summary>
 public sealed class DriveInfoStorageService : IStorageService
 {

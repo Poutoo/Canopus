@@ -73,8 +73,8 @@ public sealed class WindowsAuditService : IAuditService
 
             Guid active = Marshal.PtrToStructure<Guid>(schemeGuidPtr);
 
-            // Le nom affiché est localisé ("Utilisation normale" pour Balanced en français),
-            // d'où la classification par GUID et non par nom.
+            // The displayed name is localized ("Utilisation normale" for Balanced in French),
+            // hence classifying by GUID rather than by name.
             string name = ReadPowerSchemeFriendlyName(active) ?? active.ToString();
 
             if (active == HighPerformanceScheme || active == UltimatePerformanceScheme)
@@ -147,8 +147,8 @@ public sealed class WindowsAuditService : IAuditService
             if (key is null)
                 return ReadFailed(title, Strings.Get("Audit.GameMode.KeyMissing"));
 
-            // Les deux valeurs coexistent sur Windows 11 : AutoGameModeEnabled porte l'état
-            // du Mode Jeu, AllowAutoGameMode l'autorisation globale.
+            // Both values coexist on Windows 11: AutoGameModeEnabled holds the Game Mode
+            // state, AllowAutoGameMode the global permission.
             int? enabled = key.GetValue("AutoGameModeEnabled") as int?
                         ?? key.GetValue("AllowAutoGameMode") as int?;
 
@@ -195,7 +195,7 @@ public sealed class WindowsAuditService : IAuditService
             uint nominalMax = modules.Max(m => m.Nominal);
             uint configuredMin = modules.Min(m => m.Configured);
 
-            // Tolérance de 5 % : les valeurs WMI sont souvent arrondies (5999 vs 6000).
+            // 5% tolerance: WMI values are often rounded (5999 vs 6000).
             if (configuredMin < nominalMax * 0.95)
             {
                 return new AuditItem(title, AuditStatus.Warning, Strings.Get("Audit.Status.ToCheck"),
@@ -259,9 +259,9 @@ public sealed class WindowsAuditService : IAuditService
                     if (preference["ExclusionPath"] is not string[] paths)
                         continue;
 
-                    // Sans élévation, Defender ne renvoie pas une liste vide mais une entrée
-                    // sentinelle "N/A: Must be an administrator to view exclusions" : la compter
-                    // afficherait "1 exclusion configurée", ce qui serait faux.
+                    // Without elevation, Defender returns not an empty list but a sentinel
+                    // entry "N/A: Must be an administrator to view exclusions": counting it
+                    // would show "1 exclusion configured", which would be wrong.
                     if (paths.Any(p => p.Contains("Must be an administrator", StringComparison.OrdinalIgnoreCase)))
                     {
                         return new AuditItem(title, AuditStatus.Info, Strings.Get("Audit.Status.Info"),

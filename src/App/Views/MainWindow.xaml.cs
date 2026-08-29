@@ -44,9 +44,9 @@ public sealed partial class MainWindow : Window
             GameSessionPage.OnNavigatedTo();
     }
 
-    // Flux de mise à jour minimal, temporaire : juste de quoi prouver que
-    // check -> dialogue -> install fonctionne bout en bout. L'habillage
-    // visuel définitif viendra dans une itération séparée.
+    // Minimal, temporary update flow: just enough to prove that
+    // check -> dialog -> install works end to end. The final visual
+    // treatment will come in a separate iteration.
     private async Task CheckForUpdatesAsync()
     {
         var result = await _updateService.CheckForUpdateAsync();

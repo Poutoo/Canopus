@@ -3,8 +3,8 @@ using System.Diagnostics;
 namespace Canopus.App.Services;
 
 /// <summary>
-/// Calcule le %CPU par process à partir de l'écart de <see cref="Process.TotalProcessorTime"/>
-/// entre deux appels successifs (Windows n'expose pas de %CPU instantané par process).
+/// Computes per-process %CPU from the delta of <see cref="Process.TotalProcessorTime"/>
+/// between two successive calls (Windows exposes no instantaneous per-process %CPU).
 /// </summary>
 public sealed class ProcessMonitorService : IProcessMonitorService
 {
@@ -39,8 +39,8 @@ public sealed class ProcessMonitorService : IProcessMonitorService
             }
             catch (Exception ex) when (ex is InvalidOperationException or System.ComponentModel.Win32Exception)
             {
-                // Le process peut se terminer entre l'énumération et la lecture de
-                // ses propriétés, ou être inaccessible sans droits suffisants.
+                // The process can exit between enumeration and reading its
+                // properties, or be inaccessible without sufficient rights.
             }
             finally
             {

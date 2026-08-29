@@ -5,9 +5,9 @@ using Canopus.App.Localization;
 namespace Canopus.App.Services;
 
 /// <summary>
-/// Implémentation basée sur Velopack, avec GitHub Releases comme flux de mise à jour.
-/// Garde en mémoire la dernière mise à jour détectée pour pouvoir l'appliquer
-/// sur demande explicite de l'utilisateur (voir <see cref="DownloadAndApplyUpdateAsync"/>).
+/// Velopack-based implementation, with GitHub Releases as the update feed.
+/// Keeps the last detected update in memory so it can be applied on an
+/// explicit user request (see <see cref="DownloadAndApplyUpdateAsync"/>).
 /// </summary>
 public sealed class VelopackUpdateService : IUpdateService
 {
@@ -23,8 +23,8 @@ public sealed class VelopackUpdateService : IUpdateService
 
     public async Task<UpdateCheckResult> CheckForUpdateAsync()
     {
-        // IsInstalled est faux en dev (dotnet run / F5) : il n'y a alors pas
-        // d'installation Velopack contre laquelle vérifier une mise à jour.
+        // IsInstalled is false in dev (dotnet run / F5): there is then no
+        // Velopack install to check an update against.
         if (!_updateManager.IsInstalled)
             return new UpdateCheckResult(false, null);
 
@@ -34,8 +34,8 @@ public sealed class VelopackUpdateService : IUpdateService
         }
         catch
         {
-            // Vérification réseau vers GitHub : un échec (hors ligne, rate limit, etc.)
-            // ne doit pas empêcher l'utilisateur de continuer à utiliser l'app.
+            // Network check against GitHub: a failure (offline, rate limit, etc.)
+            // must not stop the user from continuing to use the app.
             _pendingUpdate = null;
         }
 

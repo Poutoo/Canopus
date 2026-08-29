@@ -3,9 +3,9 @@ using LibreHardwareMonitor.Hardware;
 namespace Canopus.App.Services;
 
 /// <summary>
-/// Implémentation basée sur LibreHardwareMonitorLib.
-/// Reprend la logique validée par le spike technique (voir docs/spike-notes.md),
-/// étendue pour couvrir GPU, ventilateurs, fréquences et RAM.
+/// LibreHardwareMonitorLib-based implementation.
+/// Reuses the logic validated by the technical spike (see docs/spike-notes.md),
+/// extended to cover GPU, fans, frequencies and RAM.
 /// </summary>
 public sealed class LibreHardwareMonitorService : IHardwareMonitorService, IDisposable
 {
@@ -18,7 +18,7 @@ public sealed class LibreHardwareMonitorService : IHardwareMonitorService, IDisp
             IsCpuEnabled = true,
             IsGpuEnabled = true,
             IsMemoryEnabled = true,
-            IsMotherboardEnabled = true // nécessaire pour la plupart des capteurs de ventilateurs
+            IsMotherboardEnabled = true // required for most fan sensors
         };
         _computer.Open();
     }
@@ -42,8 +42,8 @@ public sealed class LibreHardwareMonitorService : IHardwareMonitorService, IDisp
                             cpuTemp ??= sensor.Value;
                         if (sensor.SensorType == SensorType.Load && sensor.Value.HasValue)
                             cpuLoad ??= sensor.Value;
-                        // "Bus Speed" est aussi un capteur Clock mais ne reflète pas la
-                        // fréquence du cœur (~100 MHz) : à exclure explicitement.
+                        // "Bus Speed" is also a Clock sensor but does not reflect the
+                        // core frequency (~100 MHz): exclude it explicitly.
                         if (sensor.SensorType == SensorType.Clock && sensor.Value.HasValue
                             && !sensor.Name.Contains("Bus Speed", StringComparison.OrdinalIgnoreCase))
                             cpuFreq ??= sensor.Value;
@@ -65,9 +65,9 @@ public sealed class LibreHardwareMonitorService : IHardwareMonitorService, IDisp
                     break;
 
                 case HardwareType.Memory:
-                    // "Total Memory" = RAM physique. Il existe aussi un hardware
-                    // "Virtual Memory" (fichier d'échange) avec les mêmes noms de
-                    // capteurs ("Memory", "Memory Used", "Memory Available") : à ignorer ici.
+                    // "Total Memory" = physical RAM. There is also a "Virtual Memory"
+                    // hardware (page file) with the same sensor names ("Memory",
+                    // "Memory Used", "Memory Available"): ignore it here.
                     if (hardware.Name != "Total Memory")
                         break;
 
@@ -86,8 +86,8 @@ public sealed class LibreHardwareMonitorService : IHardwareMonitorService, IDisp
                     break;
 
                 case HardwareType.Motherboard:
-                    // Les capteurs de ventilateurs sont souvent exposés via les sous-matériels
-                    // (SuperIO) de la carte mère plutôt que directement ici.
+                    // Fan sensors are often exposed through the motherboard's
+                    // sub-hardware (SuperIO) rather than directly here.
                     foreach (IHardware sub in hardware.SubHardware)
                     {
                         sub.Update();

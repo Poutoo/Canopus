@@ -7,17 +7,17 @@ using Canopus.App.Services;
 namespace Canopus.App.ViewModels;
 
 /// <summary>
-/// Alimente le dashboard avec des données réelles, rafraîchies périodiquement
-/// via un <see cref="DispatcherTimer"/> (voir <see cref="TickIntervalSeconds"/>).
-/// Les seuils de classification (température, RAM, latence, gigue) sont des
-/// valeurs raisonnables par défaut, pas des seuils produit validés.
+/// Feeds the dashboard with real data, refreshed periodically via a
+/// <see cref="DispatcherTimer"/> (see <see cref="TickIntervalSeconds"/>).
+/// The classification thresholds (temperature, RAM, latency, jitter) are
+/// reasonable defaults, not validated product thresholds.
 /// </summary>
 public sealed class DashboardViewModel : ViewModelBase, IDisposable
 {
     private const double TickIntervalSeconds = 1.5;
 
-    // Échelle du thermomètre : 0-100°C (proche de la plage de throttling
-    // ~90-100°C mentionnée pour les cartes de température).
+    // Thermometer scale: 0-100°C (close to the ~90-100°C throttling range
+    // mentioned for temperature cards).
     private const double ThermometerMaxCelsius = 100.0;
 
     private enum StatusTier { Good, Warn, Bad }
@@ -72,7 +72,7 @@ public sealed class DashboardViewModel : ViewModelBase, IDisposable
     }
 
     // ------------------------------------------------------------------
-    // Card Températures
+    // Temperatures card
     // ------------------------------------------------------------------
 
     private string _cpuTemperatureText = "—";
@@ -197,7 +197,7 @@ public sealed class DashboardViewModel : ViewModelBase, IDisposable
     }
 
     // ------------------------------------------------------------------
-    // Card Charge système
+    // System load card
     // ------------------------------------------------------------------
 
     private string _ramText = "—";
@@ -257,7 +257,7 @@ public sealed class DashboardViewModel : ViewModelBase, IDisposable
     }
 
     // ------------------------------------------------------------------
-    // Card Stockage
+    // Storage card
     // ------------------------------------------------------------------
 
     private IReadOnlyList<DriveDisplayItem> _drives = [];
@@ -275,7 +275,7 @@ public sealed class DashboardViewModel : ViewModelBase, IDisposable
     }
 
     // ------------------------------------------------------------------
-    // Card Réseau
+    // Network card
     // ------------------------------------------------------------------
 
     private string _latencyText = "—";
@@ -303,8 +303,8 @@ public sealed class DashboardViewModel : ViewModelBase, IDisposable
         LatencyText = network.LatencyMs is double latency ? $"{latency:F0} ms" : "—";
         JitterText = network.JitterMs is double jitter ? $"{jitter:F1} ms" : "—";
 
-        // Seuils approximatifs (pas de spec produit validée) : latence et gigue
-        // "correctes" pour une connexion domestique typique.
+        // Approximate thresholds (no validated product spec): latency and jitter
+        // that are "fine" for a typical home connection.
         int latencyBars = network.LatencyMs switch
         {
             null => 0,
@@ -356,7 +356,7 @@ public sealed class DashboardViewModel : ViewModelBase, IDisposable
     }
 
     // ------------------------------------------------------------------
-    // Card Top processus
+    // Top processes card
     // ------------------------------------------------------------------
 
     private IReadOnlyList<ProcessDisplayItem> _topProcesses = [];
@@ -411,7 +411,7 @@ public sealed class DashboardViewModel : ViewModelBase, IDisposable
     }
 
     // ------------------------------------------------------------------
-    // Utilitaires partagés
+    // Shared helpers
     // ------------------------------------------------------------------
 
     private static (GridLength filled, GridLength empty) ComputeFillRatio(double fraction)
