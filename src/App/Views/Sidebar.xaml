@@ -39,7 +39,7 @@
                         CornerRadius="20"
                         Background="{StaticResource AccentBrush}"
                         BorderThickness="0">
-                    <FontIcon Glyph="&#xE710;" FontSize="{StaticResource FontSize4}" Foreground="White" />
+                    <FontIcon Glyph="&#xE710;" FontSize="{StaticResource FontSize4}" Foreground="{StaticResource TextOnAccentBrush}" />
                 </Button>
 
                 <Grid x:Name="DashboardIconHost" Width="40" Height="40" Tapped="OnNavItemTapped" Tag="Dashboard">
