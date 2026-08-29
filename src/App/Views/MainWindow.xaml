@@ -58,6 +58,7 @@
             <local:DashboardView x:Name="DashboardPage" AuditRequested="OnAuditRequested" GameSessionRequested="OnGameSessionRequested" />
             <local:AuditView x:Name="AuditPage" Visibility="Collapsed" />
             <local:GameSessionView x:Name="GameSessionPage" Visibility="Collapsed" />
+            <local:ParametresView x:Name="ParametresPage" Visibility="Collapsed" />
         </Grid>
     </Grid>
 </Window>

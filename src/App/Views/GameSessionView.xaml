@@ -74,12 +74,12 @@
                                     </Border>
                                 </Grid>
 
-                                <CheckBox Content="Exclure de la session"
-                                          Visibility="{x:Bind ExcludeToggleVisibility}"
-                                          IsChecked="{x:Bind IsExcluded}"
-                                          IsEnabled="{x:Bind IsExcludeToggleEnabled}"
-                                          Checked="OnMousePrecisionExcludeToggled"
-                                          Unchecked="OnMousePrecisionExcludeToggled"
+                                <CheckBox Content="Précision du pointeur activée pour cette session"
+                                          Visibility="{x:Bind PrecisionToggleVisibility}"
+                                          IsChecked="{x:Bind IsPrecisionEnabled}"
+                                          IsEnabled="{x:Bind IsPrecisionToggleEnabled}"
+                                          Checked="OnMousePrecisionToggled"
+                                          Unchecked="OnMousePrecisionToggled"
                                           FontSize="{StaticResource FontSize2}" />
 
                                 <TextBlock Text="{x:Bind Note}"

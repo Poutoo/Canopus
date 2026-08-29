@@ -51,4 +51,9 @@ public sealed class VelopackUpdateService : IUpdateService
         await _updateManager.DownloadUpdatesAsync(_pendingUpdate);
         _updateManager.ApplyUpdatesAndRestart(_pendingUpdate);
     }
+
+    public string GetCurrentVersionText() =>
+        _updateManager.IsInstalled
+            ? _updateManager.CurrentVersion?.ToString() ?? "version inconnue"
+            : "développement (non installé)";
 }

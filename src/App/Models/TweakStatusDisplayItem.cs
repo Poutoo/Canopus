@@ -10,6 +10,6 @@ public record TweakStatusDisplayItem(
     Brush StatusBgBrush,
     string Note,
     Visibility NoteVisibility,
-    Visibility ExcludeToggleVisibility,
-    bool IsExcluded,
-    bool IsExcludeToggleEnabled);
+    Visibility PrecisionToggleVisibility,
+    bool IsPrecisionEnabled,
+    bool IsPrecisionToggleEnabled);
