@@ -41,10 +41,8 @@
                                                Foreground="{StaticResource TextPrimaryBrush}" />
 
                                     <Border Grid.Column="1"
-                                            VerticalAlignment="Center"
-                                            Background="{x:Bind StatusBgBrush}"
-                                            CornerRadius="{StaticResource RadiusSm}"
-                                            Padding="10,3">
+                                            Style="{StaticResource StatusBadgeStyle}"
+                                            Background="{x:Bind StatusBgBrush}">
                                         <TextBlock Text="{x:Bind StatusLabel}"
                                                    FontSize="{StaticResource FontSize1}"
                                                    Foreground="{x:Bind StatusTextBrush}" />

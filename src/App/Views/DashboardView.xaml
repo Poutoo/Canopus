@@ -68,10 +68,10 @@
                                            Visibility="{x:Bind ViewModel.CpuFrequencyVisibility, Mode=OneWay}"
                                            FontSize="{StaticResource FontSize2}"
                                            Foreground="{StaticResource TextTertiaryBrush}" />
-                                <Border Visibility="{x:Bind ViewModel.CpuStatusVisibility, Mode=OneWay}"
+                                <Border Style="{StaticResource StatusBadgeStyle}"
+                                        Visibility="{x:Bind ViewModel.CpuStatusVisibility, Mode=OneWay}"
                                         Background="{x:Bind ViewModel.CpuStatusBgBrush, Mode=OneWay}"
-                                        CornerRadius="{StaticResource RadiusSm}"
-                                        Padding="8,2" HorizontalAlignment="Left">
+                                        HorizontalAlignment="Left">
                                     <TextBlock Text="{x:Bind ViewModel.CpuStatusLabel, Mode=OneWay}"
                                                FontSize="{StaticResource FontSize1}"
                                                Foreground="{x:Bind ViewModel.CpuStatusTextBrush, Mode=OneWay}" />
@@ -109,10 +109,10 @@
                                            Visibility="{x:Bind ViewModel.GpuFrequencyVisibility, Mode=OneWay}"
                                            FontSize="{StaticResource FontSize2}"
                                            Foreground="{StaticResource TextTertiaryBrush}" />
-                                <Border Visibility="{x:Bind ViewModel.GpuStatusVisibility, Mode=OneWay}"
+                                <Border Style="{StaticResource StatusBadgeStyle}"
+                                        Visibility="{x:Bind ViewModel.GpuStatusVisibility, Mode=OneWay}"
                                         Background="{x:Bind ViewModel.GpuStatusBgBrush, Mode=OneWay}"
-                                        CornerRadius="{StaticResource RadiusSm}"
-                                        Padding="8,2" HorizontalAlignment="Left">
+                                        HorizontalAlignment="Left">
                                     <TextBlock Text="{x:Bind ViewModel.GpuStatusLabel, Mode=OneWay}"
                                                FontSize="{StaticResource FontSize1}"
                                                Foreground="{x:Bind ViewModel.GpuStatusTextBrush, Mode=OneWay}" />

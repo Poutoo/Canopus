@@ -51,6 +51,21 @@
     </Style>
 
     <!--
+        Status badge (verdict pill) shared by AuditView, GameSessionView and
+        DashboardView. Single source of truth for the shape so the three views
+        stop redefining it with drifting padding (was 10,3 in two views, 8,2 in
+        the third). Padding 10,3 kept: it matches the majority and gives the
+        11px label (FontSize1) enough breathing room inside RadiusSm(10).
+        Background and foreground stay per-instance (data-bound to the status
+        brushes), only the geometry is centralised here.
+    -->
+    <Style x:Key="StatusBadgeStyle" TargetType="Border">
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusSm}" />
+        <Setter Property="Padding" Value="10,3" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!--
         Style pour le rail de la sidebar (même matériau, radius pilule).
         36 = moitié de la largeur réelle du rail (72px, voir Sidebar.xaml) —
         valeur exacte plutôt que RadiusPill(999), voir la note dans Tokens.xaml.
