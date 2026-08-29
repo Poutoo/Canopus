@@ -1,3 +1,4 @@
+using Canopus.App.Localization;
 using Canopus.App.Models;
 
 namespace Canopus.App.Services;
@@ -17,10 +18,11 @@ public sealed class PowerPlanTweak : IReversibleTweak
     private const string ActiveSchemeKey = "ActiveSchemeGuid";
 
     public string Name => "Plan d'alimentation";
+    public string DisplayName => Strings.Get("Tweak.PowerPlan.Name");
 
     public Task<TweakSnapshot> CaptureAsync()
     {
-        Guid active = PowerSchemeInterop.GetActiveScheme() ?? throw new InvalidOperationException("Impossible de lire le plan d'alimentation actif.");
+        Guid active = PowerSchemeInterop.GetActiveScheme() ?? throw new InvalidOperationException(Strings.Get("Tweak.PowerScheme.ReadFailed"));
         return Task.FromResult(new TweakSnapshot(Name, new Dictionary<string, object>
         {
             [ActiveSchemeKey] = active.ToString()
@@ -33,7 +35,7 @@ public sealed class PowerPlanTweak : IReversibleTweak
             return Task.CompletedTask;
 
         if (!PowerSchemeInterop.SetActiveScheme(HighPerformanceScheme))
-            throw new InvalidOperationException("Impossible d'activer un plan d'alimentation performant.");
+            throw new InvalidOperationException(Strings.Get("Tweak.PowerPlan.ApplyFailed"));
 
         return Task.CompletedTask;
     }
@@ -48,7 +50,7 @@ public sealed class PowerPlanTweak : IReversibleTweak
     {
         Guid original = Guid.Parse(snapshot.GetValue<string>(ActiveSchemeKey));
         if (!PowerSchemeInterop.SetActiveScheme(original))
-            throw new InvalidOperationException("Impossible de restaurer le plan d'alimentation d'origine.");
+            throw new InvalidOperationException(Strings.Get("Tweak.PowerPlan.RevertFailed"));
 
         return Task.CompletedTask;
     }

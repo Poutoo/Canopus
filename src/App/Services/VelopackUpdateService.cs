@@ -1,5 +1,6 @@
 using Velopack;
 using Velopack.Sources;
+using Canopus.App.Localization;
 
 namespace Canopus.App.Services;
 
@@ -54,6 +55,6 @@ public sealed class VelopackUpdateService : IUpdateService
 
     public string GetCurrentVersionText() =>
         _updateManager.IsInstalled
-            ? _updateManager.CurrentVersion?.ToString() ?? "version inconnue"
-            : "développement (non installé)";
+            ? _updateManager.CurrentVersion?.ToString() ?? Strings.Get("Update.CurrentVersion.Unknown")
+            : Strings.Get("Update.CurrentVersion.NotInstalled");
 }

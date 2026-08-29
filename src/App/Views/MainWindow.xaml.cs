@@ -1,5 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Canopus.App.Localization;
 using Canopus.App.Services;
 
 namespace Canopus.App.Views;
@@ -55,10 +56,10 @@ public sealed partial class MainWindow : Window
         var dialog = new ContentDialog
         {
             XamlRoot = Content.XamlRoot,
-            Title = "Mise à jour disponible",
-            Content = $"Une mise à jour est disponible (version {result.AvailableVersion}).",
-            PrimaryButtonText = "Installer",
-            CloseButtonText = "Plus tard"
+            Title = Strings.Get("UpdateDialog.Title"),
+            Content = Strings.Format("UpdateDialog.Content", result.AvailableVersion),
+            PrimaryButtonText = Strings.Get("UpdateDialog.Install"),
+            CloseButtonText = Strings.Get("UpdateDialog.Later")
         };
 
         var choice = await dialog.ShowAsync();

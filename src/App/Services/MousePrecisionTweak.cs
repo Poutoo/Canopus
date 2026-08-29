@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using Canopus.App.Localization;
 using Canopus.App.Models;
 
 namespace Canopus.App.Services;
@@ -22,6 +23,7 @@ public sealed class MousePrecisionTweak : IReversibleTweak
     private const string AccelerationKey = "Acceleration";
 
     public string Name => "Précision du pointeur";
+    public string DisplayName => Strings.Get("Tweak.MousePrecision.Name");
 
     public Task<TweakSnapshot> CaptureAsync()
     {
@@ -57,7 +59,7 @@ public sealed class MousePrecisionTweak : IReversibleTweak
     {
         int[] values = new int[3];
         if (!SystemParametersInfo(SPI_GETMOUSE, 0, values, 0))
-            throw new InvalidOperationException("Lecture des paramètres souris impossible.");
+            throw new InvalidOperationException(Strings.Get("Tweak.MousePrecision.ReadFailed"));
 
         return values;
     }
@@ -65,7 +67,7 @@ public sealed class MousePrecisionTweak : IReversibleTweak
     private static void SetMouseParams(int[] values)
     {
         if (!SystemParametersInfo(SPI_SETMOUSE, 0, values, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE))
-            throw new InvalidOperationException("Écriture des paramètres souris impossible.");
+            throw new InvalidOperationException(Strings.Get("Tweak.MousePrecision.WriteFailed"));
     }
 
     [DllImport("user32.dll", SetLastError = true)]

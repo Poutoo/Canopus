@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Canopus.App.Localization;
 using Canopus.App.Models;
 
 namespace Canopus.App.Services;
@@ -40,7 +41,7 @@ public sealed class GameSessionService
             }
             catch (Exception ex)
             {
-                outcomes.Add(new TweakOutcome(tweak.Name, false, $"Capture impossible : {ex.Message}"));
+                outcomes.Add(new TweakOutcome(tweak.Name, false, Strings.Format("GameSession.Tweak.CaptureFailedPrefix", ex.Message)));
             }
         }
 
@@ -52,7 +53,7 @@ public sealed class GameSessionService
             {
                 await tweak.ApplyAsync();
                 bool verified = await tweak.VerifyAsync();
-                outcomes.Add(new TweakOutcome(tweak.Name, verified, verified ? null : "La vérification a échoué après application."));
+                outcomes.Add(new TweakOutcome(tweak.Name, verified, verified ? null : Strings.Get("GameSession.Tweak.VerifyFailed")));
             }
             catch (Exception ex)
             {

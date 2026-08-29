@@ -1,5 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
+using Canopus.App.Localization;
 using Canopus.App.Models;
 using Canopus.App.Services;
 
@@ -167,7 +168,12 @@ public sealed class DashboardViewModel : ViewModelBase, IDisposable
         }
 
         StatusTier tier = celsius >= 90 ? StatusTier.Bad : celsius >= 75 ? StatusTier.Warn : StatusTier.Good;
-        string label = tier switch { StatusTier.Bad => "Critique", StatusTier.Warn => "Élevé", _ => "Stable" };
+        string label = tier switch
+        {
+            StatusTier.Bad => Strings.Get("Dashboard.Status.Critical"),
+            StatusTier.Warn => Strings.Get("Dashboard.Status.High"),
+            _ => Strings.Get("Dashboard.Status.Stable")
+        };
         var (filledRow, emptyRow) = ComputeFillRatio(celsius.Value / ThermometerMaxCelsius);
 
         return (
@@ -370,7 +376,7 @@ public sealed class DashboardViewModel : ViewModelBase, IDisposable
     private const string WarningGlyph = "\uE7BA";
     private const string OkGlyph = "\uE73E";
 
-    private string _auditSummaryText = "Analyse du système en cours…";
+    private string _auditSummaryText = Strings.Get("Dashboard.AuditSummary.Loading");
     public string AuditSummaryText { get => _auditSummaryText; private set => SetProperty(ref _auditSummaryText, value); }
 
     private string _auditIconGlyph = WarningGlyph;
@@ -389,14 +395,16 @@ public sealed class DashboardViewModel : ViewModelBase, IDisposable
 
         if (toCheck == 0)
         {
-            AuditSummaryText = "Tout est optimal";
+            AuditSummaryText = Strings.Get("Dashboard.AuditSummary.AllGood");
             AuditIconGlyph = OkGlyph;
             AuditIconBackgroundBrush = GetBrush("StatusGoodBgBrush");
             AuditIconForegroundBrush = GetBrush("StatusGoodTextBrush");
             return;
         }
 
-        AuditSummaryText = toCheck == 1 ? "1 optimisation à vérifier" : $"{toCheck} optimisations à vérifier";
+        AuditSummaryText = toCheck == 1
+            ? Strings.Get("Dashboard.AuditSummary.Singular")
+            : Strings.Format("Dashboard.AuditSummary.Plural", toCheck);
         AuditIconGlyph = WarningGlyph;
         AuditIconBackgroundBrush = GetBrush("StatusWarnBgBrush");
         AuditIconForegroundBrush = GetBrush("StatusWarnTextBrush");

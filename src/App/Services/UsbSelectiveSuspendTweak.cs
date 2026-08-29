@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using Canopus.App.Localization;
 using Canopus.App.Models;
 
 namespace Canopus.App.Services;
@@ -39,10 +40,11 @@ public sealed class UsbSelectiveSuspendTweak : IReversibleTweak
     private Guid? _schemeGuid;
 
     public string Name => "Suspension sélective USB";
+    public string DisplayName => Strings.Get("Tweak.UsbSuspend.Name");
 
     public Task<TweakSnapshot> CaptureAsync()
     {
-        Guid scheme = PowerSchemeInterop.GetActiveScheme() ?? throw new InvalidOperationException("Impossible de lire le plan d'alimentation actif.");
+        Guid scheme = PowerSchemeInterop.GetActiveScheme() ?? throw new InvalidOperationException(Strings.Get("Tweak.PowerScheme.ReadFailed"));
         _schemeGuid = scheme;
 
         uint originalValue = ReadAcValue(scheme);
@@ -56,7 +58,7 @@ public sealed class UsbSelectiveSuspendTweak : IReversibleTweak
 
     public Task ApplyAsync()
     {
-        Guid scheme = _schemeGuid ?? throw new InvalidOperationException("CaptureAsync doit être appelé avant ApplyAsync.");
+        Guid scheme = _schemeGuid ?? throw new InvalidOperationException(Strings.Get("Tweak.UsbSuspend.NotCaptured"));
         WriteAcValue(scheme, disabled: true);
         return Task.CompletedTask;
     }
@@ -82,7 +84,7 @@ public sealed class UsbSelectiveSuspendTweak : IReversibleTweak
         Guid subgroup = SubgroupGuid;
         Guid setting = SettingGuid;
         if (PowerWriteACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, disabled ? 0u : 1u) != 0)
-            throw new InvalidOperationException("Écriture du réglage USB impossible.");
+            throw new InvalidOperationException(Strings.Get("Tweak.UsbSuspend.WriteFailed"));
 
         // Must be conditional (see the reapply quirk noted on PowerWriteACValueIndex
         // above): reapplying unconditionally here previously clobbered PowerPlanTweak's
@@ -90,7 +92,7 @@ public sealed class UsbSelectiveSuspendTweak : IReversibleTweak
         // captured *before* the power plan changed. Only reapply when `scheme` is the
         // one actually active, otherwise this would incorrectly switch the system to it.
         if (PowerSchemeInterop.GetActiveScheme() == scheme && !PowerSchemeInterop.SetActiveScheme(scheme))
-            throw new InvalidOperationException("Impossible de réappliquer le plan d'alimentation après l'écriture du réglage USB.");
+            throw new InvalidOperationException(Strings.Get("Tweak.UsbSuspend.ReapplyFailed"));
     }
 
     private static uint ReadAcValue(Guid scheme)
@@ -98,7 +100,7 @@ public sealed class UsbSelectiveSuspendTweak : IReversibleTweak
         Guid subgroup = SubgroupGuid;
         Guid setting = SettingGuid;
         if (PowerReadACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, out uint value) != 0)
-            throw new InvalidOperationException("Lecture du réglage USB impossible.");
+            throw new InvalidOperationException(Strings.Get("Tweak.UsbSuspend.ReadFailed"));
 
         return value;
     }
