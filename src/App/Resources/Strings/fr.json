@@ -1,5 +1,6 @@
 {
   "App.Name": "Canopus",
+
   "Nav.Dashboard": "Tableau de bord",
   "Nav.Audit": "Audit",
   "Nav.GameSession": "Session de jeu",
@@ -13,6 +14,7 @@
   "UpdateDialog.Content": "Une mise à jour est disponible (version {0}).",
   "UpdateDialog.Install": "Installer",
   "UpdateDialog.Later": "Plus tard",
+
   "Value.Missing": "—",
   "Unit.Celsius": "°C",
   "Unit.Milliseconds": "ms",
@@ -26,6 +28,7 @@
   "Format.SizeValue": "{0} {1}",
   "Format.UsedOfTotal.SameUnit": "{0} sur {1} {2}",
   "Format.UsedOfTotal.MixedUnits": "{0} {1} sur {2} {3}",
+
   "Dashboard.Title": "Tableau de bord",
   "Dashboard.Subtitle": "Valeurs en direct",
   "Dashboard.GameSessionButton": "Session de jeu",
@@ -56,14 +59,12 @@
   "Audit.Title": "Audit",
   "Audit.Rerun": "Relancer l'audit",
   "Audit.InfoTitle": "Pour info",
-
   "Audit.PowerPlan.Title": "Plan d'alimentation",
   "Audit.GameMode.Title": "Mode Jeu Windows",
   "Audit.MemoryProfile.Title": "Profil mémoire XMP / EXPO",
   "Audit.Overlays.Title": "Overlays actifs",
   "Audit.Defender.Title": "Exclusions antivirus",
   "Audit.GpuDriver.Title": "Version du driver GPU",
-
   "Audit.Status.Optimal": "Optimal",
   "Audit.Status.Problem": "Problème",
   "Audit.Status.ToCheck": "À vérifier",
@@ -73,7 +74,6 @@
   "Audit.Status.NoneDetected": "Aucun détecté",
   "Audit.Status.OverlayActive": "Overlay actif",
   "Audit.Status.NotChecked": "Non vérifié",
-
   "Audit.PowerPlan.ReadFailed": "Impossible de lire le plan d'alimentation actif.",
   "Audit.PowerPlan.HighPerf": "Plan actif : {0}. Le CPU n'est pas bridé par la gestion d'énergie.",
   "Audit.PowerPlan.PowerSaver": "Plan actif : {0}. L'économie d'énergie limite fortement les performances CPU.",
@@ -83,30 +83,25 @@
   "Audit.PowerPlan.Balanced.Default": "Plan actif : {0}. Un plan équilibré peut brider le CPU en jeu.",
   "Audit.PowerPlan.Balanced.BestPerf": "Plan actif : {0}, mode de performance \"Meilleures performances\". Le CPU n'est pas bridé.",
   "Audit.PowerPlan.Balanced.BetterBattery": "Plan actif : {0}, mode de performance \"Économie d'énergie\". Bride fortement les performances CPU.",
-
   "Audit.GameMode.KeyMissing": "Clé de registre HKCU\\SOFTWARE\\Microsoft\\GameBar introuvable.",
   "Audit.GameMode.ValueMissing": "Ni AutoGameModeEnabled ni AllowAutoGameMode n'existent sous cette clé.",
   "Audit.GameMode.Enabled": "Le Mode Jeu Windows est activé.",
   "Audit.GameMode.Disabled": "Le Mode Jeu Windows est désactivé. Il priorise les ressources vers le jeu au premier plan.",
   "Audit.GameMode.ReadException": "Lecture impossible ({0}).",
-
   "Audit.MemoryProfile.NoModules": "Aucune barrette mémoire exploitable retournée par WMI.",
   "Audit.MemoryProfile.NotActive": "Mémoire cadencée à {0} MT/s alors que les barrettes annoncent {1} MT/s — le profil XMP/EXPO ne semble pas activé.",
   "Audit.MemoryProfile.Active": "Mémoire cadencée à {0} MT/s, conforme à la fréquence annoncée par les barrettes ({1} barrette(s) détectée(s)).",
   "Audit.MemoryProfile.MethodNote": "Détection par comparaison WMI ConfiguredClockSpeed / Speed. De nombreuses cartes mères renseignent la même valeur dans les deux champs : l'absence d'écart ne prouve donc pas que le profil est actif, elle indique seulement qu'aucun bridage n'est visible ici. À confirmer dans le BIOS en cas de doute.",
   "Audit.MemoryProfile.ReadException": "Lecture WMI impossible ({0}).",
-
   "Audit.Overlays.None": "Aucun overlay connu en cours d'exécution.",
   "Audit.Overlays.CoverageNote": "Détection basée sur une liste connue, un overlay non répertorié peut passer inaperçu.",
   "Audit.Overlays.Detected": "{0} overlay(s) en cours d'exécution : {1}. Un overlay s'injecte dans le jeu et peut coûter quelques FPS.",
   "Audit.Overlays.EnumException": "Énumération des process impossible ({0}).",
-
   "Audit.Defender.RequiresAdmin": "Lecture des exclusions impossible : droits administrateur requis.",
   "Audit.Defender.ScopeNote": "Vérification générique Windows Defender — les antivirus tiers ne sont pas couverts, et aucun jeu spécifique n'est encore ciblé.",
   "Audit.Defender.Configured": "{0} exclusion(s) configurée(s).",
   "Audit.Defender.None": "Aucune exclusion configurée.",
   "Audit.Defender.ReadException": "Lecture WMI Defender impossible ({0}) — Defender est peut-être désactivé ou remplacé par un antivirus tiers.",
-
   "Audit.GpuDriver.UnknownGpu": "GPU inconnu",
   "Audit.GpuDriver.UnknownVersion": "version inconnue",
   "Audit.GpuDriver.Line": "{0} — Version {1}{2}",
@@ -114,12 +109,11 @@
   "Audit.GpuDriver.NoController": "Aucun contrôleur vidéo retourné par WMI.",
   "Audit.GpuDriver.Note": "Information factuelle uniquement : aucune comparaison avec la dernière version publiée par le constructeur n'est effectuée.",
   "Audit.GpuDriver.ReadException": "Lecture WMI impossible ({0}).",
-
   "Audit.ReadFailed.Note": "Ce levier n'a pas pu être évalué : le résultat ci-dessus n'est pas un verdict.",
 
-  "GameSession.StartButton": "Démarrer la session",
-  "GameSession.StopButton": "Arrêter la session",
-  "GameSession.DefaultFeedback": "Applique les réglages ci-dessus et les restaure automatiquement à l'arrêt.",
+  "GameSession.StartButton": "Démarrer",
+  "GameSession.StopButton": "Arrêter",
+  "GameSession.DefaultFeedback": "Rien n'est modifié tant que tu n'as pas démarré.",
   "GameSession.Title": "Session de jeu",
   "GameSession.Hero.IdleTitle": "Prêt pour une session",
   "GameSession.Hero.IdleSubtitle": "{0} réglages seront appliqués au démarrage, puis remis comme avant à l'arrêt.",
@@ -134,10 +128,10 @@
   "GameSession.Status.Active": "Actif",
   "GameSession.Status.Failed": "Échec",
   "GameSession.Status.Excluded": "Exclu",
-  "GameSession.Feedback.AllActive": "Session démarrée : les 3 réglages sont actifs.",
-  "GameSession.Feedback.SomeExcluded": "Session démarrée : {0} réglage(s) actif(s), {1} exclu(s) volontairement.",
-  "GameSession.Feedback.SomeFailed": "Session démarrée avec {0} échec(s) — les autres réglages restent actifs.",
-  "GameSession.Feedback.Stopped": "Session arrêtée, réglages d'origine restaurés.",
+  "GameSession.Feedback.AllActive": "Session démarrée. Les 3 réglages sont actifs.",
+  "GameSession.Feedback.SomeExcluded": "Session démarrée. {0} réglage(s) actif(s), {1} exclu(s) par toi.",
+  "GameSession.Feedback.SomeFailed": "Session démarrée. {0} réglage(s) en échec, les autres sont actifs.",
+  "GameSession.Feedback.Stopped": "Session arrêtée. Les réglages sont revenus comme avant.",
   "GameSession.Tweak.CaptureFailedPrefix": "Capture impossible : {0}",
   "GameSession.Tweak.VerifyFailed": "La vérification a échoué après application.",
 
@@ -167,10 +161,10 @@
   "Parametres.Startup.MinimizeToTray": "Réduire dans la zone de notification",
   "Parametres.Updates.CheckNow": "Chercher une mise à jour",
   "Parametres.Updates.Install": "Installer",
-  "Parametres.Updates.Checking": "Recherche de mises à jour...",
-  "Parametres.Updates.Available": "Mise à jour disponible : version {0}.",
-  "Parametres.Updates.UpToDate": "Vous utilisez déjà la dernière version.",
-  "Parametres.Updates.Installing": "Téléchargement et installation en cours...",
+  "Parametres.Updates.Checking": "Recherche de mises à jour…",
+  "Parametres.Updates.Available": "La version {0} est disponible.",
+  "Parametres.Updates.UpToDate": "Tu as déjà la dernière version.",
+  "Parametres.Updates.Installing": "Téléchargement et installation en cours…",
   "Parametres.Language.Title": "Langue",
   "Parametres.Language.French": "Français",
   "Parametres.Language.English": "English",

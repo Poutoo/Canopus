@@ -41,7 +41,7 @@
             <XamlUICommand x:Key="TrayExitCommand" />
 
             <tb:TaskbarIcon x:Key="TrayIcon"
-                             ToolTipText="Canopus"
+                             ToolTipText="{loc:Loc Key=App.Name}"
                              ContextMenuMode="SecondWindow">
                 <tb:TaskbarIcon.IconSource>
                     <tb:GeneratedIconSource Text="✦" Foreground="{StaticResource AccentBrush}" />
