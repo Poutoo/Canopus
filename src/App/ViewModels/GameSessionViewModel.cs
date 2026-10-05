@@ -150,16 +150,16 @@ public sealed class GameSessionViewModel : ViewModelBase
     }
 
     private TweakStatusDisplayItem IdleItem(IReversibleTweak tweak) =>
-        Build(tweak, Strings.Get("GameSession.Status.Idle"), GetBrush("TextTertiaryBrush"), GetBrush("StatusNeutralBgBrush"));
+        Build(tweak, Strings.Get("GameSession.Status.Idle"), GetBrush("TextTertiaryBrush"), GetBrush("StatusExcludedBgBrush"));
 
     private TweakStatusDisplayItem ActiveItem(IReversibleTweak tweak) =>
-        Build(tweak, Strings.Get("GameSession.Status.Active"), GetBrush("StatusGoodTextBrush"), GetBrush("StatusGoodBgBrush"));
+        Build(tweak, Strings.Get("GameSession.Status.Active"), GetBrush("StatusNeutralTextBrush"), GetBrush("StatusActiveBgBrush"));
 
     private TweakStatusDisplayItem FailedItem(IReversibleTweak tweak, string? failureReason) =>
         Build(tweak, Strings.Get("GameSession.Status.Failed"), GetBrush("StatusBadTextBrush"), GetBrush("StatusBadBgBrush"), failureReason);
 
     private TweakStatusDisplayItem ExcludedItem(IReversibleTweak tweak) =>
-        Build(tweak, Strings.Get("GameSession.Status.Excluded"), GetBrush("StatusNeutralTextBrush"), GetBrush("StatusNeutralBgBrush"));
+        Build(tweak, Strings.Get("GameSession.Status.Excluded"), GetBrush("StatusNeutralTextBrush"), GetBrush("StatusExcludedBgBrush"));
 
     private TweakStatusDisplayItem Build(IReversibleTweak tweak, string statusLabel, Brush statusTextBrush, Brush statusBgBrush, string? noteOverride = null)
     {

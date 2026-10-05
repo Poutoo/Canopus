@@ -9,10 +9,10 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/Tokens.xaml" />
-                <ResourceDictionary Source="Styles/GlassStyles.xaml" />
+                <ResourceDictionary Source="Styles/Controls.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <FontFamily x:Key="ContentControlThemeFontFamily">ms-appx:///Assets/Fonts/Nunito-SemiBold.ttf#Nunito</FontFamily>
+            <StaticResource x:Key="ContentControlThemeFontFamily" ResourceKey="FontFamilySemiBold" />
 
             <Style TargetType="TextBlock">
                 <Setter Property="FontFamily" Value="{StaticResource FontFamilySemiBold}" />

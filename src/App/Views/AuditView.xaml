@@ -9,23 +9,23 @@
         <StackPanel Spacing="16">
             <StackPanel Spacing="4">
                 <TextBlock Text="{loc:Loc Key=Audit.Eyebrow}"
-                           FontSize="{StaticResource FontSize1}"
+                           FontSize="{StaticResource FontSize12}"
                            Foreground="{StaticResource TextTertiaryBrush}" />
                 <TextBlock Text="{loc:Loc Key=Audit.Subtitle}"
-                           FontSize="{StaticResource FontSize6}"
+                           FontSize="{StaticResource FontSize24}"
                            FontWeight="SemiBold"
                            Foreground="{StaticResource TextPrimaryBrush}" />
             </StackPanel>
 
             <TextBlock Text="{loc:Loc Key=Audit.Running}"
                        Visibility="{x:Bind ViewModel.RunningVisibility, Mode=OneWay}"
-                       FontSize="{StaticResource FontSize3}"
+                       FontSize="{StaticResource FontSize14}"
                        Foreground="{StaticResource TextTertiaryBrush}" />
 
             <ItemsControl ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="models:AuditDisplayItem">
-                        <Border Style="{StaticResource GlassCardStyle}" Margin="0,0,0,12">
+                        <Border Style="{StaticResource SurfaceL1CardStyle}" Margin="0,0,0,12">
                             <StackPanel Spacing="8">
                                 <Grid ColumnSpacing="12">
                                     <Grid.ColumnDefinitions>
@@ -36,30 +36,30 @@
                                     <TextBlock Grid.Column="0"
                                                Text="{x:Bind Title}"
                                                VerticalAlignment="Center"
-                                               FontSize="{StaticResource FontSize4}"
+                                               FontSize="{StaticResource FontSize16}"
                                                FontWeight="SemiBold"
                                                Foreground="{StaticResource TextPrimaryBrush}" />
 
                                     <Border Grid.Column="1"
                                             VerticalAlignment="Center"
                                             Background="{x:Bind StatusBgBrush}"
-                                            CornerRadius="{StaticResource RadiusSm}"
+                                            CornerRadius="{StaticResource RadiusControl}"
                                             Padding="10,3">
                                         <TextBlock Text="{x:Bind StatusLabel}"
-                                                   FontSize="{StaticResource FontSize1}"
+                                                   FontSize="{StaticResource FontSize12}"
                                                    Foreground="{x:Bind StatusTextBrush}" />
                                     </Border>
                                 </Grid>
 
                                 <TextBlock Text="{x:Bind Description}"
                                            TextWrapping="Wrap"
-                                           FontSize="{StaticResource FontSize3}"
+                                           FontSize="{StaticResource FontSize14}"
                                            Foreground="{StaticResource TextSecondaryBrush}" />
 
                                 <TextBlock Text="{x:Bind DetailNote}"
                                            Visibility="{x:Bind DetailNoteVisibility}"
                                            TextWrapping="Wrap"
-                                           FontSize="{StaticResource FontSize1}"
+                                           FontSize="{StaticResource FontSize12}"
                                            Foreground="{StaticResource TextTertiaryBrush}" />
                             </StackPanel>
                         </Border>

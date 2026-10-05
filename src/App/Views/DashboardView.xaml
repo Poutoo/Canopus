@@ -27,9 +27,9 @@
             <!-- ============================================================
                  Card Températures
                  ============================================================ -->
-            <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource GlassCardStyle}">
+            <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource SurfaceL1CardStyle}">
                 <StackPanel Spacing="16">
-                    <TextBlock Text="{loc:Loc Key=Dashboard.Temperatures.Title}" FontSize="{StaticResource FontSize4}"
+                    <TextBlock Text="{loc:Loc Key=Dashboard.Temperatures.Title}" FontSize="{StaticResource FontSize16}"
                                FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" />
 
                     <Grid ColumnSpacing="20">
@@ -46,34 +46,34 @@
                             </Grid.ColumnDefinitions>
 
                             <Border Grid.Column="0" Width="10" Height="64" VerticalAlignment="Top"
-                                    CornerRadius="{StaticResource RadiusBarPill}"
-                                    Background="{StaticResource TextDisabledBrush}">
+                                    CornerRadius="{StaticResource RadiusBar}"
+                                    Background="{StaticResource TextTertiaryBrush}">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="{x:Bind ViewModel.CpuThermometerEmptyRow, Mode=OneWay}" />
                                         <RowDefinition Height="{x:Bind ViewModel.CpuThermometerFilledRow, Mode=OneWay}" />
                                     </Grid.RowDefinitions>
-                                    <Border Grid.Row="1" CornerRadius="{StaticResource RadiusBarPill}"
+                                    <Border Grid.Row="1" CornerRadius="{StaticResource RadiusBar}"
                                             Background="{x:Bind ViewModel.CpuThermometerBrush, Mode=OneWay}" />
                                 </Grid>
                             </Border>
 
                             <StackPanel Grid.Column="1" Spacing="2">
-                                <TextBlock Text="CPU" FontSize="{StaticResource FontSize2}"
+                                <TextBlock Text="CPU" FontSize="{StaticResource FontSize13}"
                                            Foreground="{StaticResource TextTertiaryBrush}" />
                                 <TextBlock Text="{x:Bind ViewModel.CpuTemperatureText, Mode=OneWay}"
-                                           FontSize="{StaticResource FontSize6}" FontWeight="SemiBold"
+                                           FontSize="{StaticResource FontSize24}" FontWeight="SemiBold"
                                            Foreground="{x:Bind ViewModel.CpuTemperatureBrush, Mode=OneWay}" />
                                 <TextBlock Text="{x:Bind ViewModel.CpuFrequencyText, Mode=OneWay}"
                                            Visibility="{x:Bind ViewModel.CpuFrequencyVisibility, Mode=OneWay}"
-                                           FontSize="{StaticResource FontSize2}"
+                                           FontSize="{StaticResource FontSize13}"
                                            Foreground="{StaticResource TextTertiaryBrush}" />
                                 <Border Visibility="{x:Bind ViewModel.CpuStatusVisibility, Mode=OneWay}"
                                         Background="{x:Bind ViewModel.CpuStatusBgBrush, Mode=OneWay}"
-                                        CornerRadius="{StaticResource RadiusSm}"
+                                        CornerRadius="{StaticResource RadiusControl}"
                                         Padding="8,2" HorizontalAlignment="Left">
                                     <TextBlock Text="{x:Bind ViewModel.CpuStatusLabel, Mode=OneWay}"
-                                               FontSize="{StaticResource FontSize1}"
+                                               FontSize="{StaticResource FontSize12}"
                                                Foreground="{x:Bind ViewModel.CpuStatusTextBrush, Mode=OneWay}" />
                                 </Border>
                             </StackPanel>
@@ -87,34 +87,34 @@
                             </Grid.ColumnDefinitions>
 
                             <Border Grid.Column="0" Width="10" Height="64" VerticalAlignment="Top"
-                                    CornerRadius="{StaticResource RadiusBarPill}"
-                                    Background="{StaticResource TextDisabledBrush}">
+                                    CornerRadius="{StaticResource RadiusBar}"
+                                    Background="{StaticResource TextTertiaryBrush}">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="{x:Bind ViewModel.GpuThermometerEmptyRow, Mode=OneWay}" />
                                         <RowDefinition Height="{x:Bind ViewModel.GpuThermometerFilledRow, Mode=OneWay}" />
                                     </Grid.RowDefinitions>
-                                    <Border Grid.Row="1" CornerRadius="{StaticResource RadiusBarPill}"
+                                    <Border Grid.Row="1" CornerRadius="{StaticResource RadiusBar}"
                                             Background="{x:Bind ViewModel.GpuThermometerBrush, Mode=OneWay}" />
                                 </Grid>
                             </Border>
 
                             <StackPanel Grid.Column="1" Spacing="2">
-                                <TextBlock Text="GPU" FontSize="{StaticResource FontSize2}"
+                                <TextBlock Text="GPU" FontSize="{StaticResource FontSize13}"
                                            Foreground="{StaticResource TextTertiaryBrush}" />
                                 <TextBlock Text="{x:Bind ViewModel.GpuTemperatureText, Mode=OneWay}"
-                                           FontSize="{StaticResource FontSize6}" FontWeight="SemiBold"
+                                           FontSize="{StaticResource FontSize24}" FontWeight="SemiBold"
                                            Foreground="{x:Bind ViewModel.GpuTemperatureBrush, Mode=OneWay}" />
                                 <TextBlock Text="{x:Bind ViewModel.GpuFrequencyText, Mode=OneWay}"
                                            Visibility="{x:Bind ViewModel.GpuFrequencyVisibility, Mode=OneWay}"
-                                           FontSize="{StaticResource FontSize2}"
+                                           FontSize="{StaticResource FontSize13}"
                                            Foreground="{StaticResource TextTertiaryBrush}" />
                                 <Border Visibility="{x:Bind ViewModel.GpuStatusVisibility, Mode=OneWay}"
                                         Background="{x:Bind ViewModel.GpuStatusBgBrush, Mode=OneWay}"
-                                        CornerRadius="{StaticResource RadiusSm}"
+                                        CornerRadius="{StaticResource RadiusControl}"
                                         Padding="8,2" HorizontalAlignment="Left">
                                     <TextBlock Text="{x:Bind ViewModel.GpuStatusLabel, Mode=OneWay}"
-                                               FontSize="{StaticResource FontSize1}"
+                                               FontSize="{StaticResource FontSize12}"
                                                Foreground="{x:Bind ViewModel.GpuStatusTextBrush, Mode=OneWay}" />
                                 </Border>
                             </StackPanel>
@@ -126,49 +126,49 @@
             <!-- ============================================================
                  Card Charge système
                  ============================================================ -->
-            <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource GlassCardStyle}">
+            <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource SurfaceL1CardStyle}">
                 <StackPanel Spacing="16">
-                    <TextBlock Text="{loc:Loc Key=Dashboard.SystemLoad.Title}" FontSize="{StaticResource FontSize4}"
+                    <TextBlock Text="{loc:Loc Key=Dashboard.SystemLoad.Title}" FontSize="{StaticResource FontSize16}"
                                FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" />
 
                     <StackPanel Orientation="Horizontal" Spacing="8">
-                        <TextBlock Text="RAM" VerticalAlignment="Center" FontSize="{StaticResource FontSize3}"
+                        <TextBlock Text="RAM" VerticalAlignment="Center" FontSize="{StaticResource FontSize14}"
                                    Foreground="{StaticResource TextTertiaryBrush}" />
                         <TextBlock Text="{x:Bind ViewModel.RamText, Mode=OneWay}"
-                                   FontSize="{StaticResource FontSize5}" FontWeight="SemiBold"
+                                   FontSize="{StaticResource FontSize20}" FontWeight="SemiBold"
                                    Foreground="{x:Bind ViewModel.RamBrush, Mode=OneWay}" />
                     </StackPanel>
 
                     <StackPanel Spacing="6">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Text="CPU" FontSize="{StaticResource FontSize3}" Foreground="{StaticResource TextTertiaryBrush}" />
-                            <TextBlock Text="{x:Bind ViewModel.CpuLoadText, Mode=OneWay}" FontSize="{StaticResource FontSize3}"
+                            <TextBlock Text="CPU" FontSize="{StaticResource FontSize14}" Foreground="{StaticResource TextTertiaryBrush}" />
+                            <TextBlock Text="{x:Bind ViewModel.CpuLoadText, Mode=OneWay}" FontSize="{StaticResource FontSize14}"
                                        Foreground="{StaticResource TextSecondaryBrush}" />
                         </StackPanel>
-                        <Border Height="10" CornerRadius="{StaticResource RadiusBarPill}" Background="{StaticResource TextDisabledBrush}">
+                        <Border Height="10" CornerRadius="{StaticResource RadiusBar}" Background="{StaticResource TextTertiaryBrush}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="{x:Bind ViewModel.CpuLoadFilledColumn, Mode=OneWay}" />
                                     <ColumnDefinition Width="{x:Bind ViewModel.CpuLoadEmptyColumn, Mode=OneWay}" />
                                 </Grid.ColumnDefinitions>
-                                <Border Grid.Column="0" CornerRadius="{StaticResource RadiusBarPill}" Background="{StaticResource AccentBrush}" />
+                                <Border Grid.Column="0" CornerRadius="{StaticResource RadiusBar}" Background="{StaticResource AccentBrush}" />
                             </Grid>
                         </Border>
                     </StackPanel>
 
                     <StackPanel Spacing="6">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Text="GPU" FontSize="{StaticResource FontSize3}" Foreground="{StaticResource TextTertiaryBrush}" />
-                            <TextBlock Text="{x:Bind ViewModel.GpuLoadText, Mode=OneWay}" FontSize="{StaticResource FontSize3}"
+                            <TextBlock Text="GPU" FontSize="{StaticResource FontSize14}" Foreground="{StaticResource TextTertiaryBrush}" />
+                            <TextBlock Text="{x:Bind ViewModel.GpuLoadText, Mode=OneWay}" FontSize="{StaticResource FontSize14}"
                                        Foreground="{StaticResource TextSecondaryBrush}" />
                         </StackPanel>
-                        <Border Height="10" CornerRadius="{StaticResource RadiusBarPill}" Background="{StaticResource TextDisabledBrush}">
+                        <Border Height="10" CornerRadius="{StaticResource RadiusBar}" Background="{StaticResource TextTertiaryBrush}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="{x:Bind ViewModel.GpuLoadFilledColumn, Mode=OneWay}" />
                                     <ColumnDefinition Width="{x:Bind ViewModel.GpuLoadEmptyColumn, Mode=OneWay}" />
                                 </Grid.ColumnDefinitions>
-                                <Border Grid.Column="0" CornerRadius="{StaticResource RadiusBarPill}" Background="{StaticResource AccentBrush}" />
+                                <Border Grid.Column="0" CornerRadius="{StaticResource RadiusBar}" Background="{StaticResource AccentBrush}" />
                             </Grid>
                         </Border>
                     </StackPanel>
@@ -178,15 +178,15 @@
             <!-- ============================================================
                  Card Réseau
                  ============================================================ -->
-            <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource GlassCardStyle}">
+            <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource SurfaceL1CardStyle}">
                 <StackPanel Spacing="16">
-                    <TextBlock Text="{loc:Loc Key=Dashboard.Network.Title}" FontSize="{StaticResource FontSize4}"
+                    <TextBlock Text="{loc:Loc Key=Dashboard.Network.Title}" FontSize="{StaticResource FontSize16}"
                                FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" />
 
                     <StackPanel Spacing="6">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Text="{loc:Loc Key=Dashboard.Network.Latency}" FontSize="{StaticResource FontSize3}" Foreground="{StaticResource TextTertiaryBrush}" />
-                            <TextBlock Text="{x:Bind ViewModel.LatencyText, Mode=OneWay}" FontSize="{StaticResource FontSize3}"
+                            <TextBlock Text="{loc:Loc Key=Dashboard.Network.Latency}" FontSize="{StaticResource FontSize14}" Foreground="{StaticResource TextTertiaryBrush}" />
+                            <TextBlock Text="{x:Bind ViewModel.LatencyText, Mode=OneWay}" FontSize="{StaticResource FontSize14}"
                                        Foreground="{StaticResource TextSecondaryBrush}" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Spacing="3" VerticalAlignment="Bottom">
@@ -200,8 +200,8 @@
 
                     <StackPanel Spacing="6">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Text="{loc:Loc Key=Dashboard.Network.Jitter}" FontSize="{StaticResource FontSize3}" Foreground="{StaticResource TextTertiaryBrush}" />
-                            <TextBlock Text="{x:Bind ViewModel.JitterText, Mode=OneWay}" FontSize="{StaticResource FontSize3}"
+                            <TextBlock Text="{loc:Loc Key=Dashboard.Network.Jitter}" FontSize="{StaticResource FontSize14}" Foreground="{StaticResource TextTertiaryBrush}" />
+                            <TextBlock Text="{x:Bind ViewModel.JitterText, Mode=OneWay}" FontSize="{StaticResource FontSize14}"
                                        Foreground="{StaticResource TextSecondaryBrush}" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Spacing="3" VerticalAlignment="Bottom">
@@ -218,9 +218,9 @@
             <!-- ============================================================
                  Card Stockage
                  ============================================================ -->
-            <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource GlassCardStyle}">
+            <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource SurfaceL1CardStyle}">
                 <StackPanel Spacing="12">
-                    <TextBlock Text="{loc:Loc Key=Dashboard.Storage.Title}" FontSize="{StaticResource FontSize4}"
+                    <TextBlock Text="{loc:Loc Key=Dashboard.Storage.Title}" FontSize="{StaticResource FontSize16}"
                                FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" />
 
                     <ItemsControl ItemsSource="{x:Bind ViewModel.Drives, Mode=OneWay}">
@@ -233,19 +233,19 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" Text="{x:Bind Name}" VerticalAlignment="Center"
-                                               FontSize="{StaticResource FontSize3}" Foreground="{StaticResource TextSecondaryBrush}" />
+                                               FontSize="{StaticResource FontSize14}" Foreground="{StaticResource TextSecondaryBrush}" />
                                     <Border Grid.Column="1" Height="10" VerticalAlignment="Center"
-                                            CornerRadius="{StaticResource RadiusBarPill}" Background="{StaticResource TextDisabledBrush}">
+                                            CornerRadius="{StaticResource RadiusBar}" Background="{StaticResource TextTertiaryBrush}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="{x:Bind FilledColumnWidth}" />
                                                 <ColumnDefinition Width="{x:Bind EmptyColumnWidth}" />
                                             </Grid.ColumnDefinitions>
-                                            <Border Grid.Column="0" CornerRadius="{StaticResource RadiusBarPill}" Background="{StaticResource AccentBrush}" />
+                                            <Border Grid.Column="0" CornerRadius="{StaticResource RadiusBar}" Background="{StaticResource AccentBrush}" />
                                         </Grid>
                                     </Border>
                                     <TextBlock Grid.Column="2" Text="{x:Bind UsageText}" VerticalAlignment="Center"
-                                               FontSize="{StaticResource FontSize2}" Foreground="{StaticResource TextTertiaryBrush}" />
+                                               FontSize="{StaticResource FontSize13}" Foreground="{StaticResource TextTertiaryBrush}" />
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -256,9 +256,9 @@
             <!-- ============================================================
                  Card Top processus
                  ============================================================ -->
-            <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource GlassCardStyle}">
+            <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource SurfaceL1CardStyle}">
                 <StackPanel Spacing="12">
-                    <TextBlock Text="{loc:Loc Key=Dashboard.Processes.Title}" FontSize="{StaticResource FontSize4}"
+                    <TextBlock Text="{loc:Loc Key=Dashboard.Processes.Title}" FontSize="{StaticResource FontSize16}"
                                FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" />
 
                     <ItemsControl ItemsSource="{x:Bind ViewModel.TopProcesses, Mode=OneWay}">
@@ -271,11 +271,11 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" Text="{x:Bind Name}" TextTrimming="CharacterEllipsis"
-                                               FontSize="{StaticResource FontSize3}" Foreground="{StaticResource TextSecondaryBrush}" />
+                                               FontSize="{StaticResource FontSize14}" Foreground="{StaticResource TextSecondaryBrush}" />
                                     <TextBlock Grid.Column="1" Text="{x:Bind CpuText}" Width="48" TextAlignment="Right"
-                                               FontSize="{StaticResource FontSize2}" Foreground="{StaticResource TextTertiaryBrush}" />
+                                               FontSize="{StaticResource FontSize13}" Foreground="{StaticResource TextTertiaryBrush}" />
                                     <TextBlock Grid.Column="2" Text="{x:Bind MemoryText}" Width="72" TextAlignment="Right"
-                                               FontSize="{StaticResource FontSize2}" Foreground="{StaticResource TextTertiaryBrush}" />
+                                               FontSize="{StaticResource FontSize13}" Foreground="{StaticResource TextTertiaryBrush}" />
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -284,7 +284,7 @@
             </Border>
 
             <!-- Audit CTA card -->
-            <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource GlassCardStyle}">
+            <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource SurfaceL1CardStyle}">
                 <Grid ColumnSpacing="16">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -293,36 +293,36 @@
                     </Grid.ColumnDefinitions>
 
                     <Border Grid.Column="0" Width="40" Height="40" VerticalAlignment="Center"
-                            CornerRadius="{StaticResource RadiusSm}"
+                            CornerRadius="{StaticResource RadiusControl}"
                             Background="{x:Bind ViewModel.AuditIconBackgroundBrush, Mode=OneWay}">
                         <FontIcon Glyph="{x:Bind ViewModel.AuditIconGlyph, Mode=OneWay}"
-                                  FontSize="{StaticResource FontSize4}"
+                                  FontSize="{StaticResource FontSize16}"
                                   Foreground="{x:Bind ViewModel.AuditIconForegroundBrush, Mode=OneWay}" />
                     </Border>
 
                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
                         <TextBlock Text="{x:Bind ViewModel.AuditSummaryText, Mode=OneWay}"
-                                   FontSize="{StaticResource FontSize4}" FontWeight="SemiBold"
+                                   FontSize="{StaticResource FontSize16}" FontWeight="SemiBold"
                                    Foreground="{StaticResource TextPrimaryBrush}" />
                         <TextBlock Text="{loc:Loc Key=Dashboard.Audit.ViewDetail}"
-                                   FontSize="{StaticResource FontSize2}"
+                                   FontSize="{StaticResource FontSize13}"
                                    Foreground="{StaticResource TextTertiaryBrush}" />
                     </StackPanel>
 
                     <Button Grid.Column="2" VerticalAlignment="Center" Click="OnAuditDetailClick"
                             Background="{StaticResource AccentBrush}" BorderThickness="0"
-                            CornerRadius="{StaticResource RadiusSm}" Padding="16,8">
+                            CornerRadius="{StaticResource RadiusControl}" Padding="16,8">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <TextBlock Text="{loc:Loc Key=Dashboard.Audit.ViewDetailButton}" Foreground="{StaticResource TextOnAccentBrush}"
-                                       FontSize="{StaticResource FontSize3}" />
-                            <FontIcon Glyph="&#xE76C;" FontSize="{StaticResource FontSize1}" Foreground="{StaticResource TextOnAccentBrush}" />
+                                       FontSize="{StaticResource FontSize14}" />
+                            <FontIcon Glyph="&#xE76C;" FontSize="{StaticResource FontSize12}" Foreground="{StaticResource TextOnAccentBrush}" />
                         </StackPanel>
                     </Button>
                 </Grid>
             </Border>
 
             <!-- Game session CTA card -->
-            <Border Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource GlassCardStyle}">
+            <Border Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource SurfaceL1CardStyle}">
                 <Grid ColumnSpacing="16">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -331,28 +331,28 @@
                     </Grid.ColumnDefinitions>
 
                     <Border Grid.Column="0" Width="40" Height="40" VerticalAlignment="Center"
-                            CornerRadius="{StaticResource RadiusSm}"
-                            Background="{StaticResource StatusNeutralBgBrush}">
-                        <FontIcon Glyph="&#xE768;" FontSize="{StaticResource FontSize4}"
+                            CornerRadius="{StaticResource RadiusControl}"
+                            Background="{StaticResource StatusExcludedBgBrush}">
+                        <FontIcon Glyph="&#xE768;" FontSize="{StaticResource FontSize16}"
                                   Foreground="{StaticResource StatusNeutralTextBrush}" />
                     </Border>
 
                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
                         <TextBlock Text="{loc:Loc Key=Dashboard.GameSession.Title}"
-                                   FontSize="{StaticResource FontSize4}" FontWeight="SemiBold"
+                                   FontSize="{StaticResource FontSize16}" FontWeight="SemiBold"
                                    Foreground="{StaticResource TextPrimaryBrush}" />
                         <TextBlock Text="{loc:Loc Key=Dashboard.GameSession.Description}"
-                                   FontSize="{StaticResource FontSize2}"
+                                   FontSize="{StaticResource FontSize13}"
                                    Foreground="{StaticResource TextTertiaryBrush}" />
                     </StackPanel>
 
                     <Button Grid.Column="2" VerticalAlignment="Center" Click="OnGameSessionDetailClick"
                             Background="{StaticResource AccentBrush}" BorderThickness="0"
-                            CornerRadius="{StaticResource RadiusSm}" Padding="16,8">
+                            CornerRadius="{StaticResource RadiusControl}" Padding="16,8">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <TextBlock Text="{loc:Loc Key=Dashboard.GameSession.ConfigureButton}" Foreground="{StaticResource TextOnAccentBrush}"
-                                       FontSize="{StaticResource FontSize3}" />
-                            <FontIcon Glyph="&#xE76C;" FontSize="{StaticResource FontSize1}" Foreground="{StaticResource TextOnAccentBrush}" />
+                                       FontSize="{StaticResource FontSize14}" />
+                            <FontIcon Glyph="&#xE76C;" FontSize="{StaticResource FontSize12}" Foreground="{StaticResource TextOnAccentBrush}" />
                         </StackPanel>
                     </Button>
                 </Grid>

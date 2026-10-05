@@ -52,17 +52,17 @@ public sealed class AuditViewModel : ViewModelBase
         item.StatusLabel,
         GetBrush(item.Status switch
         {
-            AuditStatus.Confirmed => "StatusGoodTextBrush",
+            AuditStatus.Confirmed => "StatusNeutralTextBrush",
             AuditStatus.Warning => "StatusWarnTextBrush",
             AuditStatus.Problem => "StatusBadTextBrush",
             _ => "StatusNeutralTextBrush"
         }),
         GetBrush(item.Status switch
         {
-            AuditStatus.Confirmed => "StatusGoodBgBrush",
+            AuditStatus.Confirmed => "StatusActiveBgBrush",
             AuditStatus.Warning => "StatusWarnBgBrush",
             AuditStatus.Problem => "StatusBadBgBrush",
-            _ => "StatusNeutralBgBrush"
+            _ => "StatusExcludedBgBrush"
         }),
         item.Description,
         item.DetailNote ?? string.Empty,

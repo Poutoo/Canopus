@@ -42,7 +42,7 @@ public sealed class DashboardViewModel : ViewModelBase, IDisposable
         _processMonitorService = processMonitorService;
         _auditService = auditService;
 
-        _auditIconBackgroundBrush = GetBrush("StatusNeutralBgBrush");
+        _auditIconBackgroundBrush = GetBrush("StatusExcludedBgBrush");
         _auditIconForegroundBrush = GetBrush("StatusNeutralTextBrush");
 
         _timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(TickIntervalSeconds) };
@@ -163,8 +163,8 @@ public sealed class DashboardViewModel : ViewModelBase, IDisposable
         if (celsius is null)
         {
             var (filled, empty) = ComputeFillRatio(0);
-            return ("—", GetBrush("TextDisabledBrush"), string.Empty, Visibility.Collapsed,
-                GetBrush("TextDisabledBrush"), GetBrush("TextDisabledBrush"), GetBrush("TextDisabledBrush"), filled, empty);
+            return ("—", GetBrush("TextTertiaryBrush"), string.Empty, Visibility.Collapsed,
+                GetBrush("TextTertiaryBrush"), GetBrush("TextTertiaryBrush"), GetBrush("TextTertiaryBrush"), filled, empty);
         }
 
         StatusTier tier = celsius >= 90 ? StatusTier.Bad : celsius >= 75 ? StatusTier.Warn : StatusTier.Good;
@@ -236,7 +236,7 @@ public sealed class DashboardViewModel : ViewModelBase, IDisposable
         }
         else
         {
-            RamBrush = GetBrush("TextDisabledBrush");
+            RamBrush = GetBrush("TextTertiaryBrush");
             RamText = "—";
         }
 
@@ -340,7 +340,7 @@ public sealed class DashboardViewModel : ViewModelBase, IDisposable
         };
 
         Brush litLatency = GetStatusMidBrush(latencyTier);
-        Brush unlit = GetBrush("TextDisabledBrush");
+        Brush unlit = GetBrush("TextTertiaryBrush");
         LatencyBar1Brush = 1 <= latencyBars ? litLatency : unlit;
         LatencyBar2Brush = 2 <= latencyBars ? litLatency : unlit;
         LatencyBar3Brush = 3 <= latencyBars ? litLatency : unlit;
@@ -397,8 +397,8 @@ public sealed class DashboardViewModel : ViewModelBase, IDisposable
         {
             AuditSummaryText = Strings.Get("Dashboard.AuditSummary.AllGood");
             AuditIconGlyph = OkGlyph;
-            AuditIconBackgroundBrush = GetBrush("StatusGoodBgBrush");
-            AuditIconForegroundBrush = GetBrush("StatusGoodTextBrush");
+            AuditIconBackgroundBrush = GetBrush("StatusActiveBgBrush");
+            AuditIconForegroundBrush = GetBrush("StatusNeutralTextBrush");
             return;
         }
 
@@ -424,21 +424,21 @@ public sealed class DashboardViewModel : ViewModelBase, IDisposable
     {
         StatusTier.Bad => "StatusBadTextBrush",
         StatusTier.Warn => "StatusWarnTextBrush",
-        _ => "StatusGoodTextBrush"
+        _ => "StatusNeutralTextBrush"
     });
 
     private static Brush GetStatusMidBrush(StatusTier tier) => GetBrush(tier switch
     {
-        StatusTier.Bad => "StatusBadMidBrush",
-        StatusTier.Warn => "StatusWarnMidBrush",
-        _ => "StatusGoodMidBrush"
+        StatusTier.Bad => "StatusBadTextBrush",
+        StatusTier.Warn => "StatusWarnTextBrush",
+        _ => "DataBarBrush"
     });
 
     private static Brush GetStatusBgBrush(StatusTier tier) => GetBrush(tier switch
     {
         StatusTier.Bad => "StatusBadBgBrush",
         StatusTier.Warn => "StatusWarnBgBrush",
-        _ => "StatusGoodBgBrush"
+        _ => "StatusActiveBgBrush"
     });
 
     private static Brush GetBrush(string resourceKey) => (Brush)Application.Current.Resources[resourceKey];

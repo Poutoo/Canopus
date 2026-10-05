@@ -36,6 +36,9 @@
          quand l'icône est chargée depuis un ms-appx URI
          (https://github.com/HavenDV/H.NotifyIcon/issues/23, /issues/37). -->
     <PackageReference Include="H.NotifyIcon.WinUI" Version="2.3.2" />
+    <!-- AttachedCardShadow : ombre masquée sous la card, sinon elle transparaît
+         à travers les surfaces translucides. -->
+    <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.251219" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,11 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!--
-        Rail pleine hauteur, coins arrondis sur les 4 coins (SidebarRailStyle,
+        Rail pleine hauteur, coins arrondis sur les 4 coins (SurfaceNavStyle,
         radius pilule). État actif = élévation seule (scale ~1.1 + ombre douce),
         piloté depuis le code-behind : voir Sidebar.xaml.cs.
     -->
-    <Border Style="{StaticResource SidebarRailStyle}"
+    <Border Style="{StaticResource SurfaceNavStyle}"
             Width="72"
             Margin="0,16,0,16"
             HorizontalAlignment="Left"
@@ -29,7 +29,7 @@
                     Unicode standard s'affiche de façon fiable quelle que soit la police).
                 -->
                 <TextBlock Text="✦"
-                           FontSize="{StaticResource FontSize6}"
+                           FontSize="{StaticResource FontSize24}"
                            Foreground="{StaticResource AccentBrush}"
                            HorizontalAlignment="Center" />
 
@@ -39,7 +39,7 @@
                         CornerRadius="20"
                         Background="{StaticResource AccentBrush}"
                         BorderThickness="0">
-                    <FontIcon Glyph="&#xE710;" FontSize="{StaticResource FontSize4}" Foreground="White" />
+                    <FontIcon Glyph="&#xE710;" FontSize="{StaticResource FontSize16}" Foreground="White" />
                 </Button>
 
                 <Grid x:Name="DashboardIconHost" Width="40" Height="40" Tapped="OnNavItemTapped" Tag="Dashboard">
@@ -49,7 +49,7 @@
                     <Grid.Shadow>
                         <ThemeShadow />
                     </Grid.Shadow>
-                    <FontIcon Glyph="&#xE80F;" FontSize="{StaticResource FontSize5}" Foreground="{StaticResource TextPrimaryBrush}" />
+                    <FontIcon Glyph="&#xE80F;" FontSize="{StaticResource FontSize20}" Foreground="{StaticResource TextPrimaryBrush}" />
                 </Grid>
 
                 <Grid x:Name="HistoriqueIconHost" Width="40" Height="40" Tapped="OnNavItemTapped" Tag="Historique">
@@ -59,7 +59,7 @@
                     <Grid.Shadow>
                         <ThemeShadow />
                     </Grid.Shadow>
-                    <FontIcon Glyph="&#xE823;" FontSize="{StaticResource FontSize5}" Foreground="{StaticResource TextPrimaryBrush}" />
+                    <FontIcon Glyph="&#xE823;" FontSize="{StaticResource FontSize20}" Foreground="{StaticResource TextPrimaryBrush}" />
                 </Grid>
 
                 <Grid x:Name="DocumentationIconHost" Width="40" Height="40" Tapped="OnNavItemTapped" Tag="Documentation">
@@ -69,7 +69,7 @@
                     <Grid.Shadow>
                         <ThemeShadow />
                     </Grid.Shadow>
-                    <FontIcon Glyph="&#xE8A5;" FontSize="{StaticResource FontSize5}" Foreground="{StaticResource TextPrimaryBrush}" />
+                    <FontIcon Glyph="&#xE8A5;" FontSize="{StaticResource FontSize20}" Foreground="{StaticResource TextPrimaryBrush}" />
                 </Grid>
             </StackPanel>
 
@@ -82,7 +82,7 @@
                 <Grid.Shadow>
                     <ThemeShadow />
                 </Grid.Shadow>
-                <FontIcon Glyph="&#xE713;" FontSize="{StaticResource FontSize5}" Foreground="{StaticResource TextPrimaryBrush}" />
+                <FontIcon Glyph="&#xE713;" FontSize="{StaticResource FontSize20}" Foreground="{StaticResource TextPrimaryBrush}" />
             </Grid>
         </Grid>
     </Border>

@@ -8,10 +8,10 @@
         <StackPanel Spacing="16">
             <StackPanel Spacing="4">
                 <TextBlock Text="{loc:Loc Key=Parametres.Eyebrow}"
-                           FontSize="{StaticResource FontSize1}"
+                           FontSize="{StaticResource FontSize12}"
                            Foreground="{StaticResource TextTertiaryBrush}" />
                 <TextBlock Text="{loc:Loc Key=Parametres.Subtitle}"
-                           FontSize="{StaticResource FontSize6}"
+                           FontSize="{StaticResource FontSize24}"
                            FontWeight="SemiBold"
                            Foreground="{StaticResource TextPrimaryBrush}" />
             </StackPanel>
@@ -20,7 +20,7 @@
                  Précision du pointeur — même réglage que sur l'écran Session
                  de jeu (ISettingsService), relu à chaque affichage de cet écran.
                  ============================================================ -->
-            <Border Style="{StaticResource GlassCardStyle}">
+            <Border Style="{StaticResource SurfaceL1CardStyle}">
                 <Grid ColumnSpacing="16">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -29,12 +29,12 @@
 
                     <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
                         <TextBlock Text="{loc:Loc Key=Parametres.MousePrecision.Title}"
-                                   FontSize="{StaticResource FontSize4}"
+                                   FontSize="{StaticResource FontSize16}"
                                    FontWeight="SemiBold"
                                    Foreground="{StaticResource TextPrimaryBrush}" />
                         <TextBlock Text="{loc:Loc Key=Parametres.MousePrecision.Description}"
                                    TextWrapping="Wrap"
-                                   FontSize="{StaticResource FontSize2}"
+                                   FontSize="{StaticResource FontSize13}"
                                    Foreground="{StaticResource TextTertiaryBrush}" />
                     </StackPanel>
 
@@ -49,10 +49,10 @@
             <!-- ============================================================
                  Démarrage
                  ============================================================ -->
-            <Border Style="{StaticResource GlassCardStyle}">
+            <Border Style="{StaticResource SurfaceL1CardStyle}">
                 <StackPanel Spacing="16">
                     <TextBlock Text="{loc:Loc Key=Parametres.Startup.Title}"
-                               FontSize="{StaticResource FontSize4}"
+                               FontSize="{StaticResource FontSize16}"
                                FontWeight="SemiBold"
                                Foreground="{StaticResource TextPrimaryBrush}" />
 
@@ -66,7 +66,7 @@
                                    VerticalAlignment="Center"
                                    Text="{loc:Loc Key=Parametres.Startup.LaunchAtStartup}"
                                    TextWrapping="Wrap"
-                                   FontSize="{StaticResource FontSize3}"
+                                   FontSize="{StaticResource FontSize14}"
                                    Foreground="{StaticResource TextSecondaryBrush}" />
 
                         <ToggleSwitch Grid.Column="1"
@@ -86,7 +86,7 @@
                                    VerticalAlignment="Center"
                                    Text="{loc:Loc Key=Parametres.Startup.MinimizeToTray}"
                                    TextWrapping="Wrap"
-                                   FontSize="{StaticResource FontSize3}"
+                                   FontSize="{StaticResource FontSize14}"
                                    Foreground="{StaticResource TextSecondaryBrush}" />
 
                         <ToggleSwitch Grid.Column="1"
@@ -102,10 +102,10 @@
                  Langue — redémarrage requis pour s'appliquer, pas de bascule
                  live (voir Localization/Strings.cs).
                  ============================================================ -->
-            <Border Style="{StaticResource GlassCardStyle}">
+            <Border Style="{StaticResource SurfaceL1CardStyle}">
                 <StackPanel Spacing="12">
                     <TextBlock Text="{loc:Loc Key=Parametres.Language.Title}"
-                               FontSize="{StaticResource FontSize4}"
+                               FontSize="{StaticResource FontSize16}"
                                FontWeight="SemiBold"
                                Foreground="{StaticResource TextPrimaryBrush}" />
 
@@ -126,18 +126,18 @@
                                    VerticalAlignment="Center"
                                    Text="{loc:Loc Key=Parametres.Language.RestartNeeded}"
                                    TextWrapping="Wrap"
-                                   FontSize="{StaticResource FontSize2}"
+                                   FontSize="{StaticResource FontSize13}"
                                    Foreground="{StaticResource TextTertiaryBrush}" />
 
                         <Button Grid.Column="1"
                                 Click="OnRestartNowClick"
                                 Background="{StaticResource AccentBrush}"
                                 BorderThickness="0"
-                                CornerRadius="{StaticResource RadiusSm}"
+                                CornerRadius="{StaticResource RadiusControl}"
                                 Padding="16,8">
                             <TextBlock Text="{loc:Loc Key=Parametres.Language.RestartButton}"
                                        Foreground="{StaticResource TextOnAccentBrush}"
-                                       FontSize="{StaticResource FontSize3}" />
+                                       FontSize="{StaticResource FontSize14}" />
                         </Button>
                     </Grid>
                 </StackPanel>
@@ -146,10 +146,10 @@
             <!-- ============================================================
                  Mises à jour
                  ============================================================ -->
-            <Border Style="{StaticResource GlassCardStyle}">
+            <Border Style="{StaticResource SurfaceL1CardStyle}">
                 <StackPanel Spacing="12">
                     <TextBlock Text="{loc:Loc Key=Parametres.Updates.Title}"
-                               FontSize="{StaticResource FontSize4}"
+                               FontSize="{StaticResource FontSize16}"
                                FontWeight="SemiBold"
                                Foreground="{StaticResource TextPrimaryBrush}" />
 
@@ -161,11 +161,11 @@
 
                         <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
                             <TextBlock Text="{x:Bind ViewModel.VersionText, Mode=OneWay}"
-                                       FontSize="{StaticResource FontSize3}"
+                                       FontSize="{StaticResource FontSize14}"
                                        Foreground="{StaticResource TextSecondaryBrush}" />
                             <TextBlock Text="{x:Bind ViewModel.UpdateStatusText, Mode=OneWay}"
                                        TextWrapping="Wrap"
-                                       FontSize="{StaticResource FontSize2}"
+                                       FontSize="{StaticResource FontSize13}"
                                        Foreground="{StaticResource TextTertiaryBrush}" />
                         </StackPanel>
 
@@ -175,11 +175,11 @@
                                 IsEnabled="{x:Bind ViewModel.CanCheckForUpdates, Mode=OneWay}"
                                 Background="{StaticResource AccentBrush}"
                                 BorderThickness="0"
-                                CornerRadius="{StaticResource RadiusSm}"
+                                CornerRadius="{StaticResource RadiusControl}"
                                 Padding="16,8">
                             <TextBlock Text="{loc:Loc Key=Parametres.Updates.CheckNow}"
                                        Foreground="{StaticResource TextOnAccentBrush}"
-                                       FontSize="{StaticResource FontSize3}" />
+                                       FontSize="{StaticResource FontSize14}" />
                         </Button>
                     </Grid>
 
@@ -188,11 +188,11 @@
                             HorizontalAlignment="Left"
                             Background="{StaticResource AccentBrush}"
                             BorderThickness="0"
-                            CornerRadius="{StaticResource RadiusSm}"
+                            CornerRadius="{StaticResource RadiusControl}"
                             Padding="16,8">
                         <TextBlock Text="{loc:Loc Key=Parametres.Updates.Install}"
                                    Foreground="{StaticResource TextOnAccentBrush}"
-                                   FontSize="{StaticResource FontSize3}" />
+                                   FontSize="{StaticResource FontSize14}" />
                     </Button>
                 </StackPanel>
             </Border>
@@ -200,19 +200,19 @@
             <!-- ============================================================
                  À propos
                  ============================================================ -->
-            <Border Style="{StaticResource GlassCardStyle}">
+            <Border Style="{StaticResource SurfaceL1CardStyle}">
                 <StackPanel Spacing="8">
                     <TextBlock Text="{loc:Loc Key=Parametres.About.Title}"
-                               FontSize="{StaticResource FontSize4}"
+                               FontSize="{StaticResource FontSize16}"
                                FontWeight="SemiBold"
                                Foreground="{StaticResource TextPrimaryBrush}" />
                     <TextBlock Text="{x:Bind ViewModel.VersionText, Mode=OneWay}"
-                               FontSize="{StaticResource FontSize3}"
+                               FontSize="{StaticResource FontSize14}"
                                Foreground="{StaticResource TextSecondaryBrush}" />
                     <HyperlinkButton NavigateUri="https://github.com/Poutoo/Canopus"
                                      Content="{loc:Loc Key=Parametres.About.GitHubLink}"
                                      Padding="0"
-                                     FontSize="{StaticResource FontSize3}" />
+                                     FontSize="{StaticResource FontSize14}" />
                 </StackPanel>
             </Border>
         </StackPanel>

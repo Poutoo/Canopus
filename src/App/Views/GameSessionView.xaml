@@ -9,15 +9,15 @@
         <StackPanel Spacing="16">
             <StackPanel Spacing="4">
                 <TextBlock Text="{loc:Loc Key=GameSession.Eyebrow}"
-                           FontSize="{StaticResource FontSize1}"
+                           FontSize="{StaticResource FontSize12}"
                            Foreground="{StaticResource TextTertiaryBrush}" />
                 <TextBlock Text="{loc:Loc Key=GameSession.Subtitle}"
-                           FontSize="{StaticResource FontSize6}"
+                           FontSize="{StaticResource FontSize24}"
                            FontWeight="SemiBold"
                            Foreground="{StaticResource TextPrimaryBrush}" />
             </StackPanel>
 
-            <Border Style="{StaticResource GlassCardStyle}">
+            <Border Style="{StaticResource SurfaceL1CardStyle}">
                 <Grid ColumnSpacing="16">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -28,7 +28,7 @@
                                Text="{x:Bind ViewModel.FeedbackMessage, Mode=OneWay}"
                                TextWrapping="Wrap"
                                VerticalAlignment="Center"
-                               FontSize="{StaticResource FontSize3}"
+                               FontSize="{StaticResource FontSize14}"
                                Foreground="{StaticResource TextSecondaryBrush}" />
 
                     <Button Grid.Column="1"
@@ -36,11 +36,11 @@
                             IsEnabled="{x:Bind ViewModel.CanToggle, Mode=OneWay}"
                             Background="{StaticResource AccentBrush}"
                             BorderThickness="0"
-                            CornerRadius="{StaticResource RadiusSm}"
+                            CornerRadius="{StaticResource RadiusControl}"
                             Padding="20,10">
                         <TextBlock Text="{x:Bind ViewModel.ToggleButtonText, Mode=OneWay}"
                                    Foreground="{StaticResource TextOnAccentBrush}"
-                                   FontSize="{StaticResource FontSize4}"
+                                   FontSize="{StaticResource FontSize16}"
                                    FontWeight="SemiBold" />
                     </Button>
                 </Grid>
@@ -49,7 +49,7 @@
             <ItemsControl ItemsSource="{x:Bind ViewModel.TweakStatuses, Mode=OneWay}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="models:TweakStatusDisplayItem">
-                        <Border Style="{StaticResource GlassCardStyle}" Margin="0,0,0,12">
+                        <Border Style="{StaticResource SurfaceL1CardStyle}" Margin="0,0,0,12">
                             <StackPanel Spacing="8">
                                 <Grid ColumnSpacing="12">
                                     <Grid.ColumnDefinitions>
@@ -60,17 +60,17 @@
                                     <TextBlock Grid.Column="0"
                                                Text="{x:Bind Name}"
                                                VerticalAlignment="Center"
-                                               FontSize="{StaticResource FontSize4}"
+                                               FontSize="{StaticResource FontSize16}"
                                                FontWeight="SemiBold"
                                                Foreground="{StaticResource TextPrimaryBrush}" />
 
                                     <Border Grid.Column="1"
                                             VerticalAlignment="Center"
                                             Background="{x:Bind StatusBgBrush}"
-                                            CornerRadius="{StaticResource RadiusSm}"
+                                            CornerRadius="{StaticResource RadiusControl}"
                                             Padding="10,3">
                                         <TextBlock Text="{x:Bind StatusLabel}"
-                                                   FontSize="{StaticResource FontSize1}"
+                                                   FontSize="{StaticResource FontSize12}"
                                                    Foreground="{x:Bind StatusTextBrush}" />
                                     </Border>
                                 </Grid>
@@ -81,12 +81,12 @@
                                           IsEnabled="{x:Bind IsPrecisionToggleEnabled}"
                                           Checked="OnMousePrecisionToggled"
                                           Unchecked="OnMousePrecisionToggled"
-                                          FontSize="{StaticResource FontSize2}" />
+                                          FontSize="{StaticResource FontSize13}" />
 
                                 <TextBlock Text="{x:Bind Note}"
                                            Visibility="{x:Bind NoteVisibility}"
                                            TextWrapping="Wrap"
-                                           FontSize="{StaticResource FontSize1}"
+                                           FontSize="{StaticResource FontSize12}"
                                            Foreground="{StaticResource TextTertiaryBrush}" />
                             </StackPanel>
                         </Border>
