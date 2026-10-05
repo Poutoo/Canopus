@@ -8,7 +8,7 @@ namespace Canopus.App.Services;
 /// </summary>
 public sealed class PingNetworkService : INetworkService, IDisposable
 {
-    private const string TargetHost = "1.1.1.1";
+    public const string TargetHost = "1.1.1.1";
     private const int TimeoutMs = 1000;
     private const int HistorySize = 5;
 

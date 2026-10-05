@@ -28,6 +28,7 @@ public sealed class LibreHardwareMonitorService : IHardwareMonitorService, IDisp
         double? cpuTemp = null, gpuTemp = null, cpuLoad = null, gpuLoad = null, fanRpm = null;
         double? cpuFreq = null, gpuFreq = null;
         double? memPercent = null, memUsedGb = null, memAvailableGb = null;
+        string? cpuName = null, gpuName = null;
 
         foreach (IHardware hardware in _computer.Hardware)
         {
@@ -36,6 +37,7 @@ public sealed class LibreHardwareMonitorService : IHardwareMonitorService, IDisp
             switch (hardware.HardwareType)
             {
                 case HardwareType.Cpu:
+                    cpuName ??= hardware.Name;
                     foreach (ISensor sensor in hardware.Sensors)
                     {
                         if (sensor.SensorType == SensorType.Temperature && sensor.Value.HasValue)
@@ -53,6 +55,7 @@ public sealed class LibreHardwareMonitorService : IHardwareMonitorService, IDisp
                 case HardwareType.GpuNvidia:
                 case HardwareType.GpuAmd:
                 case HardwareType.GpuIntel:
+                    gpuName ??= hardware.Name;
                     foreach (ISensor sensor in hardware.Sensors)
                     {
                         if (sensor.SensorType == SensorType.Temperature && sensor.Value.HasValue)
@@ -104,7 +107,8 @@ public sealed class LibreHardwareMonitorService : IHardwareMonitorService, IDisp
         return new HardwareSnapshot(
             cpuTemp, gpuTemp, cpuLoad, gpuLoad, fanRpm,
             cpuFreq, gpuFreq,
-            memPercent, memUsedGb, memAvailableGb);
+            memPercent, memUsedGb, memAvailableGb,
+            cpuName, gpuName);
     }
 
     public void Dispose()

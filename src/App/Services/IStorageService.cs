@@ -3,7 +3,7 @@ namespace Canopus.App.Services;
 /// <summary>
 /// Utilisation d'un disque/partition à un instant donné.
 /// </summary>
-public record DriveSnapshot(string Name, double UsedGigabytes, double TotalGigabytes);
+public record DriveSnapshot(string Name, double UsedGigabytes, double TotalGigabytes, string VolumeLabel = "");
 
 public interface IStorageService
 {
