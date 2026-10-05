@@ -2,219 +2,145 @@
     x:Class="Canopus.App.Views.ParametresView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:loc="using:Canopus.App.Localization">
 
-    <ScrollViewer Padding="24">
-        <StackPanel Spacing="16">
-            <StackPanel Spacing="4">
-                <TextBlock Text="{loc:Loc Key=Parametres.Eyebrow}"
-                           FontSize="{StaticResource FontSize12}"
-                           Foreground="{StaticResource TextTertiaryBrush}" />
-                <TextBlock Text="{loc:Loc Key=Parametres.Subtitle}"
-                           FontSize="{StaticResource FontSize24}"
-                           FontWeight="SemiBold"
-                           Foreground="{StaticResource TextPrimaryBrush}" />
-            </StackPanel>
+    <ScrollViewer>
+        <StackPanel Padding="20,12,32,32" Spacing="20" MaxWidth="812" HorizontalAlignment="Left">
 
-            <!-- ============================================================
-                 Précision du pointeur — même réglage que sur l'écran Session
-                 de jeu (ISettingsService), relu à chaque affichage de cet écran.
-                 ============================================================ -->
-            <Border Style="{StaticResource SurfaceL1CardStyle}">
-                <Grid ColumnSpacing="16">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+            <TextBlock Text="{loc:Loc Key=Parametres.Title}" Style="{StaticResource PageTitleStyle}" />
 
-                    <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
-                        <TextBlock Text="{loc:Loc Key=Parametres.MousePrecision.Title}"
-                                   FontSize="{StaticResource FontSize16}"
-                                   FontWeight="SemiBold"
-                                   Foreground="{StaticResource TextPrimaryBrush}" />
-                        <TextBlock Text="{loc:Loc Key=Parametres.MousePrecision.Description}"
-                                   TextWrapping="Wrap"
-                                   FontSize="{StaticResource FontSize13}"
-                                   Foreground="{StaticResource TextTertiaryBrush}" />
+            <!-- Niveau 2 : démarrage -->
+            <Border Style="{StaticResource SurfaceL2CardStyle}" Padding="0,20,0,8">
+                <StackPanel>
+                    <StackPanel Spacing="4" Padding="24,0,24,12">
+                        <TextBlock Text="{loc:Loc Key=Parametres.Startup.Title}" Style="{StaticResource GroupTitleStyle}" />
+                        <TextBlock Text="{loc:Loc Key=Parametres.Startup.Description}" Style="{StaticResource BodyStyle}" />
                     </StackPanel>
 
-                    <ToggleSwitch Grid.Column="1"
-                                  OnContent=""
-                                  OffContent=""
-                                  IsOn="{x:Bind ViewModel.MousePrecisionEnabled, Mode=OneWay}"
-                                  Toggled="OnMousePrecisionToggled" />
-                </Grid>
-            </Border>
-
-            <!-- ============================================================
-                 Démarrage
-                 ============================================================ -->
-            <Border Style="{StaticResource SurfaceL1CardStyle}">
-                <StackPanel Spacing="16">
-                    <TextBlock Text="{loc:Loc Key=Parametres.Startup.Title}"
-                               FontSize="{StaticResource FontSize16}"
-                               FontWeight="SemiBold"
-                               Foreground="{StaticResource TextPrimaryBrush}" />
-
-                    <Grid ColumnSpacing="16">
+                    <Grid ColumnSpacing="16" MinHeight="56" Padding="24,8" BorderBrush="{StaticResource DividerBrush}" BorderThickness="0,1,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-
-                        <TextBlock Grid.Column="0"
-                                   VerticalAlignment="Center"
-                                   Text="{loc:Loc Key=Parametres.Startup.LaunchAtStartup}"
-                                   TextWrapping="Wrap"
-                                   FontSize="{StaticResource FontSize14}"
-                                   Foreground="{StaticResource TextSecondaryBrush}" />
-
-                        <ToggleSwitch Grid.Column="1"
-                                      OnContent=""
-                                      OffContent=""
+                        <StackPanel Spacing="2" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc Key=Parametres.Startup.LaunchAtStartup}" Style="{StaticResource RowTitleStyle}" />
+                            <TextBlock Text="{loc:Loc Key=Parametres.Startup.LaunchAtStartupDescription}" Style="{StaticResource CaptionStyle}" />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="1" Style="{StaticResource BareToggleSwitchStyle}"
+                                      AutomationProperties.Name="{loc:Loc Key=Parametres.Startup.LaunchAtStartup}"
                                       IsOn="{x:Bind ViewModel.LaunchAtStartupEnabled, Mode=OneWay}"
                                       Toggled="OnLaunchAtStartupToggled" />
                     </Grid>
 
-                    <Grid ColumnSpacing="16">
+                    <Grid ColumnSpacing="16" MinHeight="56" Padding="24,8" BorderBrush="{StaticResource DividerBrush}" BorderThickness="0,1,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-
-                        <TextBlock Grid.Column="0"
-                                   VerticalAlignment="Center"
-                                   Text="{loc:Loc Key=Parametres.Startup.MinimizeToTray}"
-                                   TextWrapping="Wrap"
-                                   FontSize="{StaticResource FontSize14}"
-                                   Foreground="{StaticResource TextSecondaryBrush}" />
-
-                        <ToggleSwitch Grid.Column="1"
-                                      OnContent=""
-                                      OffContent=""
+                        <StackPanel Spacing="2" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc Key=Parametres.Startup.MinimizeToTray}" Style="{StaticResource RowTitleStyle}" />
+                            <TextBlock Text="{loc:Loc Key=Parametres.Startup.MinimizeToTrayDescription}" Style="{StaticResource CaptionStyle}" />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="1" Style="{StaticResource BareToggleSwitchStyle}"
+                                      AutomationProperties.Name="{loc:Loc Key=Parametres.Startup.MinimizeToTray}"
                                       IsOn="{x:Bind ViewModel.MinimizeToTrayEnabled, Mode=OneWay}"
                                       Toggled="OnMinimizeToTrayToggled" />
                     </Grid>
                 </StackPanel>
             </Border>
 
-            <!-- ============================================================
-                 Langue — redémarrage requis pour s'appliquer, pas de bascule
-                 live (voir Localization/Strings.cs).
-                 ============================================================ -->
-            <Border Style="{StaticResource SurfaceL1CardStyle}">
-                <StackPanel Spacing="12">
-                    <TextBlock Text="{loc:Loc Key=Parametres.Language.Title}"
-                               FontSize="{StaticResource FontSize16}"
-                               FontWeight="SemiBold"
-                               Foreground="{StaticResource TextPrimaryBrush}" />
-
-                    <ComboBox SelectedIndex="{x:Bind ViewModel.SelectedLanguageIndex, Mode=OneWay}"
-                              SelectionChanged="OnLanguageSelectionChanged"
-                              MinWidth="180">
-                        <ComboBoxItem Content="{loc:Loc Key=Parametres.Language.French}" />
-                        <ComboBoxItem Content="{loc:Loc Key=Parametres.Language.English}" />
-                    </ComboBox>
-
-                    <Grid ColumnSpacing="16" Visibility="{x:Bind ViewModel.LanguageRestartVisibility, Mode=OneWay}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Grid.Column="0"
-                                   VerticalAlignment="Center"
-                                   Text="{loc:Loc Key=Parametres.Language.RestartNeeded}"
-                                   TextWrapping="Wrap"
-                                   FontSize="{StaticResource FontSize13}"
-                                   Foreground="{StaticResource TextTertiaryBrush}" />
-
-                        <Button Grid.Column="1"
-                                Click="OnRestartNowClick"
-                                Background="{StaticResource AccentBrush}"
-                                BorderThickness="0"
-                                CornerRadius="{StaticResource RadiusControl}"
-                                Padding="16,8">
-                            <TextBlock Text="{loc:Loc Key=Parametres.Language.RestartButton}"
-                                       Foreground="{StaticResource TextOnAccentBrush}"
-                                       FontSize="{StaticResource FontSize14}" />
-                        </Button>
-                    </Grid>
-                </StackPanel>
-            </Border>
-
-            <!-- ============================================================
-                 Mises à jour
-                 ============================================================ -->
-            <Border Style="{StaticResource SurfaceL1CardStyle}">
-                <StackPanel Spacing="12">
-                    <TextBlock Text="{loc:Loc Key=Parametres.Updates.Title}"
-                               FontSize="{StaticResource FontSize16}"
-                               FontWeight="SemiBold"
-                               Foreground="{StaticResource TextPrimaryBrush}" />
-
+            <!-- Niveau 1 : session de jeu -->
+            <StackPanel Spacing="10">
+                <TextBlock Text="{loc:Loc Key=Parametres.GameSession.Title}" Style="{StaticResource CardTitleStyle}" Padding="4,0,0,0" />
+                <Border Style="{StaticResource SurfaceL1CardStyle}" Padding="20,8" MinHeight="56">
                     <Grid ColumnSpacing="16">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-
-                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
-                            <TextBlock Text="{x:Bind ViewModel.VersionText, Mode=OneWay}"
-                                       FontSize="{StaticResource FontSize14}"
-                                       Foreground="{StaticResource TextSecondaryBrush}" />
-                            <TextBlock Text="{x:Bind ViewModel.UpdateStatusText, Mode=OneWay}"
-                                       TextWrapping="Wrap"
-                                       FontSize="{StaticResource FontSize13}"
-                                       Foreground="{StaticResource TextTertiaryBrush}" />
+                        <StackPanel Spacing="2" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Loc Key=Parametres.MousePrecision.Title}" Style="{StaticResource RowTitleStyle}" />
+                            <TextBlock Text="{loc:Loc Key=Parametres.MousePrecision.Description}" Style="{StaticResource CaptionStyle}" />
                         </StackPanel>
-
-                        <Button Grid.Column="1"
-                                VerticalAlignment="Center"
-                                Click="OnCheckForUpdatesClick"
-                                IsEnabled="{x:Bind ViewModel.CanCheckForUpdates, Mode=OneWay}"
-                                Background="{StaticResource AccentBrush}"
-                                BorderThickness="0"
-                                CornerRadius="{StaticResource RadiusControl}"
-                                Padding="16,8">
-                            <TextBlock Text="{loc:Loc Key=Parametres.Updates.CheckNow}"
-                                       Foreground="{StaticResource TextOnAccentBrush}"
-                                       FontSize="{StaticResource FontSize14}" />
-                        </Button>
+                        <ToggleSwitch Grid.Column="1" Style="{StaticResource BareToggleSwitchStyle}"
+                                      AutomationProperties.Name="{loc:Loc Key=Parametres.MousePrecision.Title}"
+                                      IsOn="{x:Bind ViewModel.MousePrecisionEnabled, Mode=OneWay}"
+                                      Toggled="OnMousePrecisionToggled" />
                     </Grid>
+                </Border>
+            </StackPanel>
 
-                    <Button Click="OnInstallUpdateClick"
-                            Visibility="{x:Bind ViewModel.InstallButtonVisibility, Mode=OneWay}"
-                            HorizontalAlignment="Left"
-                            Background="{StaticResource AccentBrush}"
-                            BorderThickness="0"
-                            CornerRadius="{StaticResource RadiusControl}"
-                            Padding="16,8">
-                        <TextBlock Text="{loc:Loc Key=Parametres.Updates.Install}"
-                                   Foreground="{StaticResource TextOnAccentBrush}"
-                                   FontSize="{StaticResource FontSize14}" />
-                    </Button>
-                </StackPanel>
-            </Border>
+            <!-- Niveau 1 : langue -->
+            <StackPanel Spacing="10">
+                <TextBlock Text="{loc:Loc Key=Parametres.Language.Title}" Style="{StaticResource CardTitleStyle}" Padding="4,0,0,0" />
+                <Border Style="{StaticResource SurfaceL1CardStyle}" Padding="0">
+                    <StackPanel>
+                        <Grid ColumnSpacing="16" MinHeight="56" Padding="20,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{loc:Loc Key=Parametres.Language.Interface}" Style="{StaticResource RowTitleStyle}" VerticalAlignment="Center" />
 
-            <!-- ============================================================
-                 À propos
-                 ============================================================ -->
-            <Border Style="{StaticResource SurfaceL1CardStyle}">
-                <StackPanel Spacing="8">
-                    <TextBlock Text="{loc:Loc Key=Parametres.About.Title}"
-                               FontSize="{StaticResource FontSize16}"
-                               FontWeight="SemiBold"
-                               Foreground="{StaticResource TextPrimaryBrush}" />
-                    <TextBlock Text="{x:Bind ViewModel.VersionText, Mode=OneWay}"
-                               FontSize="{StaticResource FontSize14}"
-                               Foreground="{StaticResource TextSecondaryBrush}" />
-                    <HyperlinkButton NavigateUri="https://github.com/Poutoo/Canopus"
-                                     Content="{loc:Loc Key=Parametres.About.GitHubLink}"
-                                     Padding="0"
-                                     FontSize="{StaticResource FontSize14}" />
+                            <Grid Grid.Column="1" VerticalAlignment="Center" Padding="3"
+                                  CornerRadius="{StaticResource RadiusControl}" Background="{StaticResource SegmentTrackBrush}"
+                                  BorderBrush="{StaticResource DividerBrush}" BorderThickness="1"
+                                  XYFocusKeyboardNavigation="Enabled">
+                                <Border x:Name="LanguageThumb" Width="96" Height="28" HorizontalAlignment="Left"
+                                        CornerRadius="{StaticResource RadiusSegmentThumb}" Background="{StaticResource SegmentThumbBrush}"
+                                        ui:Effects.Shadow="{StaticResource ShadowSegmentThumb}" IsHitTestVisible="False" />
+                                <StackPanel Orientation="Horizontal">
+                                    <Button x:Name="FrenchSegment" Style="{StaticResource SegmentButtonStyle}" Click="OnLanguageSegmentClick"
+                                            AutomationProperties.Name="{loc:Loc Key=Parametres.Language.French}">
+                                        <TextBlock x:Name="FrenchLabel" Text="{loc:Loc Key=Parametres.Language.French}" Style="{StaticResource SegmentLabelStyle}" />
+                                    </Button>
+                                    <Button x:Name="EnglishSegment" Style="{StaticResource SegmentButtonStyle}" Click="OnLanguageSegmentClick"
+                                            AutomationProperties.Name="{loc:Loc Key=Parametres.Language.English}">
+                                        <TextBlock x:Name="EnglishLabel" Text="{loc:Loc Key=Parametres.Language.English}" Style="{StaticResource SegmentLabelStyle}" />
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+
+                        <Grid ColumnSpacing="16" Padding="20,10,20,14" Visibility="{x:Bind ViewModel.LanguageRestartVisibility, Mode=OneWay}"
+                              BorderBrush="{StaticResource DividerBrush}" BorderThickness="0,1,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{loc:Loc Key=Parametres.Language.RestartNeeded}" Style="{StaticResource TextBoldStyle}"
+                                       Foreground="{StaticResource StatusWarnTextBrush}" VerticalAlignment="Center" />
+                            <Button Grid.Column="1" Style="{StaticResource PrimarySmallButtonStyle}"
+                                    Content="{loc:Loc Key=Parametres.Language.RestartButton}" Click="OnRestartNowClick" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Niveau 0 : version et mises à jour -->
+            <Grid ColumnSpacing="16" Padding="4,8" BorderBrush="{StaticResource DividerStrongBrush}" BorderThickness="0,1,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Spacing="2" VerticalAlignment="Center">
+                    <TextBlock Text="{x:Bind ViewModel.VersionText, Mode=OneWay}" Style="{StaticResource RowTitleStrongStyle}" />
+                    <TextBlock Text="{x:Bind ViewModel.UpdateStatusText, Mode=OneWay}" Style="{StaticResource CaptionStyle}"
+                               Foreground="{x:Bind ViewModel.UpdateStatusBrush, Mode=OneWay}"
+                               Visibility="{x:Bind ViewModel.UpdateStatusVisibility, Mode=OneWay}" />
                 </StackPanel>
-            </Border>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <Button Style="{StaticResource SecondarySmallButtonStyle}" Content="{loc:Loc Key=Parametres.Updates.CheckNow}"
+                            Click="OnCheckForUpdatesClick"
+                            Visibility="{x:Bind ViewModel.CheckButtonVisibility, Mode=OneWay}"
+                            IsEnabled="{x:Bind ViewModel.CanCheckForUpdates, Mode=OneWay}" />
+                    <Button Style="{StaticResource PrimarySmallButtonStyle}" Height="34" Padding="16,0"
+                            Content="{loc:Loc Key=Parametres.Updates.Install}"
+                            Click="OnInstallUpdateClick"
+                            Visibility="{x:Bind ViewModel.InstallButtonVisibility, Mode=OneWay}" />
+                </StackPanel>
+            </Grid>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

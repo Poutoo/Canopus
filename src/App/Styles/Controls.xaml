@@ -396,6 +396,60 @@
     </Style>
 
     <!-- ============================================================
+         INTERRUPTEUR — ressources légères du ToggleSwitch natif
+         ============================================================ -->
+    <StaticResource x:Key="ToggleSwitchFillOff" ResourceKey="TransparentBrush" />
+    <StaticResource x:Key="ToggleSwitchFillOffPointerOver" ResourceKey="GhostHoverBrush" />
+    <StaticResource x:Key="ToggleSwitchFillOffPressed" ResourceKey="GhostHoverBrush" />
+    <StaticResource x:Key="ToggleSwitchStrokeOff" ResourceKey="TextTertiaryBrush" />
+    <StaticResource x:Key="ToggleSwitchStrokeOffPointerOver" ResourceKey="TextTertiaryBrush" />
+    <StaticResource x:Key="ToggleSwitchStrokeOffPressed" ResourceKey="TextTertiaryBrush" />
+    <StaticResource x:Key="ToggleSwitchKnobFillOff" ResourceKey="TextTertiaryBrush" />
+    <StaticResource x:Key="ToggleSwitchKnobFillOffPointerOver" ResourceKey="TextTertiaryBrush" />
+    <StaticResource x:Key="ToggleSwitchKnobFillOffPressed" ResourceKey="TextTertiaryBrush" />
+    <StaticResource x:Key="ToggleSwitchFillOn" ResourceKey="AccentBrush" />
+    <StaticResource x:Key="ToggleSwitchFillOnPointerOver" ResourceKey="AccentHoverBrush" />
+    <StaticResource x:Key="ToggleSwitchFillOnPressed" ResourceKey="AccentPressedBrush" />
+    <StaticResource x:Key="ToggleSwitchStrokeOn" ResourceKey="AccentBrush" />
+    <StaticResource x:Key="ToggleSwitchStrokeOnPointerOver" ResourceKey="AccentHoverBrush" />
+    <StaticResource x:Key="ToggleSwitchStrokeOnPressed" ResourceKey="AccentPressedBrush" />
+    <StaticResource x:Key="ToggleSwitchKnobFillOn" ResourceKey="TextOnAccentBrush" />
+    <StaticResource x:Key="ToggleSwitchKnobFillOnPointerOver" ResourceKey="TextOnAccentBrush" />
+    <StaticResource x:Key="ToggleSwitchKnobFillOnPressed" ResourceKey="TextOnAccentBrush" />
+
+    <Style x:Key="BareToggleSwitchStyle" TargetType="ToggleSwitch">
+        <Setter Property="OnContent" Value="" />
+        <Setter Property="OffContent" Value="" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!-- ============================================================
+         SÉLECTEUR SEGMENTÉ (langue)
+         ============================================================ -->
+    <Style x:Key="SegmentButtonStyle" TargetType="Button" BasedOn="{StaticResource CanopusButtonBaseStyle}">
+        <Setter Property="Template" Value="{StaticResource GhostButtonTemplate}" />
+        <Setter Property="Background" Value="{StaticResource TransparentBrush}" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusSegmentThumb}" />
+        <Setter Property="Width" Value="96" />
+        <Setter Property="Height" Value="28" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+
+    <Style x:Key="SegmentLabelStyle" TargetType="TextBlock" BasedOn="{StaticResource TextSemiBoldStyle}">
+        <Setter Property="FontSize" Value="{StaticResource FontSize13}" />
+        <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+    </Style>
+
+    <Style x:Key="SegmentLabelActiveStyle" TargetType="TextBlock" BasedOn="{StaticResource SegmentLabelStyle}">
+        <Setter Property="FontFamily" Value="{StaticResource FontFamilyExtraBold}" />
+        <Setter Property="FontWeight" Value="ExtraBold" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+    </Style>
+
+    <!-- ============================================================
          NAVIGATION — le fond de l'item actif est un indicateur séparé
          qui glisse (Sidebar.xaml.cs)
          ============================================================ -->

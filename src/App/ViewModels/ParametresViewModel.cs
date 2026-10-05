@@ -1,4 +1,5 @@
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
 using Canopus.App.Localization;
 using Canopus.App.Models;
 using Canopus.App.Services;
@@ -13,13 +14,17 @@ public sealed class ParametresViewModel : ViewModelBase
 
     private AppSettings _settings = new();
 
+    // Language the interface is currently displayed in: a change only applies on restart.
+    private AppLanguage? _launchLanguage;
+
     public ParametresViewModel()
     {
         _settingsService = new JsonSettingsService();
         _startupService = new WindowsStartupService();
         _updateService = new VelopackUpdateService();
 
-        _versionText = _updateService.GetCurrentVersionText();
+        _versionText = Strings.Format("Parametres.Updates.Version", _updateService.GetCurrentVersionText());
+        _updateStatusBrush = GetBrush("TextTertiaryBrush");
         _ = LoadAsync();
     }
 
@@ -35,8 +40,7 @@ public sealed class ParametresViewModel : ViewModelBase
     private int _selectedLanguageIndex;
     public int SelectedLanguageIndex { get => _selectedLanguageIndex; private set => SetProperty(ref _selectedLanguageIndex, value); }
 
-    // Restart-to-apply, not live-switching -- see Localization/Strings.cs. Reset to
-    // Collapsed on every LoadAsync: a fresh view display has no pending, unsaved change.
+    // Restart-to-apply, not live-switching -- see Localization/Strings.cs.
     private Visibility _languageRestartVisibility = Visibility.Collapsed;
     public Visibility LanguageRestartVisibility { get => _languageRestartVisibility; private set => SetProperty(ref _languageRestartVisibility, value); }
 
@@ -45,6 +49,15 @@ public sealed class ParametresViewModel : ViewModelBase
 
     private string _updateStatusText = string.Empty;
     public string UpdateStatusText { get => _updateStatusText; private set => SetProperty(ref _updateStatusText, value); }
+
+    private Brush _updateStatusBrush;
+    public Brush UpdateStatusBrush { get => _updateStatusBrush; private set => SetProperty(ref _updateStatusBrush, value); }
+
+    private Visibility _updateStatusVisibility = Visibility.Collapsed;
+    public Visibility UpdateStatusVisibility { get => _updateStatusVisibility; private set => SetProperty(ref _updateStatusVisibility, value); }
+
+    private Visibility _checkButtonVisibility = Visibility.Visible;
+    public Visibility CheckButtonVisibility { get => _checkButtonVisibility; private set => SetProperty(ref _checkButtonVisibility, value); }
 
     private bool _canCheckForUpdates = true;
     public bool CanCheckForUpdates { get => _canCheckForUpdates; private set => SetProperty(ref _canCheckForUpdates, value); }
@@ -62,8 +75,8 @@ public sealed class ParametresViewModel : ViewModelBase
         MousePrecisionEnabled = _settings.MousePrecisionTweakEnabled;
         MinimizeToTrayEnabled = _settings.MinimizeToTray;
         LaunchAtStartupEnabled = _startupService.IsEnabled();
-        SelectedLanguageIndex = _settings.Language == AppLanguage.En ? 1 : 0;
-        LanguageRestartVisibility = Visibility.Collapsed;
+        _launchLanguage ??= _settings.Language;
+        ApplyLanguage(_settings.Language);
     }
 
     public async Task SetMousePrecisionEnabledAsync(bool enabled)
@@ -107,7 +120,13 @@ public sealed class ParametresViewModel : ViewModelBase
 
         _settings = _settings with { Language = language };
         await _settingsService.SaveAsync(_settings);
-        LanguageRestartVisibility = Visibility.Visible;
+        ApplyLanguage(language);
+    }
+
+    private void ApplyLanguage(AppLanguage language)
+    {
+        SelectedLanguageIndex = language == AppLanguage.En ? 1 : 0;
+        LanguageRestartVisibility = language != _launchLanguage ? Visibility.Visible : Visibility.Collapsed;
     }
 
     public void RestartApp()
@@ -119,15 +138,17 @@ public sealed class ParametresViewModel : ViewModelBase
     public async Task CheckForUpdatesAsync()
     {
         CanCheckForUpdates = false;
-        UpdateStatusText = Strings.Get("Parametres.Updates.Checking");
+        SetUpdateStatus(Strings.Get("Parametres.Updates.Checking"), "TextTertiaryBrush");
         try
         {
             UpdateCheckResult result = await _updateService.CheckForUpdateAsync();
             _isUpdateAvailable = result.IsUpdateAvailable;
             InstallButtonVisibility = result.IsUpdateAvailable ? Visibility.Visible : Visibility.Collapsed;
-            UpdateStatusText = result.IsUpdateAvailable
-                ? Strings.Format("Parametres.Updates.Available", result.AvailableVersion)
-                : Strings.Get("Parametres.Updates.UpToDate");
+            CheckButtonVisibility = result.IsUpdateAvailable ? Visibility.Collapsed : Visibility.Visible;
+            if (result.IsUpdateAvailable)
+                SetUpdateStatus(Strings.Format("Parametres.Updates.Available", result.AvailableVersion), "TextPrimaryBrush");
+            else
+                SetUpdateStatus(Strings.Get("Parametres.Updates.UpToDate"), "TextTertiaryBrush");
         }
         finally
         {
@@ -141,7 +162,17 @@ public sealed class ParametresViewModel : ViewModelBase
             return;
 
         CanCheckForUpdates = false;
-        UpdateStatusText = Strings.Get("Parametres.Updates.Installing");
+        InstallButtonVisibility = Visibility.Collapsed;
+        SetUpdateStatus(Strings.Get("Parametres.Updates.Installing"), "TextPrimaryBrush");
         await _updateService.DownloadAndApplyUpdateAsync();
     }
+
+    private void SetUpdateStatus(string text, string brushKey)
+    {
+        UpdateStatusText = text;
+        UpdateStatusBrush = GetBrush(brushKey);
+        UpdateStatusVisibility = string.IsNullOrEmpty(text) ? Visibility.Collapsed : Visibility.Visible;
+    }
+
+    private static Brush GetBrush(string resourceKey) => (Brush)Application.Current.Resources[resourceKey];
 }

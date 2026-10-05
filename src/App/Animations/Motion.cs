@@ -39,7 +39,7 @@ public static class Motion
     {
         Visual visual = VisualOf(element);
         visual.StopAnimation("Translation.Y");
-        visual.Properties.InsertVector3("Translation", new Vector3(0, y, 0));
+        SetScalar(visual, "Translation.Y", y);
     }
 
     /// <summary>
@@ -69,6 +69,11 @@ public static class Motion
         visual.StartAnimation(property, animation);
     }
 
+    private static Vector3 CurrentTranslation(Visual visual) =>
+        visual.Properties.TryGetVector3("Translation", out Vector3 current) == CompositionGetValueStatus.Succeeded
+            ? current
+            : Vector3.Zero;
+
     private static void SetScalar(Visual visual, string property, float value)
     {
         switch (property)
@@ -79,8 +84,11 @@ public static class Motion
             case "Scale.X":
                 visual.Scale = visual.Scale with { X = value };
                 break;
+            case "Translation.X":
+                visual.Properties.InsertVector3("Translation", CurrentTranslation(visual) with { X = value });
+                break;
             case "Translation.Y":
-                visual.Properties.InsertVector3("Translation", new Vector3(0, value, 0));
+                visual.Properties.InsertVector3("Translation", CurrentTranslation(visual) with { Y = value });
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(property), property, null);
