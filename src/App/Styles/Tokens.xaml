@@ -129,12 +129,12 @@
 
     <!-- ============================================================
          POLICES
-         ATTENTION : Nunito et JetBrains Mono ne sont pas des polices Windows
-         par défaut. Fichiers .ttf à ajouter dans Assets/Fonts/ avant que ces
-         FontFamily ne fonctionnent réellement (sinon fallback silencieux vers
-         une police système).
+         Nunito statique (OFL, Assets/Fonts/OFL.txt). Une famille par graisse :
+         un FontFamily pointant sur un seul fichier ne contient que cette
+         graisse, WinUI synthétiserait les autres.
          ============================================================ -->
-    <FontFamily x:Key="BodyFontFamily">/Assets/Fonts/Nunito-Regular.ttf#Nunito</FontFamily>
-    <FontFamily x:Key="MonoFontFamily">/Assets/Fonts/JetBrainsMono-Regular.ttf#JetBrains Mono</FontFamily>
+    <FontFamily x:Key="FontFamilySemiBold">ms-appx:///Assets/Fonts/Nunito-SemiBold.ttf#Nunito</FontFamily>
+    <FontFamily x:Key="FontFamilyBold">ms-appx:///Assets/Fonts/Nunito-Bold.ttf#Nunito</FontFamily>
+    <FontFamily x:Key="FontFamilyExtraBold">ms-appx:///Assets/Fonts/Nunito-ExtraBold.ttf#Nunito</FontFamily>
 
 </ResourceDictionary>

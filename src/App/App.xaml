@@ -12,6 +12,13 @@
                 <ResourceDictionary Source="Styles/GlassStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <FontFamily x:Key="ContentControlThemeFontFamily">ms-appx:///Assets/Fonts/Nunito-SemiBold.ttf#Nunito</FontFamily>
+
+            <Style TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource FontFamilySemiBold}" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+            </Style>
+
             <!--
                 Icône de zone de notification, déclarée comme ressource (pas d'élément visuel,
                 pas de fenêtre) : voir App.xaml.cs pour ForceCreate()/Dispose().
