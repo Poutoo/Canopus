@@ -3,15 +3,16 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    xmlns:loc="using:Canopus.App.Localization">
+    xmlns:loc="using:Canopus.App.Localization"
+    xmlns:anim="using:Canopus.App.Animations">
 
     <ScrollViewer>
         <StackPanel Padding="20,12,32,32" Spacing="20" MaxWidth="812" HorizontalAlignment="Left">
 
-            <TextBlock Text="{loc:Loc Key=Parametres.Title}" Style="{StaticResource PageTitleStyle}" />
+            <TextBlock Text="{loc:Loc Key=Parametres.Title}" anim:Entrance.Order="0" Style="{StaticResource PageTitleStyle}" />
 
             <!-- Niveau 2 : démarrage -->
-            <Border Style="{StaticResource SurfaceL2CardStyle}" Padding="0,20,0,8">
+            <Border Style="{StaticResource SurfaceL2CardStyle}" anim:Entrance.Order="1" Padding="0,20,0,8">
                 <StackPanel>
                     <StackPanel Spacing="4" Padding="24,0,24,12">
                         <TextBlock Text="{loc:Loc Key=Parametres.Startup.Title}" Style="{StaticResource GroupTitleStyle}" />
@@ -51,7 +52,7 @@
             </Border>
 
             <!-- Niveau 1 : session de jeu -->
-            <StackPanel Spacing="10">
+            <StackPanel anim:Entrance.Order="2" Spacing="10">
                 <TextBlock Text="{loc:Loc Key=Parametres.GameSession.Title}" Style="{StaticResource CardTitleStyle}" Padding="4,0,0,0" />
                 <Border Style="{StaticResource SurfaceL1CardStyle}" Padding="20,8" MinHeight="56">
                     <Grid ColumnSpacing="16">
@@ -72,7 +73,7 @@
             </StackPanel>
 
             <!-- Niveau 1 : langue -->
-            <StackPanel Spacing="10">
+            <StackPanel anim:Entrance.Order="3" Spacing="10">
                 <TextBlock Text="{loc:Loc Key=Parametres.Language.Title}" Style="{StaticResource CardTitleStyle}" Padding="4,0,0,0" />
                 <Border Style="{StaticResource SurfaceL1CardStyle}" Padding="0">
                     <StackPanel>
@@ -119,7 +120,7 @@
             </StackPanel>
 
             <!-- Niveau 0 : version et mises à jour -->
-            <Grid ColumnSpacing="16" Padding="4,8" BorderBrush="{StaticResource DividerStrongBrush}" BorderThickness="0,1,0,0">
+            <Grid anim:Entrance.Order="4" ColumnSpacing="16" Padding="4,8" BorderBrush="{StaticResource DividerStrongBrush}" BorderThickness="0,1,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />

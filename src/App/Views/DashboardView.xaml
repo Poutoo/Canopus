@@ -4,13 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:models="using:Canopus.App.Models"
     xmlns:controls="using:Canopus.App.Controls"
-    xmlns:loc="using:Canopus.App.Localization">
+    xmlns:loc="using:Canopus.App.Localization"
+    xmlns:anim="using:Canopus.App.Animations">
 
     <ScrollViewer>
         <StackPanel Padding="20,12,32,32" Spacing="20">
 
             <!-- En-tête -->
-            <Grid ColumnSpacing="16">
+            <Grid anim:Entrance.Order="0" ColumnSpacing="16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -24,7 +25,7 @@
             </Grid>
 
             <!-- Niveau 2 : processeur et carte graphique -->
-            <Border Style="{StaticResource SurfaceL2CardStyle}" Padding="28,24">
+            <Border Style="{StaticResource SurfaceL2CardStyle}" anim:Entrance.Order="1" Padding="28,24">
                 <Grid ColumnSpacing="32">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -114,7 +115,7 @@
                     <ColumnDefinition Width="1.1*" />
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="0" Style="{StaticResource SurfaceL1CardStyle}">
+                <Border Grid.Column="0" Style="{StaticResource SurfaceL1CardStyle}" anim:Entrance.Order="2">
                     <Grid RowSpacing="12">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -135,7 +136,7 @@
                     </Grid>
                 </Border>
 
-                <Border Grid.Column="1" Style="{StaticResource SurfaceL1CardStyle}">
+                <Border Grid.Column="1" Style="{StaticResource SurfaceL1CardStyle}" anim:Entrance.Order="3">
                     <StackPanel Spacing="14">
                         <TextBlock Text="{loc:Loc Key=Dashboard.Memory.Title}" Style="{StaticResource CardTitleStyle}" />
                         <ItemsControl ItemsSource="{x:Bind ViewModel.MemoryRows}">
@@ -167,7 +168,7 @@
                     </StackPanel>
                 </Border>
 
-                <Border Grid.Column="2" Style="{StaticResource SurfaceL1CardStyle}">
+                <Border Grid.Column="2" Style="{StaticResource SurfaceL1CardStyle}" anim:Entrance.Order="4">
                     <StackPanel>
                         <Grid ColumnSpacing="12" Padding="0,0,0,8">
                             <Grid.ColumnDefinitions>
@@ -205,7 +206,7 @@
             </Grid>
 
             <!-- Niveau 0 : résumé de l'audit, sans barre -->
-            <StackPanel Orientation="Horizontal" Spacing="16" Padding="4,6">
+            <StackPanel anim:Entrance.Order="5" Orientation="Horizontal" Spacing="16" Padding="4,6">
                 <TextBlock Text="{x:Bind ViewModel.AuditSummaryText, Mode=OneWay}" Style="{StaticResource CardTitleStyle}"
                            Foreground="{x:Bind ViewModel.AuditSummaryBrush, Mode=OneWay}" VerticalAlignment="Center" />
                 <TextBlock Text="{loc:Loc Key=Dashboard.AuditSummary.Source}" Style="{StaticResource BodyStyle}"

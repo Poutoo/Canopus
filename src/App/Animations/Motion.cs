@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Numerics;
 using Microsoft.UI.Composition;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Hosting;
 using Windows.UI.ViewManagement;
@@ -14,12 +15,22 @@ namespace Canopus.App.Animations;
 public static class Motion
 {
     private static readonly UISettings UiSettings = new();
+    private static AppWindow? _window;
 
     public static bool AnimationsEnabled => UiSettings.AnimationsEnabled;
 
+    public static void AttachWindow(AppWindow window) => _window = window;
+
+    /// <summary>False while the window is minimized or hidden in the notification area.</summary>
+    public static bool IsWindowPresented =>
+        _window is null
+        || (_window.IsVisible && _window.Presenter is not OverlappedPresenter { State: OverlappedPresenterState.Minimized });
+
     public static double Value(string key) => (double)Application.Current.Resources[key];
 
-    public static TimeSpan Duration(string key) => TimeSpan.FromMilliseconds(Value(key));
+    /// <summary>Token duration, or zero when Windows animations are turned off.</summary>
+    public static TimeSpan Duration(string key) =>
+        AnimationsEnabled ? TimeSpan.FromMilliseconds(Value(key)) : TimeSpan.Zero;
 
     public static Visual VisualOf(UIElement element) => ElementCompositionPreview.GetElementVisual(element);
 
@@ -69,6 +80,23 @@ public static class Motion
         visual.StartAnimation(property, animation);
     }
 
+    /// <summary>Same as <see cref="AnimateScalar"/>, completing when the animation ends.</summary>
+    public static Task AnimateScalarAsync(UIElement element, string property, float to, TimeSpan duration, string easingKey)
+    {
+        if (!AnimationsEnabled || duration <= TimeSpan.Zero)
+        {
+            AnimateScalar(element, property, null, to, TimeSpan.Zero, TimeSpan.Zero, easingKey);
+            return Task.CompletedTask;
+        }
+
+        var completion = new TaskCompletionSource();
+        CompositionScopedBatch batch = VisualOf(element).Compositor.CreateScopedBatch(CompositionBatchTypes.Animation);
+        AnimateScalar(element, property, null, to, duration, TimeSpan.Zero, easingKey);
+        batch.End();
+        batch.Completed += (_, _) => completion.TrySetResult();
+        return completion.Task;
+    }
+
     private static Vector3 CurrentTranslation(Visual visual) =>
         visual.Properties.TryGetVector3("Translation", out Vector3 current) == CompositionGetValueStatus.Succeeded
             ? current
@@ -83,6 +111,9 @@ public static class Motion
                 break;
             case "Scale.X":
                 visual.Scale = visual.Scale with { X = value };
+                break;
+            case "Scale.Y":
+                visual.Scale = visual.Scale with { Y = value };
                 break;
             case "Translation.X":
                 visual.Properties.InsertVector3("Translation", CurrentTranslation(visual) with { X = value });

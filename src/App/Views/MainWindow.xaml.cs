@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Windows.UI;
+using Canopus.App.Animations;
 using Canopus.App.Localization;
 using Canopus.App.Services;
 
@@ -12,13 +13,18 @@ public sealed partial class MainWindow : Window
 {
     private readonly IUpdateService _updateService = new VelopackUpdateService();
 
+    private AppPage _currentPage = AppPage.Dashboard;
+    private int _navigationVersion;
+
     public MainWindow()
     {
         InitializeComponent();
         Title = Strings.Get("App.Name");
         ConfigureBackdrop();
         ConfigureTitleBar();
+        Motion.AttachWindow(AppWindow);
         Activated += OnActivated;
+        RootGrid.Loaded += (_, _) => Entrance.Play(DashboardPage);
         _ = CheckForUpdatesAsync();
     }
 
@@ -66,14 +72,30 @@ public sealed partial class MainWindow : Window
 
     private void OnGameSessionRequested(object sender, EventArgs e) => ShowPage(AppPage.GameSession);
 
-    private void ShowPage(AppPage page)
+    // Old page fades out, then the new one enters in a cascade. A newer navigation
+    // started during the fade-out supersedes this one.
+    private async void ShowPage(AppPage page)
     {
         NavSidebar.SetActivePage(page);
 
-        DashboardPage.Visibility = page == AppPage.Dashboard ? Visibility.Visible : Visibility.Collapsed;
-        AuditPage.Visibility = page == AppPage.Audit ? Visibility.Visible : Visibility.Collapsed;
-        GameSessionPage.Visibility = page == AppPage.GameSession ? Visibility.Visible : Visibility.Collapsed;
-        ParametresPage.Visibility = page == AppPage.Parametres ? Visibility.Visible : Visibility.Collapsed;
+        if (page != _currentPage)
+        {
+            int version = ++_navigationVersion;
+            await Motion.AnimateScalarAsync(PageHost, "Opacity", 0f, Motion.Duration("MotionDurationPageExit"), "MotionEasingExit");
+            if (version != _navigationVersion)
+                return;
+
+            _currentPage = page;
+            DashboardPage.Visibility = page == AppPage.Dashboard ? Visibility.Visible : Visibility.Collapsed;
+            AuditPage.Visibility = page == AppPage.Audit ? Visibility.Visible : Visibility.Collapsed;
+            GameSessionPage.Visibility = page == AppPage.GameSession ? Visibility.Visible : Visibility.Collapsed;
+            ParametresPage.Visibility = page == AppPage.Parametres ? Visibility.Visible : Visibility.Collapsed;
+
+            FrameworkElement target = PageFor(page);
+            target.UpdateLayout();
+            Motion.AnimateScalar(PageHost, "Opacity", null, 1f, TimeSpan.Zero, TimeSpan.Zero, "MotionEasingEnter");
+            Entrance.Play(target);
+        }
 
         if (page == AppPage.Audit)
             _ = AuditPage.ViewModel.RefreshAsync();
@@ -84,6 +106,14 @@ public sealed partial class MainWindow : Window
         else if (page == AppPage.GameSession)
             GameSessionPage.OnNavigatedTo();
     }
+
+    private FrameworkElement PageFor(AppPage page) => page switch
+    {
+        AppPage.Audit => AuditPage,
+        AppPage.GameSession => GameSessionPage,
+        AppPage.Parametres => ParametresPage,
+        _ => DashboardPage
+    };
 
     // Flux de mise à jour minimal, temporaire : juste de quoi prouver que
     // check -> dialogue -> install fonctionne bout en bout. L'habillage

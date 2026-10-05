@@ -43,8 +43,32 @@ public sealed class DataBar : Grid
         set => SetValue(FillProperty, value);
     }
 
-    private void OnValueChanged(double oldValue, double newValue) => SetFillScale(newValue);
+    /// <summary>Fills the bar from zero, as part of the page entrance.</summary>
+    public void PlayEntrance(TimeSpan delay) =>
+        Motion.AnimateScalar(_fill, "Scale.X", 0f, Target(Value), Motion.Duration("MotionDurationBar"), delay, "MotionEasingEnter");
+
+    // The 1.5 s refresh moves bars only for a visible change, on a window that is on
+    // screen and a page that is displayed; otherwise the value is set without animation.
+    private void OnValueChanged(double oldValue, double newValue)
+    {
+        double minDelta = Motion.Value("MotionBarMinDelta") / 100;
+        bool animate = Math.Abs(newValue - oldValue) >= minDelta && Motion.IsWindowPresented && IsDisplayed();
+        TimeSpan duration = animate ? Motion.Duration("MotionDurationBar") : TimeSpan.Zero;
+        Motion.AnimateScalar(_fill, "Scale.X", null, Target(newValue), duration, TimeSpan.Zero, "MotionEasingEnter");
+    }
+
+    private bool IsDisplayed()
+    {
+        for (DependencyObject? node = this; node is not null; node = VisualTreeHelper.GetParent(node))
+        {
+            if (node is UIElement { Visibility: Visibility.Collapsed })
+                return false;
+        }
+        return XamlRoot is not null;
+    }
+
+    private static float Target(double fraction) => (float)Math.Clamp(fraction, 0, 1);
 
     private void SetFillScale(double fraction) =>
-        Motion.VisualOf(_fill).Scale = new Vector3((float)Math.Clamp(fraction, 0, 1), 1, 1);
+        Motion.VisualOf(_fill).Scale = new Vector3(Target(fraction), 1, 1);
 }

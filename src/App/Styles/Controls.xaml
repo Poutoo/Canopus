@@ -6,7 +6,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    xmlns:media="using:CommunityToolkit.WinUI.Media">
+    xmlns:media="using:CommunityToolkit.WinUI.Media"
+    xmlns:anim="using:Canopus.App.Animations">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Tokens.xaml" />
@@ -217,6 +218,7 @@
          ============================================================ -->
     <ControlTemplate x:Key="PrimaryButtonTemplate" TargetType="Button">
         <Grid x:Name="RootGrid"
+              anim:BackgroundTransition.IsEnabled="True"
               Background="{TemplateBinding Background}"
               BorderBrush="{TemplateBinding BorderBrush}"
               BorderThickness="{TemplateBinding BorderThickness}"
@@ -257,6 +259,7 @@
 
     <ControlTemplate x:Key="SecondaryButtonTemplate" TargetType="Button">
         <Grid x:Name="RootGrid"
+              anim:BackgroundTransition.IsEnabled="True"
               Background="{TemplateBinding Background}"
               BorderBrush="{TemplateBinding BorderBrush}"
               BorderThickness="{TemplateBinding BorderThickness}"
@@ -297,6 +300,7 @@
 
     <ControlTemplate x:Key="GhostButtonTemplate" TargetType="Button">
         <Grid x:Name="RootGrid"
+              anim:BackgroundTransition.IsEnabled="True"
               Background="{TemplateBinding Background}"
               BorderBrush="{TemplateBinding BorderBrush}"
               BorderThickness="{TemplateBinding BorderThickness}"
@@ -348,6 +352,7 @@
         <Setter Property="FontSize" Value="{StaticResource FontSize14}" />
         <Setter Property="Height" Value="36" />
         <Setter Property="Padding" Value="16,0" />
+        <Setter Property="anim:PressFeedback.IsEnabled" Value="True" />
     </Style>
 
     <Style x:Key="PrimaryButtonStyle" TargetType="Button" BasedOn="{StaticResource CanopusButtonBaseStyle}">
@@ -455,6 +460,7 @@
          ============================================================ -->
     <ControlTemplate x:Key="NavItemTemplate" TargetType="Button">
         <Grid x:Name="RootGrid"
+              anim:BackgroundTransition.IsEnabled="True"
               Background="{TemplateBinding Background}"
               CornerRadius="{TemplateBinding CornerRadius}">
             <VisualStateManager.VisualStateGroups>

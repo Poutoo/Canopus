@@ -3,13 +3,14 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:models="using:Canopus.App.Models"
-    xmlns:loc="using:Canopus.App.Localization">
+    xmlns:loc="using:Canopus.App.Localization"
+    xmlns:anim="using:Canopus.App.Animations">
 
     <ScrollViewer>
         <StackPanel Padding="20,12,32,32" Spacing="20">
 
             <!-- En-tête -->
-            <Grid ColumnSpacing="16">
+            <Grid anim:Entrance.Order="0" ColumnSpacing="16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -24,7 +25,7 @@
             </Grid>
 
             <!-- Niveau 2 : les réglages à vérifier -->
-            <Border Style="{StaticResource SurfaceL2CardStyle}" Padding="0,8">
+            <Border Style="{StaticResource SurfaceL2CardStyle}" anim:Entrance.Order="1" Padding="0,8">
                 <StackPanel>
                     <TextBlock Text="{x:Bind ViewModel.SummaryText, Mode=OneWay}" Style="{StaticResource HeroTitleStyle}"
                                Padding="24,14,24,8" />
@@ -57,7 +58,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Niveau 1 : ce qui est confirmé -->
-                <ItemsControl ItemsSource="{x:Bind ViewModel.ConfirmedItems, Mode=OneWay}" VerticalAlignment="Top">
+                <ItemsControl ItemsSource="{x:Bind ViewModel.ConfirmedItems, Mode=OneWay}" anim:Entrance.Order="2" VerticalAlignment="Top">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Spacing="12" />
@@ -93,7 +94,7 @@
                 </ItemsControl>
 
                 <!-- Niveau 0 : pour info -->
-                <StackPanel Grid.Column="1" Padding="4,0" Visibility="{x:Bind ViewModel.InfoVisibility, Mode=OneWay}">
+                <StackPanel Grid.Column="1" Padding="4,0" anim:Entrance.Order="3" Visibility="{x:Bind ViewModel.InfoVisibility, Mode=OneWay}">
                     <TextBlock Text="{loc:Loc Key=Audit.InfoTitle}" Style="{StaticResource CardTitleStyle}" Padding="0,0,0,6" />
                     <ItemsControl ItemsSource="{x:Bind ViewModel.InfoItems, Mode=OneWay}">
                         <ItemsControl.ItemTemplate>

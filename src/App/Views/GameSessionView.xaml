@@ -3,7 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:models="using:Canopus.App.Models"
-    xmlns:loc="using:Canopus.App.Localization">
+    xmlns:loc="using:Canopus.App.Localization"
+    xmlns:anim="using:Canopus.App.Animations">
 
     <UserControl.Resources>
         <!-- Case « Exclure de la session » : 18 px, coins de 4 px, cochée en accent -->
@@ -31,10 +32,10 @@
     <ScrollViewer>
         <StackPanel Padding="20,12,32,32" Spacing="20">
 
-            <TextBlock Text="{loc:Loc Key=GameSession.Title}" Style="{StaticResource PageTitleStyle}" />
+            <TextBlock Text="{loc:Loc Key=GameSession.Title}" anim:Entrance.Order="0" Style="{StaticResource PageTitleStyle}" />
 
             <!-- Niveau 2 : démarrer ou arrêter, avec le message de retour -->
-            <Border Style="{StaticResource SurfaceL2CardStyle}">
+            <Border Style="{StaticResource SurfaceL2CardStyle}" anim:Entrance.Order="1">
                 <StackPanel Spacing="18">
                     <Grid ColumnSpacing="32">
                         <Grid.ColumnDefinitions>
@@ -58,7 +59,7 @@
             </Border>
 
             <!-- Niveau 1 : les réglages de la session -->
-            <Border Style="{StaticResource SurfaceL1CardStyle}" Padding="0,4">
+            <Border Style="{StaticResource SurfaceL1CardStyle}" anim:Entrance.Order="2" Padding="0,4">
                 <ItemsControl ItemsSource="{x:Bind ViewModel.TweakStatuses, Mode=OneWay}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="models:TweakStatusDisplayItem">
