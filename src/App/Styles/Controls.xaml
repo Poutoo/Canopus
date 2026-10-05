@@ -395,4 +395,69 @@
         <Setter Property="Padding" Value="12,0" />
     </Style>
 
+    <!-- ============================================================
+         NAVIGATION — le fond de l'item actif est un indicateur séparé
+         qui glisse (Sidebar.xaml.cs)
+         ============================================================ -->
+    <ControlTemplate x:Key="NavItemTemplate" TargetType="Button">
+        <Grid x:Name="RootGrid"
+              Background="{TemplateBinding Background}"
+              CornerRadius="{TemplateBinding CornerRadius}">
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Target="RootGrid.Background" Value="{StaticResource NavItemHoverBrush}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Target="RootGrid.Background" Value="{StaticResource NavItemPressedBrush}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled" />
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <ContentPresenter Content="{TemplateBinding Content}"
+                              Padding="{TemplateBinding Padding}"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                              AutomationProperties.AccessibilityView="Raw" />
+        </Grid>
+    </ControlTemplate>
+
+    <Style x:Key="NavItemStyle" TargetType="Button">
+        <Setter Property="Template" Value="{StaticResource NavItemTemplate}" />
+        <Setter Property="Background" Value="{StaticResource TransparentBrush}" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusControl}" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="UseSystemFocusVisuals" Value="True" />
+    </Style>
+
+    <Style x:Key="NavLabelStyle" TargetType="TextBlock" BasedOn="{StaticResource TextSemiBoldStyle}">
+        <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+    </Style>
+
+    <Style x:Key="NavLabelActiveStyle" TargetType="TextBlock" BasedOn="{StaticResource NavLabelStyle}">
+        <Setter Property="FontFamily" Value="{StaticResource FontFamilyExtraBold}" />
+        <Setter Property="FontWeight" Value="ExtraBold" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+    </Style>
+
+    <Style x:Key="NavIconStyle" TargetType="Path">
+        <Setter Property="Stroke" Value="{StaticResource TextSecondaryBrush}" />
+        <Setter Property="StrokeThickness" Value="{StaticResource IconStrokeThickness}" />
+        <Setter Property="StrokeStartLineCap" Value="Round" />
+        <Setter Property="StrokeEndLineCap" Value="Round" />
+        <Setter Property="StrokeLineJoin" Value="Round" />
+    </Style>
+
 </ResourceDictionary>
