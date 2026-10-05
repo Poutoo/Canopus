@@ -1,12 +1,11 @@
 {
+  "App.Name": "Canopus",
   "Tray.Open": "Ouvrir",
   "Tray.Exit": "Quitter",
-
   "UpdateDialog.Title": "Mise à jour disponible",
   "UpdateDialog.Content": "Une mise à jour est disponible (version {0}).",
   "UpdateDialog.Install": "Installer",
   "UpdateDialog.Later": "Plus tard",
-
   "Dashboard.Temperatures.Title": "Températures",
   "Dashboard.Storage.Title": "Stockage",
   "Dashboard.SystemLoad.Title": "Charge système",
@@ -26,18 +25,15 @@
   "Dashboard.AuditSummary.AllGood": "Tout est optimal",
   "Dashboard.AuditSummary.Singular": "1 optimisation à vérifier",
   "Dashboard.AuditSummary.Plural": "{0} optimisations à vérifier",
-
   "Audit.Eyebrow": "AUDIT SYSTÈME",
   "Audit.Subtitle": "Leviers vérifiés sur votre configuration",
   "Audit.Running": "Analyse en cours…",
-
   "Audit.PowerPlan.Title": "Plan d'alimentation",
   "Audit.GameMode.Title": "Mode Jeu Windows",
   "Audit.MemoryProfile.Title": "Profil mémoire XMP / EXPO",
   "Audit.Overlays.Title": "Overlays actifs",
   "Audit.Defender.Title": "Exclusions antivirus",
   "Audit.GpuDriver.Title": "Version du driver GPU",
-
   "Audit.Status.Optimal": "Optimal",
   "Audit.Status.Problem": "Problème",
   "Audit.Status.ToCheck": "À vérifier",
@@ -47,7 +43,6 @@
   "Audit.Status.NoneDetected": "Aucun détecté",
   "Audit.Status.OverlayActive": "Overlay actif",
   "Audit.Status.NotChecked": "Non vérifié",
-
   "Audit.PowerPlan.ReadFailed": "Impossible de lire le plan d'alimentation actif.",
   "Audit.PowerPlan.HighPerf": "Plan actif : {0}. Le CPU n'est pas bridé par la gestion d'énergie.",
   "Audit.PowerPlan.PowerSaver": "Plan actif : {0}. L'économie d'énergie limite fortement les performances CPU.",
@@ -57,30 +52,25 @@
   "Audit.PowerPlan.Balanced.Default": "Plan actif : {0}. Un plan équilibré peut brider le CPU en jeu.",
   "Audit.PowerPlan.Balanced.BestPerf": "Plan actif : {0}, mode de performance \"Meilleures performances\". Le CPU n'est pas bridé.",
   "Audit.PowerPlan.Balanced.BetterBattery": "Plan actif : {0}, mode de performance \"Économie d'énergie\". Bride fortement les performances CPU.",
-
   "Audit.GameMode.KeyMissing": "Clé de registre HKCU\\SOFTWARE\\Microsoft\\GameBar introuvable.",
   "Audit.GameMode.ValueMissing": "Ni AutoGameModeEnabled ni AllowAutoGameMode n'existent sous cette clé.",
   "Audit.GameMode.Enabled": "Le Mode Jeu Windows est activé.",
   "Audit.GameMode.Disabled": "Le Mode Jeu Windows est désactivé. Il priorise les ressources vers le jeu au premier plan.",
   "Audit.GameMode.ReadException": "Lecture impossible ({0}).",
-
   "Audit.MemoryProfile.NoModules": "Aucune barrette mémoire exploitable retournée par WMI.",
   "Audit.MemoryProfile.NotActive": "Mémoire cadencée à {0} MT/s alors que les barrettes annoncent {1} MT/s — le profil XMP/EXPO ne semble pas activé.",
   "Audit.MemoryProfile.Active": "Mémoire cadencée à {0} MT/s, conforme à la fréquence annoncée par les barrettes ({1} barrette(s) détectée(s)).",
   "Audit.MemoryProfile.MethodNote": "Détection par comparaison WMI ConfiguredClockSpeed / Speed. De nombreuses cartes mères renseignent la même valeur dans les deux champs : l'absence d'écart ne prouve donc pas que le profil est actif, elle indique seulement qu'aucun bridage n'est visible ici. À confirmer dans le BIOS en cas de doute.",
   "Audit.MemoryProfile.ReadException": "Lecture WMI impossible ({0}).",
-
   "Audit.Overlays.None": "Aucun overlay connu en cours d'exécution.",
   "Audit.Overlays.CoverageNote": "Détection basée sur une liste connue, un overlay non répertorié peut passer inaperçu.",
   "Audit.Overlays.Detected": "{0} overlay(s) en cours d'exécution : {1}. Un overlay s'injecte dans le jeu et peut coûter quelques FPS.",
   "Audit.Overlays.EnumException": "Énumération des process impossible ({0}).",
-
   "Audit.Defender.RequiresAdmin": "Lecture des exclusions impossible : droits administrateur requis.",
   "Audit.Defender.ScopeNote": "Vérification générique Windows Defender — les antivirus tiers ne sont pas couverts, et aucun jeu spécifique n'est encore ciblé.",
   "Audit.Defender.Configured": "{0} exclusion(s) configurée(s).",
   "Audit.Defender.None": "Aucune exclusion configurée.",
   "Audit.Defender.ReadException": "Lecture WMI Defender impossible ({0}) — Defender est peut-être désactivé ou remplacé par un antivirus tiers.",
-
   "Audit.GpuDriver.UnknownGpu": "GPU inconnu",
   "Audit.GpuDriver.UnknownVersion": "version inconnue",
   "Audit.GpuDriver.Line": "{0} — Version {1}{2}",
@@ -88,9 +78,7 @@
   "Audit.GpuDriver.NoController": "Aucun contrôleur vidéo retourné par WMI.",
   "Audit.GpuDriver.Note": "Information factuelle uniquement : aucune comparaison avec la dernière version publiée par le constructeur n'est effectuée.",
   "Audit.GpuDriver.ReadException": "Lecture WMI impossible ({0}).",
-
   "Audit.ReadFailed.Note": "Ce levier n'a pas pu être évalué : le résultat ci-dessus n'est pas un verdict.",
-
   "GameSession.Eyebrow": "SESSION DE JEU",
   "GameSession.Subtitle": "Optimisez vos réglages pour jouer",
   "GameSession.StartButton": "Démarrer la session",
@@ -109,7 +97,6 @@
   "GameSession.Feedback.Stopped": "Session arrêtée, réglages d'origine restaurés.",
   "GameSession.Tweak.CaptureFailedPrefix": "Capture impossible : {0}",
   "GameSession.Tweak.VerifyFailed": "La vérification a échoué après application.",
-
   "Tweak.PowerPlan.Name": "Plan d'alimentation",
   "Tweak.MousePrecision.Name": "Précision du pointeur",
   "Tweak.UsbSuspend.Name": "Suspension sélective USB",
@@ -122,13 +109,10 @@
   "Tweak.UsbSuspend.ReadFailed": "Lecture du réglage USB impossible.",
   "Tweak.UsbSuspend.ReapplyFailed": "Impossible de réappliquer le plan d'alimentation après l'écriture du réglage USB.",
   "Tweak.UsbSuspend.NotCaptured": "CaptureAsync doit être appelé avant ApplyAsync.",
-
   "Update.CurrentVersion.Unknown": "version inconnue",
   "Update.CurrentVersion.NotInstalled": "développement (non installé)",
-
   "Startup.ExePathUnavailable": "Impossible de déterminer le chemin de l'exécutable.",
   "Startup.TaskCreationFailed": "Impossible de créer la tâche planifiée de démarrage.",
-
   "Parametres.Eyebrow": "PARAMÈTRES",
   "Parametres.Subtitle": "Configurez Canopus",
   "Parametres.MousePrecision.Title": "Précision du pointeur",
