@@ -8,13 +8,12 @@ namespace Canopus.App.ViewModels;
 
 public sealed class GameSessionViewModel : ViewModelBase
 {
-    // Honest limits worth surfacing rather than letting "Actif" overclaim what a
-    // tweak actually guarantees -- same treatment as the audit's DetailNote.
     // Keyed by IReversibleTweak.Name (stable identifier, not localized) -> translation key.
-    private static readonly Dictionary<string, string> TweakNoteKeys = new()
+    private static readonly Dictionary<string, string> TweakDescriptionKeys = new()
     {
-        ["Précision du pointeur"] = "GameSession.Notes.MousePrecision",
-        ["Suspension sélective USB"] = "GameSession.Notes.UsbSuspend"
+        ["Plan d'alimentation"] = "GameSession.Tweaks.PowerPlan",
+        ["Précision du pointeur"] = "GameSession.Tweaks.MousePrecision",
+        ["Suspension sélective USB"] = "GameSession.Tweaks.UsbSuspend"
     };
 
     private readonly ISettingsService _settingsService;
@@ -28,7 +27,9 @@ public sealed class GameSessionViewModel : ViewModelBase
         _settingsService = new JsonSettingsService();
         _allTweaks = GameSessionService.CreateDefaultTweaks();
 
-        _tweakStatuses = _allTweaks.Select(IdleItem).ToList();
+        _tweakStatuses = BuildIdleItems();
+        _heroSubtitle = IdleSubtitle();
+        _feedbackBrush = GetBrush("TextTertiaryBrush");
         _ = LoadSettingsAsync();
     }
 
@@ -49,6 +50,15 @@ public sealed class GameSessionViewModel : ViewModelBase
 
     private string _feedbackMessage = Strings.Get("GameSession.DefaultFeedback");
     public string FeedbackMessage { get => _feedbackMessage; private set => SetProperty(ref _feedbackMessage, value); }
+
+    private Brush _feedbackBrush;
+    public Brush FeedbackBrush { get => _feedbackBrush; private set => SetProperty(ref _feedbackBrush, value); }
+
+    private string _heroTitle = Strings.Get("GameSession.Hero.IdleTitle");
+    public string HeroTitle { get => _heroTitle; private set => SetProperty(ref _heroTitle, value); }
+
+    private string _heroSubtitle;
+    public string HeroSubtitle { get => _heroSubtitle; private set => SetProperty(ref _heroSubtitle, value); }
 
     // Excluding a tweak only takes effect on the next session start, so the
     // checkbox is locked while one is already running -- flipping it mid-session
@@ -109,16 +119,19 @@ public sealed class GameSessionViewModel : ViewModelBase
         _sessionService = new GameSessionService(activeTweaks);
         IReadOnlyList<TweakOutcome> outcomes = await _sessionService.StartSessionAsync();
 
+        IsSessionActive = true;
         TweakStatuses = _allTweaks
-            .Select(t => !activeTweaks.Contains(t)
-                ? ExcludedItem(t)
+            .Select((t, i) => !activeTweaks.Contains(t)
+                ? ExcludedItem(t, i)
                 : outcomes.FirstOrDefault(o => o.TweakName == t.Name) is { } outcome
-                    ? (outcome.Succeeded ? ActiveItem(t) : FailedItem(t, outcome.FailureReason))
-                    : FailedItem(t, null))
+                    ? (outcome.Succeeded ? ActiveItem(t, i) : FailedItem(t, i, outcome.FailureReason))
+                    : FailedItem(t, i, null))
             .ToList();
 
-        IsSessionActive = true;
         ToggleButtonText = Strings.Get("GameSession.StopButton");
+        HeroTitle = Strings.Get("GameSession.Hero.ActiveTitle");
+        HeroSubtitle = Strings.Get("GameSession.Hero.ActiveSubtitle");
+        FeedbackBrush = GetBrush("TextPrimaryBrush");
 
         int failedCount = outcomes.Count(o => !o.Succeeded);
         int excludedCount = _allTweaks.Count - activeTweaks.Count;
@@ -135,10 +148,12 @@ public sealed class GameSessionViewModel : ViewModelBase
         if (_sessionService is not null)
             await _sessionService.StopSessionAsync();
 
-        RefreshIdleStatuses();
         IsSessionActive = false;
+        RefreshIdleStatuses();
         ToggleButtonText = Strings.Get("GameSession.StartButton");
+        HeroTitle = Strings.Get("GameSession.Hero.IdleTitle");
         FeedbackMessage = Strings.Get("GameSession.Feedback.Stopped");
+        FeedbackBrush = GetBrush("TextPrimaryBrush");
     }
 
     private void RefreshIdleStatuses()
@@ -146,31 +161,48 @@ public sealed class GameSessionViewModel : ViewModelBase
         if (IsSessionActive)
             return;
 
-        TweakStatuses = _allTweaks.Select(IdleItem).ToList();
+        TweakStatuses = BuildIdleItems();
+        HeroSubtitle = IdleSubtitle();
     }
 
-    private TweakStatusDisplayItem IdleItem(IReversibleTweak tweak) =>
-        Build(tweak, Strings.Get("GameSession.Status.Idle"), GetBrush("TextTertiaryBrush"), GetBrush("StatusExcludedBgBrush"));
+    private List<TweakStatusDisplayItem> BuildIdleItems() =>
+        _allTweaks
+            .Select((t, i) => t is MousePrecisionTweak && !MousePrecisionTweakEnabled ? ExcludedItem(t, i) : IdleItem(t, i))
+            .ToList();
 
-    private TweakStatusDisplayItem ActiveItem(IReversibleTweak tweak) =>
-        Build(tweak, Strings.Get("GameSession.Status.Active"), GetBrush("StatusNeutralTextBrush"), GetBrush("StatusActiveBgBrush"));
+    private string IdleSubtitle() =>
+        Strings.Format("GameSession.Hero.IdleSubtitle", _allTweaks.Count - (MousePrecisionTweakEnabled ? 0 : 1));
 
-    private TweakStatusDisplayItem FailedItem(IReversibleTweak tweak, string? failureReason) =>
-        Build(tweak, Strings.Get("GameSession.Status.Failed"), GetBrush("StatusBadTextBrush"), GetBrush("StatusBadBgBrush"), failureReason);
+    private TweakStatusDisplayItem IdleItem(IReversibleTweak tweak, int index) =>
+        Build(tweak, index, "GameSession.Status.Idle", "StatusIdleTextBrush", "TransparentBrush");
 
-    private TweakStatusDisplayItem ExcludedItem(IReversibleTweak tweak) =>
-        Build(tweak, Strings.Get("GameSession.Status.Excluded"), GetBrush("StatusNeutralTextBrush"), GetBrush("StatusExcludedBgBrush"));
+    private TweakStatusDisplayItem ActiveItem(IReversibleTweak tweak, int index) =>
+        Build(tweak, index, "GameSession.Status.Active", "StatusActiveTextBrush", "StatusActiveBgBrush");
 
-    private TweakStatusDisplayItem Build(IReversibleTweak tweak, string statusLabel, Brush statusTextBrush, Brush statusBgBrush, string? noteOverride = null)
+    private TweakStatusDisplayItem FailedItem(IReversibleTweak tweak, int index, string? failureReason) =>
+        Build(tweak, index, "GameSession.Status.Failed", "StatusBadTextBrush", "StatusBadBgBrush",
+            failureReason ?? Strings.Get("GameSession.Feedback.FailedFallback"));
+
+    private TweakStatusDisplayItem ExcludedItem(IReversibleTweak tweak, int index) =>
+        Build(tweak, index, "GameSession.Status.Excluded", "StatusExcludedTextBrush", "StatusExcludedBgBrush");
+
+    private TweakStatusDisplayItem Build(IReversibleTweak tweak, int index, string statusKey,
+        string statusTextBrushKey, string statusBgBrushKey, string? failureReason = null)
     {
-        string note = noteOverride
-            ?? (TweakNoteKeys.TryGetValue(tweak.Name, out string? noteKey) ? Strings.Get(noteKey) : string.Empty);
+        string description = TweakDescriptionKeys.TryGetValue(tweak.Name, out string? key) ? Strings.Get(key) : string.Empty;
         bool isMouseTweak = tweak is MousePrecisionTweak;
 
-        return new TweakStatusDisplayItem(tweak.DisplayName, statusLabel, statusTextBrush, statusBgBrush, note,
-            string.IsNullOrEmpty(note) ? Visibility.Collapsed : Visibility.Visible,
+        return new TweakStatusDisplayItem(
+            tweak.DisplayName,
+            description,
+            Strings.Get(statusKey),
+            GetBrush(statusTextBrushKey),
+            GetBrush(statusBgBrushKey),
+            failureReason ?? string.Empty,
+            failureReason is null ? Visibility.Collapsed : Visibility.Visible,
+            index == 0 ? new Thickness(0) : new Thickness(0, 1, 0, 0),
             isMouseTweak ? Visibility.Visible : Visibility.Collapsed,
-            MousePrecisionTweakEnabled,
+            !MousePrecisionTweakEnabled,
             !IsSessionActive);
     }
 
