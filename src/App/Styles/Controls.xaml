@@ -138,28 +138,28 @@
         <Setter Property="FontSize" Value="{StaticResource FontSize72}" />
         <Setter Property="CharacterSpacing" Value="{StaticResource TrackingDisplay}" />
         <Setter Property="TextWrapping" Value="NoWrap" />
-        <Setter Property="TextLineBounds" Value="Tight" />
+        <Setter Property="TextLineBounds" Value="TrimToBaseline" />
     </Style>
 
     <Style x:Key="DisplayUnitStyle" TargetType="TextBlock" BasedOn="{StaticResource TextExtraBoldStyle}">
         <Setter Property="FontSize" Value="{StaticResource FontSize24}" />
         <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
         <Setter Property="TextWrapping" Value="NoWrap" />
-        <Setter Property="TextLineBounds" Value="Tight" />
+        <Setter Property="TextLineBounds" Value="TrimToBaseline" />
     </Style>
 
     <Style x:Key="MetricValueStyle" TargetType="TextBlock" BasedOn="{StaticResource TextExtraBoldStyle}">
         <Setter Property="FontSize" Value="{StaticResource FontSize36}" />
         <Setter Property="CharacterSpacing" Value="{StaticResource TrackingTitle}" />
         <Setter Property="TextWrapping" Value="NoWrap" />
-        <Setter Property="TextLineBounds" Value="Tight" />
+        <Setter Property="TextLineBounds" Value="TrimToBaseline" />
     </Style>
 
     <Style x:Key="MetricUnitStyle" TargetType="TextBlock" BasedOn="{StaticResource TextBoldStyle}">
         <Setter Property="FontSize" Value="{StaticResource FontSize15}" />
         <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
         <Setter Property="TextWrapping" Value="NoWrap" />
-        <Setter Property="TextLineBounds" Value="Tight" />
+        <Setter Property="TextLineBounds" Value="TrimToBaseline" />
     </Style>
 
     <!-- Intitulé de ligne : réglage, élément de liste -->
