@@ -48,12 +48,14 @@
   "Dashboard.AuditSummary.Source": "d'après le dernier audit",
   "Dashboard.AuditSummary.ViewAudit": "Voir l'audit",
 
-  "Audit.Eyebrow": "AUDIT SYSTÈME",
-  "Audit.Subtitle": "Leviers vérifiés sur votre configuration",
+  "Audit.Subtitle": "{0} vérifications en lecture seule.",
   "Audit.Running": "Analyse en cours…",
   "Audit.Summary.None": "Aucun réglage à vérifier",
   "Audit.Summary.Singular": "1 réglage à vérifier",
   "Audit.Summary.Plural": "{0} réglages à vérifier",
+  "Audit.Title": "Audit",
+  "Audit.Rerun": "Relancer l'audit",
+  "Audit.InfoTitle": "Pour info",
 
   "Audit.PowerPlan.Title": "Plan d'alimentation",
   "Audit.GameMode.Title": "Mode Jeu Windows",

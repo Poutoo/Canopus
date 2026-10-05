@@ -48,12 +48,14 @@
   "Dashboard.AuditSummary.Source": "from the latest audit",
   "Dashboard.AuditSummary.ViewAudit": "View the audit",
 
-  "Audit.Eyebrow": "SYSTEM AUDIT",
-  "Audit.Subtitle": "Levers checked on your configuration",
+  "Audit.Subtitle": "{0} read-only checks.",
   "Audit.Running": "Scanning…",
   "Audit.Summary.None": "Nothing to check",
   "Audit.Summary.Singular": "1 setting to check",
   "Audit.Summary.Plural": "{0} settings to check",
+  "Audit.Title": "Audit",
+  "Audit.Rerun": "Run the audit again",
+  "Audit.InfoTitle": "For your information",
 
   "Audit.PowerPlan.Title": "Power plan",
   "Audit.GameMode.Title": "Windows Game Mode",
