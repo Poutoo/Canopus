@@ -5,11 +5,13 @@ namespace Canopus.App.Models;
 
 public record TweakStatusDisplayItem(
     string Name,
+    string Description,
     string StatusLabel,
     Brush StatusTextBrush,
     Brush StatusBgBrush,
-    string Note,
-    Visibility NoteVisibility,
-    Visibility PrecisionToggleVisibility,
-    bool IsPrecisionEnabled,
-    bool IsPrecisionToggleEnabled);
+    string FailureReason,
+    Visibility FailureVisibility,
+    Thickness DividerThickness,
+    Visibility ExcludeVisibility,
+    bool IsExcluded,
+    bool IsExcludeEnabled);

@@ -1,5 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
+using Canopus.App.Localization;
 using Canopus.App.Models;
 using Canopus.App.Services;
 
@@ -20,14 +21,27 @@ public sealed class AuditViewModel : ViewModelBase
         _ = LoadAsync(forceRefresh: false);
     }
 
-    private IReadOnlyList<AuditDisplayItem> _items = [];
-    public IReadOnlyList<AuditDisplayItem> Items { get => _items; private set => SetProperty(ref _items, value); }
+    /// <summary>Warnings and problems: the main element of the screen.</summary>
+    private IReadOnlyList<AuditDisplayItem> _attentionItems = [];
+    public IReadOnlyList<AuditDisplayItem> AttentionItems { get => _attentionItems; private set => SetProperty(ref _attentionItems, value); }
 
-    private bool _isRunning;
-    public bool IsRunning { get => _isRunning; private set => SetProperty(ref _isRunning, value); }
+    private IReadOnlyList<AuditDisplayItem> _confirmedItems = [];
+    public IReadOnlyList<AuditDisplayItem> ConfirmedItems { get => _confirmedItems; private set => SetProperty(ref _confirmedItems, value); }
 
-    private Visibility _runningVisibility = Visibility.Visible;
-    public Visibility RunningVisibility { get => _runningVisibility; private set => SetProperty(ref _runningVisibility, value); }
+    private IReadOnlyList<AuditDisplayItem> _infoItems = [];
+    public IReadOnlyList<AuditDisplayItem> InfoItems { get => _infoItems; private set => SetProperty(ref _infoItems, value); }
+
+    private string _summaryText = Strings.Get("Audit.Running");
+    public string SummaryText { get => _summaryText; private set => SetProperty(ref _summaryText, value); }
+
+    private string _subtitleText = Strings.Get("Audit.Running");
+    public string SubtitleText { get => _subtitleText; private set => SetProperty(ref _subtitleText, value); }
+
+    private bool _canRerun;
+    public bool CanRerun { get => _canRerun; private set => SetProperty(ref _canRerun, value); }
+
+    private Visibility _infoVisibility = Visibility.Collapsed;
+    public Visibility InfoVisibility { get => _infoVisibility; private set => SetProperty(ref _infoVisibility, value); }
 
     // Forces a fresh detection pass -- used when the user explicitly navigates to
     // this screen, so they always see current data rather than a stale cache.
@@ -35,16 +49,21 @@ public sealed class AuditViewModel : ViewModelBase
 
     private async Task LoadAsync(bool forceRefresh)
     {
-        IsRunning = true;
-        RunningVisibility = Visibility.Visible;
+        CanRerun = false;
+        SubtitleText = Strings.Get("Audit.Running");
 
         IReadOnlyList<AuditItem> items = forceRefresh
             ? await _auditService.RunAuditAsync()
             : await _auditService.GetOrRunAuditAsync();
-        Items = items.Select(ToDisplayItem).ToList();
 
-        IsRunning = false;
-        RunningVisibility = Visibility.Collapsed;
+        AttentionItems = items.Where(i => i.Status is AuditStatus.Warning or AuditStatus.Problem).Select(ToDisplayItem).ToList();
+        ConfirmedItems = items.Where(i => i.Status == AuditStatus.Confirmed).Select(ToDisplayItem).ToList();
+        InfoItems = items.Where(i => i.Status == AuditStatus.Info).Select(ToDisplayItem).ToList();
+        InfoVisibility = InfoItems.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+
+        SummaryText = AuditSummary.Text(AttentionItems.Count);
+        SubtitleText = Strings.Format("Audit.Subtitle", items.Count);
+        CanRerun = true;
     }
 
     private static AuditDisplayItem ToDisplayItem(AuditItem item) => new(
@@ -52,17 +71,16 @@ public sealed class AuditViewModel : ViewModelBase
         item.StatusLabel,
         GetBrush(item.Status switch
         {
-            AuditStatus.Confirmed => "StatusGoodTextBrush",
             AuditStatus.Warning => "StatusWarnTextBrush",
             AuditStatus.Problem => "StatusBadTextBrush",
+            AuditStatus.Info => "StatusInfoTextBrush",
             _ => "StatusNeutralTextBrush"
         }),
         GetBrush(item.Status switch
         {
-            AuditStatus.Confirmed => "StatusGoodBgBrush",
             AuditStatus.Warning => "StatusWarnBgBrush",
             AuditStatus.Problem => "StatusBadBgBrush",
-            _ => "StatusNeutralBgBrush"
+            _ => "TransparentBrush"
         }),
         item.Description,
         item.DetailNote ?? string.Empty,

@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Canopus.App.Localization;
@@ -9,18 +10,15 @@ namespace Canopus.App.ViewModels;
 /// <summary>
 /// Alimente le dashboard avec des données réelles, rafraîchies périodiquement
 /// via un <see cref="DispatcherTimer"/> (voir <see cref="TickIntervalSeconds"/>).
-/// Les seuils de classification (température, RAM, latence, gigue) sont des
-/// valeurs raisonnables par défaut, pas des seuils produit validés.
+/// Les seuils de classification (température) sont des valeurs raisonnables
+/// par défaut, pas des seuils produit validés.
 /// </summary>
 public sealed class DashboardViewModel : ViewModelBase, IDisposable
 {
     private const double TickIntervalSeconds = 1.5;
+    private const string RamRowKey = "RAM";
 
-    // Échelle du thermomètre : 0-100°C (proche de la plage de throttling
-    // ~90-100°C mentionnée pour les cartes de température).
-    private const double ThermometerMaxCelsius = 100.0;
-
-    private enum StatusTier { Good, Warn, Bad }
+    private enum StatusTier { Normal, Warn, Bad }
 
     private readonly IHardwareMonitorService _hardwareMonitorService;
     private readonly IStorageService _storageService;
@@ -42,8 +40,8 @@ public sealed class DashboardViewModel : ViewModelBase, IDisposable
         _processMonitorService = processMonitorService;
         _auditService = auditService;
 
-        _auditIconBackgroundBrush = GetBrush("StatusNeutralBgBrush");
-        _auditIconForegroundBrush = GetBrush("StatusNeutralTextBrush");
+        NetworkFootnote = Strings.Format("Dashboard.Network.Footnote",
+            PingNetworkService.TargetHost, Formats.Number(TickIntervalSeconds, 1));
 
         _timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(TickIntervalSeconds) };
         _timer.Tick += async (_, _) => await RefreshAsync();
@@ -64,384 +62,202 @@ public sealed class DashboardViewModel : ViewModelBase, IDisposable
         NetworkSnapshot network = await _networkService.GetSnapshotAsync();
         IReadOnlyList<ProcessSnapshot> processes = _processMonitorService.GetTopProcesses();
 
-        ApplyTemperatures(hardware);
-        ApplySystemLoad(hardware);
-        ApplyDrives(drives);
+        ApplyProcessors(hardware);
+        ApplyMemory(hardware, drives);
         ApplyNetwork(network);
         ApplyProcesses(processes);
     }
 
     // ------------------------------------------------------------------
-    // Card Températures
+    // Élément principal : processeur et carte graphique
     // ------------------------------------------------------------------
 
-    private string _cpuTemperatureText = "—";
-    public string CpuTemperatureText { get => _cpuTemperatureText; private set => SetProperty(ref _cpuTemperatureText, value); }
+    public ProcessorDisplay Cpu { get; } = new();
+    public ProcessorDisplay Gpu { get; } = new();
 
-    private Brush? _cpuTemperatureBrush;
-    public Brush? CpuTemperatureBrush { get => _cpuTemperatureBrush; private set => SetProperty(ref _cpuTemperatureBrush, value); }
-
-    private string _cpuFrequencyText = string.Empty;
-    public string CpuFrequencyText { get => _cpuFrequencyText; private set => SetProperty(ref _cpuFrequencyText, value); }
-
-    private Visibility _cpuFrequencyVisibility = Visibility.Collapsed;
-    public Visibility CpuFrequencyVisibility { get => _cpuFrequencyVisibility; private set => SetProperty(ref _cpuFrequencyVisibility, value); }
-
-    private string _cpuStatusLabel = string.Empty;
-    public string CpuStatusLabel { get => _cpuStatusLabel; private set => SetProperty(ref _cpuStatusLabel, value); }
-
-    private Visibility _cpuStatusVisibility = Visibility.Collapsed;
-    public Visibility CpuStatusVisibility { get => _cpuStatusVisibility; private set => SetProperty(ref _cpuStatusVisibility, value); }
-
-    private Brush? _cpuStatusTextBrush;
-    public Brush? CpuStatusTextBrush { get => _cpuStatusTextBrush; private set => SetProperty(ref _cpuStatusTextBrush, value); }
-
-    private Brush? _cpuStatusBgBrush;
-    public Brush? CpuStatusBgBrush { get => _cpuStatusBgBrush; private set => SetProperty(ref _cpuStatusBgBrush, value); }
-
-    private Brush? _cpuThermometerBrush;
-    public Brush? CpuThermometerBrush { get => _cpuThermometerBrush; private set => SetProperty(ref _cpuThermometerBrush, value); }
-
-    private GridLength _cpuThermometerFilledRow = new(0, GridUnitType.Star);
-    public GridLength CpuThermometerFilledRow { get => _cpuThermometerFilledRow; private set => SetProperty(ref _cpuThermometerFilledRow, value); }
-
-    private GridLength _cpuThermometerEmptyRow = new(1, GridUnitType.Star);
-    public GridLength CpuThermometerEmptyRow { get => _cpuThermometerEmptyRow; private set => SetProperty(ref _cpuThermometerEmptyRow, value); }
-
-    private string _gpuTemperatureText = "—";
-    public string GpuTemperatureText { get => _gpuTemperatureText; private set => SetProperty(ref _gpuTemperatureText, value); }
-
-    private Brush? _gpuTemperatureBrush;
-    public Brush? GpuTemperatureBrush { get => _gpuTemperatureBrush; private set => SetProperty(ref _gpuTemperatureBrush, value); }
-
-    private string _gpuFrequencyText = string.Empty;
-    public string GpuFrequencyText { get => _gpuFrequencyText; private set => SetProperty(ref _gpuFrequencyText, value); }
-
-    private Visibility _gpuFrequencyVisibility = Visibility.Collapsed;
-    public Visibility GpuFrequencyVisibility { get => _gpuFrequencyVisibility; private set => SetProperty(ref _gpuFrequencyVisibility, value); }
-
-    private string _gpuStatusLabel = string.Empty;
-    public string GpuStatusLabel { get => _gpuStatusLabel; private set => SetProperty(ref _gpuStatusLabel, value); }
-
-    private Visibility _gpuStatusVisibility = Visibility.Collapsed;
-    public Visibility GpuStatusVisibility { get => _gpuStatusVisibility; private set => SetProperty(ref _gpuStatusVisibility, value); }
-
-    private Brush? _gpuStatusTextBrush;
-    public Brush? GpuStatusTextBrush { get => _gpuStatusTextBrush; private set => SetProperty(ref _gpuStatusTextBrush, value); }
-
-    private Brush? _gpuStatusBgBrush;
-    public Brush? GpuStatusBgBrush { get => _gpuStatusBgBrush; private set => SetProperty(ref _gpuStatusBgBrush, value); }
-
-    private Brush? _gpuThermometerBrush;
-    public Brush? GpuThermometerBrush { get => _gpuThermometerBrush; private set => SetProperty(ref _gpuThermometerBrush, value); }
-
-    private GridLength _gpuThermometerFilledRow = new(0, GridUnitType.Star);
-    public GridLength GpuThermometerFilledRow { get => _gpuThermometerFilledRow; private set => SetProperty(ref _gpuThermometerFilledRow, value); }
-
-    private GridLength _gpuThermometerEmptyRow = new(1, GridUnitType.Star);
-    public GridLength GpuThermometerEmptyRow { get => _gpuThermometerEmptyRow; private set => SetProperty(ref _gpuThermometerEmptyRow, value); }
-
-    private void ApplyTemperatures(HardwareSnapshot hardware)
+    private void ApplyProcessors(HardwareSnapshot hardware)
     {
-        (CpuTemperatureText, CpuTemperatureBrush, CpuStatusLabel, CpuStatusVisibility,
-            CpuStatusTextBrush, CpuStatusBgBrush, CpuThermometerBrush, CpuThermometerFilledRow, CpuThermometerEmptyRow) =
-            BuildTemperatureDisplay(hardware.CpuTemperatureCelsius);
-
-        (CpuFrequencyText, CpuFrequencyVisibility) = BuildFrequencyDisplay(hardware.CpuFrequencyMhz);
-
-        (GpuTemperatureText, GpuTemperatureBrush, GpuStatusLabel, GpuStatusVisibility,
-            GpuStatusTextBrush, GpuStatusBgBrush, GpuThermometerBrush, GpuThermometerFilledRow, GpuThermometerEmptyRow) =
-            BuildTemperatureDisplay(hardware.GpuTemperatureCelsius);
-
-        (GpuFrequencyText, GpuFrequencyVisibility) = BuildFrequencyDisplay(hardware.GpuFrequencyMhz);
+        Cpu.Apply(hardware.CpuTemperatureCelsius, hardware.CpuLoadPercent, hardware.CpuName,
+            hardware.CpuFrequencyMhz is double cpuMhz ? Formats.Gigahertz(cpuMhz) : string.Empty);
+        Gpu.Apply(hardware.GpuTemperatureCelsius, hardware.GpuLoadPercent, hardware.GpuName,
+            hardware.GpuFrequencyMhz is double gpuMhz ? Formats.Megahertz(gpuMhz) : string.Empty);
     }
 
-    private static (string text, Brush brush, string statusLabel, Visibility statusVisibility,
-        Brush statusTextBrush, Brush statusBgBrush, Brush thermBrush, GridLength filledRow, GridLength emptyRow)
-        BuildTemperatureDisplay(double? celsius)
+    // ------------------------------------------------------------------
+    // Mémoire et disques
+    // ------------------------------------------------------------------
+
+    public ObservableCollection<UsageDisplayItem> MemoryRows { get; } = [];
+
+    private void ApplyMemory(HardwareSnapshot hardware, IReadOnlyList<DriveSnapshot> drives)
     {
-        if (celsius is null)
+        var rows = new List<(string Key, string Label, string Value, double Fraction)>();
+
+        if (hardware.MemoryUsedGigabytes is double usedGb && hardware.MemoryAvailableGigabytes is double availableGb)
         {
-            var (filled, empty) = ComputeFillRatio(0);
-            return ("—", GetBrush("TextDisabledBrush"), string.Empty, Visibility.Collapsed,
-                GetBrush("TextDisabledBrush"), GetBrush("TextDisabledBrush"), GetBrush("TextDisabledBrush"), filled, empty);
+            double totalGb = usedGb + availableGb;
+            rows.Add((RamRowKey, Strings.Get("Dashboard.Memory.Ram"), Formats.UsedOfTotal(usedGb, totalGb),
+                totalGb > 0 ? usedGb / totalGb : 0));
+        }
+        else if (hardware.MemoryUsedPercent is double memPercent)
+        {
+            rows.Add((RamRowKey, Strings.Get("Dashboard.Memory.Ram"), Formats.Percent(memPercent), memPercent / 100));
         }
 
-        StatusTier tier = celsius >= 90 ? StatusTier.Bad : celsius >= 75 ? StatusTier.Warn : StatusTier.Good;
-        string label = tier switch
+        foreach (DriveSnapshot drive in drives)
         {
-            StatusTier.Bad => Strings.Get("Dashboard.Status.Critical"),
-            StatusTier.Warn => Strings.Get("Dashboard.Status.High"),
-            _ => Strings.Get("Dashboard.Status.Stable")
-        };
-        var (filledRow, emptyRow) = ComputeFillRatio(celsius.Value / ThermometerMaxCelsius);
-
-        return (
-            $"{celsius:F0}°C",
-            GetStatusTextBrush(tier),
-            label,
-            Visibility.Visible,
-            GetStatusTextBrush(tier),
-            GetStatusBgBrush(tier),
-            GetStatusMidBrush(tier),
-            filledRow,
-            emptyRow);
-    }
-
-    private static (string text, Visibility visibility) BuildFrequencyDisplay(double? megahertz)
-    {
-        if (megahertz is null)
-            return (string.Empty, Visibility.Collapsed);
-
-        return ($"{megahertz.Value / 1000.0:F1} GHz", Visibility.Visible);
-    }
-
-    // ------------------------------------------------------------------
-    // Card Charge système
-    // ------------------------------------------------------------------
-
-    private string _ramText = "—";
-    public string RamText { get => _ramText; private set => SetProperty(ref _ramText, value); }
-
-    private Brush? _ramBrush;
-    public Brush? RamBrush { get => _ramBrush; private set => SetProperty(ref _ramBrush, value); }
-
-    private string _cpuLoadText = "—";
-    public string CpuLoadText { get => _cpuLoadText; private set => SetProperty(ref _cpuLoadText, value); }
-
-    private GridLength _cpuLoadFilledColumn = new(0, GridUnitType.Star);
-    public GridLength CpuLoadFilledColumn { get => _cpuLoadFilledColumn; private set => SetProperty(ref _cpuLoadFilledColumn, value); }
-
-    private GridLength _cpuLoadEmptyColumn = new(1, GridUnitType.Star);
-    public GridLength CpuLoadEmptyColumn { get => _cpuLoadEmptyColumn; private set => SetProperty(ref _cpuLoadEmptyColumn, value); }
-
-    private string _gpuLoadText = "—";
-    public string GpuLoadText { get => _gpuLoadText; private set => SetProperty(ref _gpuLoadText, value); }
-
-    private GridLength _gpuLoadFilledColumn = new(0, GridUnitType.Star);
-    public GridLength GpuLoadFilledColumn { get => _gpuLoadFilledColumn; private set => SetProperty(ref _gpuLoadFilledColumn, value); }
-
-    private GridLength _gpuLoadEmptyColumn = new(1, GridUnitType.Star);
-    public GridLength GpuLoadEmptyColumn { get => _gpuLoadEmptyColumn; private set => SetProperty(ref _gpuLoadEmptyColumn, value); }
-
-    private void ApplySystemLoad(HardwareSnapshot hardware)
-    {
-        if (hardware.MemoryUsedPercent is double memPercent)
-        {
-            StatusTier tier = memPercent >= 90 ? StatusTier.Bad : memPercent >= 70 ? StatusTier.Warn : StatusTier.Good;
-            RamBrush = GetStatusTextBrush(tier);
-            RamText = hardware.MemoryAvailableGigabytes is double availableGb && hardware.MemoryUsedGigabytes is double usedGb
-                ? $"{usedGb:F1} / {usedGb + availableGb:F1} Go"
-                : $"{memPercent:F0} %";
-        }
-        else
-        {
-            RamBrush = GetBrush("TextDisabledBrush");
-            RamText = "—";
+            string label = string.IsNullOrWhiteSpace(drive.VolumeLabel)
+                ? drive.Name
+                : Strings.Format("Dashboard.Memory.Drive", drive.Name, drive.VolumeLabel);
+            rows.Add((drive.Name, label, Formats.UsedOfTotal(drive.UsedGigabytes, drive.TotalGigabytes),
+                drive.TotalGigabytes > 0 ? drive.UsedGigabytes / drive.TotalGigabytes : 0));
         }
 
-        (CpuLoadText, CpuLoadFilledColumn, CpuLoadEmptyColumn) = BuildLoadDisplay(hardware.CpuLoadPercent);
-        (GpuLoadText, GpuLoadFilledColumn, GpuLoadEmptyColumn) = BuildLoadDisplay(hardware.GpuLoadPercent);
-    }
-
-    private static (string text, GridLength filled, GridLength empty) BuildLoadDisplay(double? percent)
-    {
-        if (percent is null)
+        // Rows are updated in place (matched by key) so that bars animate rather than
+        // being recreated on every tick.
+        for (int i = MemoryRows.Count - 1; i >= 0; i--)
         {
-            var (filled, empty) = ComputeFillRatio(0);
-            return ("—", filled, empty);
+            if (rows.All(r => r.Key != MemoryRows[i].Key))
+                MemoryRows.RemoveAt(i);
         }
 
-        var (filledCol, emptyCol) = ComputeFillRatio(percent.Value / 100.0);
-        return ($"{percent:F0} %", filledCol, emptyCol);
-    }
-
-    // ------------------------------------------------------------------
-    // Card Stockage
-    // ------------------------------------------------------------------
-
-    private IReadOnlyList<DriveDisplayItem> _drives = [];
-    public IReadOnlyList<DriveDisplayItem> Drives { get => _drives; private set => SetProperty(ref _drives, value); }
-
-    private void ApplyDrives(IReadOnlyList<DriveSnapshot> drives)
-    {
-        Drives = drives
-            .Select(d =>
+        for (int i = 0; i < rows.Count; i++)
+        {
+            var (key, label, value, fraction) = rows[i];
+            UsageDisplayItem? item = MemoryRows.FirstOrDefault(r => r.Key == key);
+            if (item is null)
             {
-                var (filled, empty) = ComputeFillRatio(d.TotalGigabytes > 0 ? d.UsedGigabytes / d.TotalGigabytes : 0);
-                return new DriveDisplayItem(d.Name, $"{d.UsedGigabytes:F0} / {d.TotalGigabytes:F0} Go", filled, empty);
-            })
-            .ToList();
+                item = new UsageDisplayItem(key);
+                MemoryRows.Insert(Math.Min(i, MemoryRows.Count), item);
+            }
+
+            item.Label = label;
+            item.ValueText = value;
+            item.Fraction = Math.Clamp(fraction, 0, 1);
+        }
     }
 
     // ------------------------------------------------------------------
-    // Card Réseau
+    // Réseau
     // ------------------------------------------------------------------
 
-    private string _latencyText = "—";
-    public string LatencyText { get => _latencyText; private set => SetProperty(ref _latencyText, value); }
+    private string _latencyValue = Formats.Missing;
+    public string LatencyValue { get => _latencyValue; private set => SetProperty(ref _latencyValue, value); }
 
-    private string _jitterText = "—";
+    private string _jitterText = string.Empty;
     public string JitterText { get => _jitterText; private set => SetProperty(ref _jitterText, value); }
 
-    private Brush? _latencyBar1Brush, _latencyBar2Brush, _latencyBar3Brush, _latencyBar4Brush, _latencyBar5Brush;
-    public Brush? LatencyBar1Brush { get => _latencyBar1Brush; private set => SetProperty(ref _latencyBar1Brush, value); }
-    public Brush? LatencyBar2Brush { get => _latencyBar2Brush; private set => SetProperty(ref _latencyBar2Brush, value); }
-    public Brush? LatencyBar3Brush { get => _latencyBar3Brush; private set => SetProperty(ref _latencyBar3Brush, value); }
-    public Brush? LatencyBar4Brush { get => _latencyBar4Brush; private set => SetProperty(ref _latencyBar4Brush, value); }
-    public Brush? LatencyBar5Brush { get => _latencyBar5Brush; private set => SetProperty(ref _latencyBar5Brush, value); }
-
-    private Brush? _jitterBar1Brush, _jitterBar2Brush, _jitterBar3Brush, _jitterBar4Brush, _jitterBar5Brush;
-    public Brush? JitterBar1Brush { get => _jitterBar1Brush; private set => SetProperty(ref _jitterBar1Brush, value); }
-    public Brush? JitterBar2Brush { get => _jitterBar2Brush; private set => SetProperty(ref _jitterBar2Brush, value); }
-    public Brush? JitterBar3Brush { get => _jitterBar3Brush; private set => SetProperty(ref _jitterBar3Brush, value); }
-    public Brush? JitterBar4Brush { get => _jitterBar4Brush; private set => SetProperty(ref _jitterBar4Brush, value); }
-    public Brush? JitterBar5Brush { get => _jitterBar5Brush; private set => SetProperty(ref _jitterBar5Brush, value); }
+    public string NetworkFootnote { get; }
 
     private void ApplyNetwork(NetworkSnapshot network)
     {
-        LatencyText = network.LatencyMs is double latency ? $"{latency:F0} ms" : "—";
-        JitterText = network.JitterMs is double jitter ? $"{jitter:F1} ms" : "—";
-
-        // Seuils approximatifs (pas de spec produit validée) : latence et gigue
-        // "correctes" pour une connexion domestique typique.
-        int latencyBars = network.LatencyMs switch
-        {
-            null => 0,
-            <= 20 => 5,
-            <= 50 => 4,
-            <= 80 => 3,
-            <= 150 => 2,
-            _ => 1
-        };
-        StatusTier latencyTier = network.LatencyMs switch
-        {
-            null => StatusTier.Good,
-            <= 50 => StatusTier.Good,
-            <= 100 => StatusTier.Warn,
-            _ => StatusTier.Bad
-        };
-
-        int jitterBars = network.JitterMs switch
-        {
-            null => 0,
-            <= 5 => 5,
-            <= 15 => 4,
-            <= 30 => 3,
-            <= 50 => 2,
-            _ => 1
-        };
-        StatusTier jitterTier = network.JitterMs switch
-        {
-            null => StatusTier.Good,
-            <= 15 => StatusTier.Good,
-            <= 30 => StatusTier.Warn,
-            _ => StatusTier.Bad
-        };
-
-        Brush litLatency = GetStatusMidBrush(latencyTier);
-        Brush unlit = GetBrush("TextDisabledBrush");
-        LatencyBar1Brush = 1 <= latencyBars ? litLatency : unlit;
-        LatencyBar2Brush = 2 <= latencyBars ? litLatency : unlit;
-        LatencyBar3Brush = 3 <= latencyBars ? litLatency : unlit;
-        LatencyBar4Brush = 4 <= latencyBars ? litLatency : unlit;
-        LatencyBar5Brush = 5 <= latencyBars ? litLatency : unlit;
-
-        Brush litJitter = GetStatusMidBrush(jitterTier);
-        JitterBar1Brush = 1 <= jitterBars ? litJitter : unlit;
-        JitterBar2Brush = 2 <= jitterBars ? litJitter : unlit;
-        JitterBar3Brush = 3 <= jitterBars ? litJitter : unlit;
-        JitterBar4Brush = 4 <= jitterBars ? litJitter : unlit;
-        JitterBar5Brush = 5 <= jitterBars ? litJitter : unlit;
+        LatencyValue = network.LatencyMs is double latency ? Formats.Number(latency, 0) : Formats.Missing;
+        JitterText = Strings.Format("Dashboard.Network.Jitter",
+            network.JitterMs is double jitter ? Formats.Milliseconds(jitter, 1) : Formats.Missing);
     }
 
     // ------------------------------------------------------------------
-    // Card Top processus
+    // Processus
     // ------------------------------------------------------------------
 
-    private IReadOnlyList<ProcessDisplayItem> _topProcesses = [];
-    public IReadOnlyList<ProcessDisplayItem> TopProcesses { get => _topProcesses; private set => SetProperty(ref _topProcesses, value); }
+    public ObservableCollection<ProcessDisplayItem> TopProcesses { get; } = [];
 
     private void ApplyProcesses(IReadOnlyList<ProcessSnapshot> processes)
     {
-        TopProcesses = processes
-            .Select(p => new ProcessDisplayItem(p.Name, $"{p.CpuPercent:F0} %", $"{p.MemoryMegabytes:F0} Mo"))
+        var items = processes
+            .Select(p => new ProcessDisplayItem(p.Name, Formats.Percent(p.CpuPercent, 1), Formats.Memory(p.MemoryMegabytes)))
             .ToList();
+
+        while (TopProcesses.Count > items.Count)
+            TopProcesses.RemoveAt(TopProcesses.Count - 1);
+
+        for (int i = 0; i < items.Count; i++)
+        {
+            if (i >= TopProcesses.Count)
+                TopProcesses.Add(items[i]);
+            else if (TopProcesses[i] != items[i])
+                TopProcesses[i] = items[i];
+        }
     }
 
     // ------------------------------------------------------------------
-    // Audit CTA card
+    // Résumé de l'audit (niveau 0)
     // ------------------------------------------------------------------
-
-    private const string WarningGlyph = "\uE7BA";
-    private const string OkGlyph = "\uE73E";
 
     private string _auditSummaryText = Strings.Get("Dashboard.AuditSummary.Loading");
     public string AuditSummaryText { get => _auditSummaryText; private set => SetProperty(ref _auditSummaryText, value); }
 
-    private string _auditIconGlyph = WarningGlyph;
-    public string AuditIconGlyph { get => _auditIconGlyph; private set => SetProperty(ref _auditIconGlyph, value); }
+    private Brush _auditSummaryBrush = GetBrush("TextPrimaryBrush");
+    public Brush AuditSummaryBrush { get => _auditSummaryBrush; private set => SetProperty(ref _auditSummaryBrush, value); }
 
-    private Brush? _auditIconBackgroundBrush;
-    public Brush? AuditIconBackgroundBrush { get => _auditIconBackgroundBrush; private set => SetProperty(ref _auditIconBackgroundBrush, value); }
-
-    private Brush? _auditIconForegroundBrush;
-    public Brush? AuditIconForegroundBrush { get => _auditIconForegroundBrush; private set => SetProperty(ref _auditIconForegroundBrush, value); }
+    private Visibility _auditSourceVisibility = Visibility.Collapsed;
+    public Visibility AuditSourceVisibility { get => _auditSourceVisibility; private set => SetProperty(ref _auditSourceVisibility, value); }
 
     public async Task RefreshAuditSummaryAsync()
     {
         IReadOnlyList<AuditItem> items = await _auditService.GetOrRunAuditAsync();
         int toCheck = items.Count(i => i.Status is AuditStatus.Warning or AuditStatus.Problem);
 
-        if (toCheck == 0)
-        {
-            AuditSummaryText = Strings.Get("Dashboard.AuditSummary.AllGood");
-            AuditIconGlyph = OkGlyph;
-            AuditIconBackgroundBrush = GetBrush("StatusGoodBgBrush");
-            AuditIconForegroundBrush = GetBrush("StatusGoodTextBrush");
-            return;
-        }
-
-        AuditSummaryText = toCheck == 1
-            ? Strings.Get("Dashboard.AuditSummary.Singular")
-            : Strings.Format("Dashboard.AuditSummary.Plural", toCheck);
-        AuditIconGlyph = WarningGlyph;
-        AuditIconBackgroundBrush = GetBrush("StatusWarnBgBrush");
-        AuditIconForegroundBrush = GetBrush("StatusWarnTextBrush");
+        AuditSummaryText = AuditSummary.Text(toCheck);
+        AuditSummaryBrush = GetBrush(toCheck == 0 ? "TextPrimaryBrush" : "StatusWarnTextBrush");
+        AuditSourceVisibility = Visibility.Visible;
     }
-
-    // ------------------------------------------------------------------
-    // Utilitaires partagés
-    // ------------------------------------------------------------------
-
-    private static (GridLength filled, GridLength empty) ComputeFillRatio(double fraction)
-    {
-        fraction = Math.Clamp(fraction, 0.0, 1.0);
-        return (new GridLength(fraction, GridUnitType.Star), new GridLength(1 - fraction, GridUnitType.Star));
-    }
-
-    private static Brush GetStatusTextBrush(StatusTier tier) => GetBrush(tier switch
-    {
-        StatusTier.Bad => "StatusBadTextBrush",
-        StatusTier.Warn => "StatusWarnTextBrush",
-        _ => "StatusGoodTextBrush"
-    });
-
-    private static Brush GetStatusMidBrush(StatusTier tier) => GetBrush(tier switch
-    {
-        StatusTier.Bad => "StatusBadMidBrush",
-        StatusTier.Warn => "StatusWarnMidBrush",
-        _ => "StatusGoodMidBrush"
-    });
-
-    private static Brush GetStatusBgBrush(StatusTier tier) => GetBrush(tier switch
-    {
-        StatusTier.Bad => "StatusBadBgBrush",
-        StatusTier.Warn => "StatusWarnBgBrush",
-        _ => "StatusGoodBgBrush"
-    });
 
     private static Brush GetBrush(string resourceKey) => (Brush)Application.Current.Resources[resourceKey];
 
     public void Dispose() => _timer.Stop();
+
+    /// <summary>One column of the main card: temperature, status, frequency, load and model name.</summary>
+    public sealed class ProcessorDisplay : ViewModelBase
+    {
+        private string _temperature = Formats.Missing;
+        public string Temperature { get => _temperature; private set => SetProperty(ref _temperature, value); }
+
+        private string _statusText = string.Empty;
+        public string StatusText { get => _statusText; private set => SetProperty(ref _statusText, value); }
+
+        private Brush _statusBrush = GetBrush("StatusNeutralTextBrush");
+        public Brush StatusBrush { get => _statusBrush; private set => SetProperty(ref _statusBrush, value); }
+
+        private string _frequencyText = string.Empty;
+        public string FrequencyText { get => _frequencyText; private set => SetProperty(ref _frequencyText, value); }
+
+        private string _loadText = Formats.Missing;
+        public string LoadText { get => _loadText; private set => SetProperty(ref _loadText, value); }
+
+        private double _loadFraction;
+        public double LoadFraction { get => _loadFraction; private set => SetProperty(ref _loadFraction, value); }
+
+        private string _name = string.Empty;
+        public string Name { get => _name; private set => SetProperty(ref _name, value); }
+
+        public void Apply(double? celsius, double? loadPercent, string? name, string frequencyText)
+        {
+            Temperature = celsius is double c ? Formats.Number(c, 0) : Formats.Missing;
+            FrequencyText = frequencyText;
+            Name = name ?? string.Empty;
+            LoadText = loadPercent is double load ? Formats.Percent(load) : Formats.Missing;
+            LoadFraction = loadPercent is double fraction ? Math.Clamp(fraction / 100, 0, 1) : 0;
+
+            if (celsius is not double value)
+            {
+                StatusText = string.Empty;
+                return;
+            }
+
+            StatusTier tier = value >= 90 ? StatusTier.Bad : value >= 75 ? StatusTier.Warn : StatusTier.Normal;
+            StatusText = Strings.Get(tier switch
+            {
+                StatusTier.Bad => "Dashboard.Status.Critical",
+                StatusTier.Warn => "Dashboard.Status.High",
+                _ => "Dashboard.Status.Normal"
+            });
+            StatusBrush = GetBrush(tier switch
+            {
+                StatusTier.Bad => "StatusBadTextBrush",
+                StatusTier.Warn => "StatusWarnTextBrush",
+                _ => "StatusNeutralTextBrush"
+            });
+        }
+    }
 }

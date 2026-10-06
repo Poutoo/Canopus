@@ -1,3 +1,4 @@
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Canopus.App.ViewModels;
 
@@ -12,4 +13,6 @@ public sealed partial class AuditView : UserControl
         InitializeComponent();
         ViewModel = new AuditViewModel(App.AuditService);
     }
+
+    private void OnRerunClick(object sender, RoutedEventArgs e) => _ = ViewModel.RefreshAsync();
 }

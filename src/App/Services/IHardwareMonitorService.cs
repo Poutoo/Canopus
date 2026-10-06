@@ -13,7 +13,9 @@ public record HardwareSnapshot(
     double? GpuFrequencyMhz,
     double? MemoryUsedPercent,
     double? MemoryUsedGigabytes,
-    double? MemoryAvailableGigabytes
+    double? MemoryAvailableGigabytes,
+    string? CpuName = null,
+    string? GpuName = null
 );
 
 public interface IHardwareMonitorService

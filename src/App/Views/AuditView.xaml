@@ -3,69 +3,122 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:models="using:Canopus.App.Models"
-    xmlns:loc="using:Canopus.App.Localization">
+    xmlns:loc="using:Canopus.App.Localization"
+    xmlns:anim="using:Canopus.App.Animations">
 
-    <ScrollViewer Padding="24">
-        <StackPanel Spacing="16">
-            <StackPanel Spacing="4">
-                <TextBlock Text="{loc:Loc Key=Audit.Eyebrow}"
-                           FontSize="{StaticResource FontSize1}"
-                           Foreground="{StaticResource TextTertiaryBrush}" />
-                <TextBlock Text="{loc:Loc Key=Audit.Subtitle}"
-                           FontSize="{StaticResource FontSize6}"
-                           FontWeight="SemiBold"
-                           Foreground="{StaticResource TextPrimaryBrush}" />
-            </StackPanel>
+    <ScrollViewer>
+        <StackPanel Padding="20,12,32,32" Spacing="20">
 
-            <TextBlock Text="{loc:Loc Key=Audit.Running}"
-                       Visibility="{x:Bind ViewModel.RunningVisibility, Mode=OneWay}"
-                       FontSize="{StaticResource FontSize3}"
-                       Foreground="{StaticResource TextTertiaryBrush}" />
+            <!-- En-tête -->
+            <Grid anim:Entrance.Order="0" ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Spacing="2" VerticalAlignment="Center">
+                    <TextBlock Text="{loc:Loc Key=Audit.Title}" Style="{StaticResource PageTitleStyle}" />
+                    <TextBlock Text="{x:Bind ViewModel.SubtitleText, Mode=OneWay}" Style="{StaticResource PageSubtitleStyle}" />
+                </StackPanel>
+                <Button Grid.Column="1" Style="{StaticResource SecondaryButtonStyle}" VerticalAlignment="Center"
+                        Content="{loc:Loc Key=Audit.Rerun}" Click="OnRerunClick"
+                        IsEnabled="{x:Bind ViewModel.CanRerun, Mode=OneWay}" />
+            </Grid>
 
-            <ItemsControl ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="models:AuditDisplayItem">
-                        <Border Style="{StaticResource GlassCardStyle}" Margin="0,0,0,12">
-                            <StackPanel Spacing="8">
-                                <Grid ColumnSpacing="12">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
+            <!-- Niveau 2 : les réglages à vérifier -->
+            <Border Style="{StaticResource SurfaceL2CardStyle}" anim:Entrance.Order="1" Padding="0,8">
+                <StackPanel>
+                    <TextBlock Text="{x:Bind ViewModel.SummaryText, Mode=OneWay}" Style="{StaticResource HeroTitleStyle}"
+                               Padding="24,14,24,8" />
+                    <ItemsControl ItemsSource="{x:Bind ViewModel.AttentionItems, Mode=OneWay}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:AuditDisplayItem">
+                                <StackPanel Spacing="6" Padding="24,16" BorderBrush="{StaticResource DividerBrush}" BorderThickness="0,1,0,0">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <TextBlock Text="{x:Bind Title}" Style="{StaticResource CardTitleStyle}" VerticalAlignment="Center" />
+                                        <Border Style="{StaticResource ChipStyle}" Background="{x:Bind StatusBgBrush}">
+                                            <TextBlock Text="{x:Bind StatusLabel}" Style="{StaticResource ChipTextStyle}"
+                                                       Foreground="{x:Bind StatusTextBrush}" />
+                                        </Border>
+                                    </StackPanel>
+                                    <TextBlock Text="{x:Bind Description}" Style="{StaticResource TextBoldStyle}"
+                                               FontSize="{StaticResource FontSize15}" />
+                                    <TextBlock Text="{x:Bind DetailNote}" Visibility="{x:Bind DetailNoteVisibility}"
+                                               Style="{StaticResource BodyStyle}" MaxWidth="760" HorizontalAlignment="Left" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
 
-                                    <TextBlock Grid.Column="0"
-                                               Text="{x:Bind Title}"
-                                               VerticalAlignment="Center"
-                                               FontSize="{StaticResource FontSize4}"
-                                               FontWeight="SemiBold"
-                                               Foreground="{StaticResource TextPrimaryBrush}" />
+            <Grid ColumnSpacing="28">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="1.6*" />
+                </Grid.ColumnDefinitions>
 
-                                    <Border Grid.Column="1"
-                                            VerticalAlignment="Center"
-                                            Background="{x:Bind StatusBgBrush}"
-                                            CornerRadius="{StaticResource RadiusSm}"
-                                            Padding="10,3">
-                                        <TextBlock Text="{x:Bind StatusLabel}"
-                                                   FontSize="{StaticResource FontSize1}"
+                <!-- Niveau 1 : ce qui est confirmé -->
+                <ItemsControl ItemsSource="{x:Bind ViewModel.ConfirmedItems, Mode=OneWay}" anim:Entrance.Order="2" VerticalAlignment="Top">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="12" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:AuditDisplayItem">
+                            <Border Style="{StaticResource SurfaceL1CardStyle}" Padding="20,18">
+                                <StackPanel Spacing="6">
+                                    <Grid ColumnSpacing="8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Viewbox Width="16" Height="16" VerticalAlignment="Center">
+                                            <Canvas Width="24" Height="24">
+                                                <Path Data="M5,12.5 L9.5,17 L19,7.5" Stroke="{StaticResource TextSecondaryBrush}"
+                                                      StrokeThickness="{StaticResource IconStrokeThicknessBold}"
+                                                      StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" />
+                                            </Canvas>
+                                        </Viewbox>
+                                        <TextBlock Grid.Column="1" Text="{x:Bind Title}" Style="{StaticResource CardTitleStyle}" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Column="2" Text="{x:Bind StatusLabel}" Style="{StaticResource CaptionStrongStyle}"
+                                                   Foreground="{x:Bind StatusTextBrush}" VerticalAlignment="Center" />
+                                    </Grid>
+                                    <TextBlock Text="{x:Bind Description}" Style="{StaticResource BodyStyle}" />
+                                    <TextBlock Text="{x:Bind DetailNote}" Visibility="{x:Bind DetailNoteVisibility}" Style="{StaticResource CaptionStyle}" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- Niveau 0 : pour info -->
+                <StackPanel Grid.Column="1" Padding="4,0" anim:Entrance.Order="3" Visibility="{x:Bind ViewModel.InfoVisibility, Mode=OneWay}">
+                    <TextBlock Text="{loc:Loc Key=Audit.InfoTitle}" Style="{StaticResource CardTitleStyle}" Padding="0,0,0,6" />
+                    <ItemsControl ItemsSource="{x:Bind ViewModel.InfoItems, Mode=OneWay}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:AuditDisplayItem">
+                                <StackPanel Spacing="3" Padding="0,10" BorderBrush="{StaticResource DividerStrongBrush}" BorderThickness="0,1,0,0">
+                                    <Grid ColumnSpacing="16">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{x:Bind Title}" Style="{StaticResource TextExtraBoldStyle}" />
+                                        <TextBlock Grid.Column="1" Text="{x:Bind StatusLabel}" Style="{StaticResource CaptionStrongStyle}"
                                                    Foreground="{x:Bind StatusTextBrush}" />
-                                    </Border>
-                                </Grid>
-
-                                <TextBlock Text="{x:Bind Description}"
-                                           TextWrapping="Wrap"
-                                           FontSize="{StaticResource FontSize3}"
-                                           Foreground="{StaticResource TextSecondaryBrush}" />
-
-                                <TextBlock Text="{x:Bind DetailNote}"
-                                           Visibility="{x:Bind DetailNoteVisibility}"
-                                           TextWrapping="Wrap"
-                                           FontSize="{StaticResource FontSize1}"
-                                           Foreground="{StaticResource TextTertiaryBrush}" />
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                                    </Grid>
+                                    <TextBlock Text="{x:Bind Description}" Style="{StaticResource TextBoldStyle}"
+                                               Foreground="{x:Bind StatusTextBrush}" />
+                                    <TextBlock Text="{x:Bind DetailNote}" Visibility="{x:Bind DetailNoteVisibility}"
+                                               Style="{StaticResource BodyStyle}" FontSize="{StaticResource FontSize13}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Grid>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

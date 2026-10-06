@@ -19,7 +19,7 @@ public sealed class DriveInfoStorageService : IStorageService
             double totalGb = drive.TotalSize / bytesPerGigabyte;
             double freeGb = drive.TotalFreeSpace / bytesPerGigabyte;
 
-            result.Add(new DriveSnapshot(drive.Name.TrimEnd('\\'), totalGb - freeGb, totalGb));
+            result.Add(new DriveSnapshot(drive.Name.TrimEnd('\\'), totalGb - freeGb, totalGb, drive.VolumeLabel));
         }
 
         return result;

@@ -3,96 +3,98 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:models="using:Canopus.App.Models"
-    xmlns:loc="using:Canopus.App.Localization">
+    xmlns:loc="using:Canopus.App.Localization"
+    xmlns:anim="using:Canopus.App.Animations">
 
-    <ScrollViewer Padding="24">
-        <StackPanel Spacing="16">
-            <StackPanel Spacing="4">
-                <TextBlock Text="{loc:Loc Key=GameSession.Eyebrow}"
-                           FontSize="{StaticResource FontSize1}"
-                           Foreground="{StaticResource TextTertiaryBrush}" />
-                <TextBlock Text="{loc:Loc Key=GameSession.Subtitle}"
-                           FontSize="{StaticResource FontSize6}"
-                           FontWeight="SemiBold"
-                           Foreground="{StaticResource TextPrimaryBrush}" />
-            </StackPanel>
+    <UserControl.Resources>
+        <!-- Case « Exclure de la session » : 18 px, coins de 4 px, cochée en accent -->
+        <StaticResource x:Key="CheckBoxCheckBackgroundFillUnchecked" ResourceKey="CheckboxUncheckedBrush" />
+        <StaticResource x:Key="CheckBoxCheckBackgroundFillUncheckedPointerOver" ResourceKey="SecondaryButtonHoverBrush" />
+        <StaticResource x:Key="CheckBoxCheckBackgroundFillUncheckedPressed" ResourceKey="SecondaryButtonHoverBrush" />
+        <StaticResource x:Key="CheckBoxCheckBackgroundStrokeUnchecked" ResourceKey="TextTertiaryBrush" />
+        <StaticResource x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver" ResourceKey="TextTertiaryBrush" />
+        <StaticResource x:Key="CheckBoxCheckBackgroundStrokeUncheckedPressed" ResourceKey="TextTertiaryBrush" />
+        <StaticResource x:Key="CheckBoxCheckBackgroundFillChecked" ResourceKey="AccentBrush" />
+        <StaticResource x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" ResourceKey="AccentHoverBrush" />
+        <StaticResource x:Key="CheckBoxCheckBackgroundFillCheckedPressed" ResourceKey="AccentPressedBrush" />
+        <StaticResource x:Key="CheckBoxCheckBackgroundStrokeChecked" ResourceKey="AccentBrush" />
+        <StaticResource x:Key="CheckBoxCheckBackgroundStrokeCheckedPointerOver" ResourceKey="AccentHoverBrush" />
+        <StaticResource x:Key="CheckBoxCheckBackgroundStrokeCheckedPressed" ResourceKey="AccentPressedBrush" />
+        <StaticResource x:Key="CheckBoxCheckGlyphForegroundChecked" ResourceKey="TextOnAccentBrush" />
+        <StaticResource x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" ResourceKey="TextOnAccentBrush" />
+        <StaticResource x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" ResourceKey="TextOnAccentBrush" />
+        <StaticResource x:Key="CheckBoxForegroundUnchecked" ResourceKey="TextPrimaryBrush" />
+        <StaticResource x:Key="CheckBoxForegroundChecked" ResourceKey="TextPrimaryBrush" />
+        <StaticResource x:Key="CheckBoxForegroundUncheckedDisabled" ResourceKey="TextTertiaryBrush" />
+        <StaticResource x:Key="CheckBoxForegroundCheckedDisabled" ResourceKey="TextTertiaryBrush" />
+    </UserControl.Resources>
 
-            <Border Style="{StaticResource GlassCardStyle}">
-                <Grid ColumnSpacing="16">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+    <ScrollViewer>
+        <StackPanel Padding="20,12,32,32" Spacing="20">
 
-                    <TextBlock Grid.Column="0"
-                               Text="{x:Bind ViewModel.FeedbackMessage, Mode=OneWay}"
-                               TextWrapping="Wrap"
-                               VerticalAlignment="Center"
-                               FontSize="{StaticResource FontSize3}"
-                               Foreground="{StaticResource TextSecondaryBrush}" />
+            <TextBlock Text="{loc:Loc Key=GameSession.Title}" anim:Entrance.Order="0" Style="{StaticResource PageTitleStyle}" />
 
-                    <Button Grid.Column="1"
-                            Click="OnToggleSessionClick"
-                            IsEnabled="{x:Bind ViewModel.CanToggle, Mode=OneWay}"
-                            Background="{StaticResource AccentBrush}"
-                            BorderThickness="0"
-                            CornerRadius="{StaticResource RadiusSm}"
-                            Padding="20,10">
-                        <TextBlock Text="{x:Bind ViewModel.ToggleButtonText, Mode=OneWay}"
-                                   Foreground="{StaticResource TextOnAccentBrush}"
-                                   FontSize="{StaticResource FontSize4}"
-                                   FontWeight="SemiBold" />
-                    </Button>
-                </Grid>
+            <!-- Niveau 2 : démarrer ou arrêter, avec le message de retour -->
+            <Border Style="{StaticResource SurfaceL2CardStyle}" anim:Entrance.Order="1">
+                <StackPanel Spacing="18">
+                    <Grid ColumnSpacing="32">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Spacing="6" VerticalAlignment="Center">
+                            <TextBlock Text="{x:Bind ViewModel.HeroTitle, Mode=OneWay}" Style="{StaticResource HeroTitleStyle}" />
+                            <TextBlock Text="{x:Bind ViewModel.HeroSubtitle, Mode=OneWay}" Style="{StaticResource BodyLargeStyle}" />
+                        </StackPanel>
+                        <Button Grid.Column="1" Style="{StaticResource HeroButtonStyle}" VerticalAlignment="Center"
+                                Content="{x:Bind ViewModel.ToggleButtonText, Mode=OneWay}"
+                                IsEnabled="{x:Bind ViewModel.CanToggle, Mode=OneWay}"
+                                Click="OnToggleSessionClick" />
+                    </Grid>
+                    <Border BorderBrush="{StaticResource DividerBrush}" BorderThickness="0,1,0,0" Padding="0,14,0,0">
+                        <TextBlock Text="{x:Bind ViewModel.FeedbackMessage, Mode=OneWay}" Style="{StaticResource TextBoldStyle}"
+                                   Foreground="{x:Bind ViewModel.FeedbackBrush, Mode=OneWay}" />
+                    </Border>
+                </StackPanel>
             </Border>
 
-            <ItemsControl ItemsSource="{x:Bind ViewModel.TweakStatuses, Mode=OneWay}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="models:TweakStatusDisplayItem">
-                        <Border Style="{StaticResource GlassCardStyle}" Margin="0,0,0,12">
-                            <StackPanel Spacing="8">
-                                <Grid ColumnSpacing="12">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Grid.Column="0"
-                                               Text="{x:Bind Name}"
-                                               VerticalAlignment="Center"
-                                               FontSize="{StaticResource FontSize4}"
-                                               FontWeight="SemiBold"
-                                               Foreground="{StaticResource TextPrimaryBrush}" />
-
-                                    <Border Grid.Column="1"
-                                            VerticalAlignment="Center"
-                                            Background="{x:Bind StatusBgBrush}"
-                                            CornerRadius="{StaticResource RadiusSm}"
-                                            Padding="10,3">
-                                        <TextBlock Text="{x:Bind StatusLabel}"
-                                                   FontSize="{StaticResource FontSize1}"
-                                                   Foreground="{x:Bind StatusTextBrush}" />
-                                    </Border>
-                                </Grid>
-
-                                <CheckBox Content="{loc:Loc Key=GameSession.PrecisionCheckbox}"
-                                          Visibility="{x:Bind PrecisionToggleVisibility}"
-                                          IsChecked="{x:Bind IsPrecisionEnabled}"
-                                          IsEnabled="{x:Bind IsPrecisionToggleEnabled}"
-                                          Checked="OnMousePrecisionToggled"
-                                          Unchecked="OnMousePrecisionToggled"
-                                          FontSize="{StaticResource FontSize2}" />
-
-                                <TextBlock Text="{x:Bind Note}"
-                                           Visibility="{x:Bind NoteVisibility}"
-                                           TextWrapping="Wrap"
-                                           FontSize="{StaticResource FontSize1}"
-                                           Foreground="{StaticResource TextTertiaryBrush}" />
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <!-- Niveau 1 : les réglages de la session -->
+            <Border Style="{StaticResource SurfaceL1CardStyle}" anim:Entrance.Order="2" Padding="0,4">
+                <ItemsControl ItemsSource="{x:Bind ViewModel.TweakStatuses, Mode=OneWay}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:TweakStatusDisplayItem">
+                            <Grid ColumnSpacing="20" Padding="22,16"
+                                  BorderBrush="{StaticResource DividerBrush}" BorderThickness="{x:Bind DividerThickness}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="{x:Bind Name}" Style="{StaticResource RowTitleStrongStyle}" />
+                                    <TextBlock Text="{x:Bind Description}" Style="{StaticResource BodyStyle}" />
+                                    <TextBlock Text="{x:Bind FailureReason}" Visibility="{x:Bind FailureVisibility}"
+                                               Style="{StaticResource TextBoldStyle}" Foreground="{StaticResource StatusBadTextBrush}" />
+                                    <CheckBox Content="{loc:Loc Key=GameSession.ExcludeCheckbox}"
+                                              Visibility="{x:Bind ExcludeVisibility}"
+                                              IsChecked="{x:Bind IsExcluded}"
+                                              IsEnabled="{x:Bind IsExcludeEnabled}"
+                                              Checked="OnExcludeToggled"
+                                              Unchecked="OnExcludeToggled"
+                                              FontFamily="{StaticResource FontFamilyBold}" FontWeight="Bold"
+                                              FontSize="{StaticResource FontSize14}"
+                                              CornerRadius="{StaticResource RadiusCheckbox}"
+                                              Margin="0,4,0,0" />
+                                </StackPanel>
+                                <Border Grid.Column="1" Style="{StaticResource ChipStyle}" MinHeight="24" Padding="9,0"
+                                        VerticalAlignment="Top" Background="{x:Bind StatusBgBrush}">
+                                    <TextBlock Text="{x:Bind StatusLabel}" Style="{StaticResource ChipTextStyle}"
+                                               Foreground="{x:Bind StatusTextBrush}" />
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Border>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

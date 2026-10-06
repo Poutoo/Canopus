@@ -33,9 +33,9 @@ public sealed partial class DashboardView : UserControl
         };
     }
 
-    private void OnAuditDetailClick(object sender, RoutedEventArgs e) =>
+    private void OnAuditClick(object sender, RoutedEventArgs e) =>
         AuditRequested?.Invoke(this, EventArgs.Empty);
 
-    private void OnGameSessionDetailClick(object sender, RoutedEventArgs e) =>
+    private void OnGameSessionClick(object sender, RoutedEventArgs e) =>
         GameSessionRequested?.Invoke(this, EventArgs.Empty);
 }
