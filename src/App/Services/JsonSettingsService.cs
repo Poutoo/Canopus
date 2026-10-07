@@ -3,30 +3,33 @@ using Canopus.App.Models;
 
 namespace Canopus.App.Services;
 
-public sealed class JsonSettingsService : ISettingsService
+// filePath only exists so tests never touch the real settings file.
+public sealed class JsonSettingsService(string? filePath = null) : ISettingsService
 {
-    private static readonly string FilePath = Path.Combine(
+    private static readonly string DefaultFilePath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "Canopus", "settings.json");
+
+    private readonly string _filePath = filePath ?? DefaultFilePath;
 
     private static readonly JsonSerializerOptions SerializerOptions = new() { WriteIndented = true };
 
     public async Task<AppSettings> LoadAsync()
     {
-        if (!File.Exists(FilePath))
+        if (!File.Exists(_filePath))
             return new AppSettings();
 
-        await using FileStream stream = File.OpenRead(FilePath);
+        await using FileStream stream = File.OpenRead(_filePath);
         return await JsonSerializer.DeserializeAsync<AppSettings>(stream, SerializerOptions) ?? new AppSettings();
     }
 
     public async Task SaveAsync(AppSettings settings)
     {
-        string? directory = Path.GetDirectoryName(FilePath);
+        string? directory = Path.GetDirectoryName(_filePath);
         if (directory is not null)
             Directory.CreateDirectory(directory);
 
-        await using FileStream stream = File.Create(FilePath);
+        await using FileStream stream = File.Create(_filePath);
         await JsonSerializer.SerializeAsync(stream, settings, SerializerOptions);
     }
 }
