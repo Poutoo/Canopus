@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Tests de la logique pure de l'app. Les fichiers sources sont liés plutôt que
+       le projet référencé : l'app est un exe WinUI qui ne se charge pas dans un
+       hôte de test, et ces fichiers n'ont pas de dépendance WinUI. -->
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <RootNamespace>Canopus.App.Tests</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\src\App\Localization\Strings.cs" Link="Linked\Localization\Strings.cs" />
+    <Compile Include="..\..\src\App\Localization\LocalizationLoader.cs" Link="Linked\Localization\LocalizationLoader.cs" />
+    <Compile Include="..\..\src\App\Localization\Formats.cs" Link="Linked\Localization\Formats.cs" />
+    <Compile Include="..\..\src\App\ViewModels\AuditSummary.cs" Link="Linked\ViewModels\AuditSummary.cs" />
+    <Compile Include="..\..\src\App\Models\AppLanguage.cs" Link="Linked\Models\AppLanguage.cs" />
+    <Compile Include="..\..\src\App\Models\AppSettings.cs" Link="Linked\Models\AppSettings.cs" />
+    <Compile Include="..\..\src\App\Models\TweakOutcome.cs" Link="Linked\Models\TweakOutcome.cs" />
+    <Compile Include="..\..\src\App\Models\TweakSnapshot.cs" Link="Linked\Models\TweakSnapshot.cs" />
+    <Compile Include="..\..\src\App\Models\SessionSnapshotFile.cs" Link="Linked\Models\SessionSnapshotFile.cs" />
+    <Compile Include="..\..\src\App\Services\IReversibleTweak.cs" Link="Linked\Services\IReversibleTweak.cs" />
+    <Compile Include="..\..\src\App\Services\GameSessionService.cs" Link="Linked\Services\GameSessionService.cs" />
+    <Compile Include="..\..\src\App\Services\PowerPlanTweak.cs" Link="Linked\Services\PowerPlanTweak.cs" />
+    <Compile Include="..\..\src\App\Services\MousePrecisionTweak.cs" Link="Linked\Services\MousePrecisionTweak.cs" />
+    <Compile Include="..\..\src\App\Services\UsbSelectiveSuspendTweak.cs" Link="Linked\Services\UsbSelectiveSuspendTweak.cs" />
+    <Compile Include="..\..\src\App\Services\PowerSchemeInterop.cs" Link="Linked\Services\PowerSchemeInterop.cs" />
+    <Compile Include="..\..\src\App\Services\ISettingsService.cs" Link="Linked\Services\ISettingsService.cs" />
+    <Compile Include="..\..\src\App\Services\JsonSettingsService.cs" Link="Linked\Services\JsonSettingsService.cs" />
+  </ItemGroup>
+
+  <!-- Même nom de ressource que dans l'app, attendu par LocalizationLoader -->
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\src\App\Resources\Strings\fr.json" LogicalName="Canopus.Resources.Strings.fr.json" />
+    <EmbeddedResource Include="..\..\src\App\Resources\Strings\en.json" LogicalName="Canopus.Resources.Strings.en.json" />
+  </ItemGroup>
+
+</Project>
