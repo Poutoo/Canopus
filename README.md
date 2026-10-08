@@ -36,6 +36,8 @@ src/App/
 ├── Resources/      Textes fr.json et en.json (embarqués dans l'assembly)
 ├── Styles/         Tokens.xaml (design tokens) et Controls.xaml (styles)
 └── Assets/Fonts/   Nunito SemiBold, Bold et ExtraBold (licence OFL)
+
+tests/App.Tests/    Tests unitaires (xUnit)
 ```
 
 ## Design system (v5)
@@ -62,6 +64,19 @@ La maquette de référence (`docs/design/Canopus_DS_v5.html`) n'est pas versionn
 ```
 dotnet build src/App/App.csproj -c Debug -p:Platform=x64
 ```
+
+## Tests et CI
+
+```
+dotnet test tests/App.Tests/App.Tests.csproj
+```
+
+- Les tests couvrent la logique sans WinUI : traductions (mêmes clés et mêmes `{0}` en français et en anglais, aucune clé utilisée dans le code qui manquerait), formats des nombres et unités, résumé de l'audit, session de jeu (capture, application, vérification, restauration, reprise après plantage) et paramètres.
+- Le projet de tests compile directement ces fichiers sources (fichiers liés dans le `.csproj`) plutôt que de référencer l'app : un exe WinUI ne se charge pas dans un hôte de test. Un nouveau fichier de logique à tester doit y être ajouté.
+- Les tests n'écrivent que dans des dossiers temporaires, jamais dans les vrais `session-snapshot.json` ou `settings.json`. Ils tournent aussi sous Linux.
+- La CI GitHub Actions (`.github/workflows/ci.yml`) lance, à chaque PR et à chaque push sur `main` :
+  - les tests, sous Ubuntu ;
+  - le build de l'app, sous Windows. C'est le seul endroit hors de ta machine où le XAML est compilé.
 
 ## Mises à jour automatiques (Velopack)
 

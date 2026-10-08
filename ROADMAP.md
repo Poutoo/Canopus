@@ -14,8 +14,9 @@ Ordre indicatif, sans date. Les étapes « Prochaines » sont des propositions �
 ## Prochaines étapes (à valider)
 
 ### Qualité
-- [ ] Projet de tests unitaires (formats et unités, résumé d'audit, logique d'affichage des ViewModels)
-- [ ] CI GitHub Actions : build et tests à chaque PR
+- [x] Projet de tests unitaires (traductions, formats et unités, résumé d'audit, session de jeu, paramètres)
+- [ ] Tester aussi la logique d'affichage des ViewModels (aujourd'hui liée à WinUI)
+- [x] CI GitHub Actions : tests et build Windows à chaque PR
 - [ ] Mesurer le contraste réel au pire point (fond clair, très sombre, aplat noir) pour confirmer les chiffres de la maquette
 - [ ] Mesurer CPU et RAM au repos sur le Tableau de bord, pour avoir une référence avant les prochaines fonctionnalités
 
