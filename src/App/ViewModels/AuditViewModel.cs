@@ -62,7 +62,7 @@ public sealed class AuditViewModel : ViewModelBase
         InfoVisibility = InfoItems.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
 
         SummaryText = AuditSummary.Text(AttentionItems.Count);
-        SubtitleText = Strings.Format("Audit.Subtitle", items.Count);
+        SubtitleText = Strings.Format("Audit.Subtitle", items.Count, Formats.Time(_auditService.LastRunAt ?? DateTime.Now));
         CanRerun = true;
     }
 

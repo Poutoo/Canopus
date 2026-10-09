@@ -29,6 +29,7 @@ public sealed class LibreHardwareMonitorService : IHardwareMonitorService, IDisp
         double? cpuFreq = null, gpuFreq = null;
         double? memPercent = null, memUsedGb = null, memAvailableGb = null;
         string? cpuName = null, gpuName = null;
+        var gpus = new List<IHardware>();
 
         foreach (IHardware hardware in _computer.Hardware)
         {
@@ -55,16 +56,7 @@ public sealed class LibreHardwareMonitorService : IHardwareMonitorService, IDisp
                 case HardwareType.GpuNvidia:
                 case HardwareType.GpuAmd:
                 case HardwareType.GpuIntel:
-                    gpuName ??= hardware.Name;
-                    foreach (ISensor sensor in hardware.Sensors)
-                    {
-                        if (sensor.SensorType == SensorType.Temperature && sensor.Value.HasValue)
-                            gpuTemp ??= sensor.Value;
-                        if (sensor.SensorType == SensorType.Load && sensor.Value.HasValue)
-                            gpuLoad ??= sensor.Value;
-                        if (sensor.SensorType == SensorType.Clock && sensor.Value.HasValue)
-                            gpuFreq ??= sensor.Value;
-                    }
+                    gpus.Add(hardware);
                     break;
 
                 case HardwareType.Memory:
@@ -104,12 +96,32 @@ public sealed class LibreHardwareMonitorService : IHardwareMonitorService, IDisp
             }
         }
 
+        if (gpus.Count > 0)
+        {
+            IHardware gpu = gpus[GpuChoice.PickDedicated(gpus.Select(DedicatedMemoryMegabytes).ToList())];
+            gpuName = gpu.Name;
+            foreach (ISensor sensor in gpu.Sensors)
+            {
+                if (sensor.SensorType == SensorType.Temperature && sensor.Value.HasValue)
+                    gpuTemp ??= sensor.Value;
+                if (sensor.SensorType == SensorType.Load && sensor.Value.HasValue)
+                    gpuLoad ??= sensor.Value;
+                if (sensor.SensorType == SensorType.Clock && sensor.Value.HasValue)
+                    gpuFreq ??= sensor.Value;
+            }
+        }
+
         return new HardwareSnapshot(
             cpuTemp, gpuTemp, cpuLoad, gpuLoad, fanRpm,
             cpuFreq, gpuFreq,
             memPercent, memUsedGb, memAvailableGb,
             cpuName, gpuName);
     }
+
+    private static double? DedicatedMemoryMegabytes(IHardware gpu) => gpu.Sensors
+        .Where(s => s.SensorType == SensorType.SmallData && s.Name == "D3D Dedicated Memory Total")
+        .Select(s => s.Value)
+        .FirstOrDefault();
 
     public void Dispose()
     {

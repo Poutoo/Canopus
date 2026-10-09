@@ -14,6 +14,8 @@
     <x:Double x:Key="BackdropLuminosityOpacity">0.75</x:Double>
     <Color x:Key="BackdropFallbackColor">#FFE9DFE7</Color>
     <SolidColorBrush x:Key="BackdropFallbackBrush" Color="{StaticResource BackdropFallbackColor}" />
+    <!-- Dialog surface: opaque, a popup has no backdrop to blur. -->
+    <SolidColorBrush x:Key="DialogSurfaceBrush" Color="{StaticResource BackdropTintColor}" />
 
     <!-- ============================================================
          PALETTE DRAGÉE — texte

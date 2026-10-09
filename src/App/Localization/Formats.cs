@@ -23,6 +23,9 @@ public static class Formats
     public static string Megahertz(double megahertz) =>
         Strings.Format("Format.Megahertz", Number(megahertz, 0));
 
+    public static string Time(DateTime time) =>
+        Strings.Format("Format.Time", time.Hour.ToString(Strings.Culture), time.Minute.ToString("00", Strings.Culture));
+
     public static string Memory(double megabytes) => megabytes >= MegabytesPerGigabyte
         ? Strings.Format("Format.SizeValue", Number(megabytes / MegabytesPerGigabyte, 1), Strings.Get("Unit.Gigabytes"))
         : Strings.Format("Format.SizeValue", Number(megabytes, 0), Strings.Get("Unit.Megabytes"));

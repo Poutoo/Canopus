@@ -43,17 +43,24 @@ public sealed class WindowsAuditService : IAuditService
     // same sweep instead of each starting their own.
     private Task<IReadOnlyList<AuditItem>>? _auditTask;
 
+    public DateTime? LastRunAt { get; private set; }
+
     public Task<IReadOnlyList<AuditItem>> RunAuditAsync()
     {
         Task<IReadOnlyList<AuditItem>> task = Task.Run<IReadOnlyList<AuditItem>>(() =>
-        [
-            DetectPowerPlan(),
-            DetectGameMode(),
-            DetectMemoryProfile(),
-            DetectOverlays(),
-            DetectDefenderExclusions(),
-            ReadGpuDriverInfo()
-        ]);
+        {
+            IReadOnlyList<AuditItem> items =
+            [
+                DetectPowerPlan(),
+                DetectGameMode(),
+                DetectMemoryProfile(),
+                DetectOverlays(),
+                DetectDefenderExclusions(),
+                ReadGpuDriverInfo()
+            ];
+            LastRunAt = DateTime.Now;
+            return items;
+        });
 
         _auditTask = task;
         return task;

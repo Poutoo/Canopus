@@ -35,6 +35,15 @@ public sealed class FormatsTests
     }
 
     [Theory]
+    [InlineData(AppLanguage.Fr, "14 h 05")]
+    [InlineData(AppLanguage.En, "14:05")]
+    public void Time_follows_the_language(AppLanguage language, string expected)
+    {
+        Strings.Initialize(language);
+        Assert.Equal(expected, Formats.Time(new DateTime(2026, 10, 9, 14, 5, 0)));
+    }
+
+    [Theory]
     [InlineData(530, "530 Mo")]
     [InlineData(6963, "6,8 Go")]
     public void Process_memory_switches_to_gigabytes(double megabytes, string expected)
