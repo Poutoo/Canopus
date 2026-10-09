@@ -1,0 +1,24 @@
+<ContentDialog
+    x:Class="Canopus.App.Views.UpdateDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:loc="using:Canopus.App.Localization"
+    RequestedTheme="Light"
+    Title="{loc:Loc Key=UpdateDialog.Title}"
+    PrimaryButtonText="{loc:Loc Key=UpdateDialog.Install}"
+    CloseButtonText="{loc:Loc Key=UpdateDialog.Later}"
+    DefaultButton="Primary"
+    PrimaryButtonStyle="{StaticResource PrimaryButtonStyle}"
+    CloseButtonStyle="{StaticResource SecondaryButtonStyle}"
+    FontFamily="{StaticResource FontFamilyExtraBold}"
+    Foreground="{StaticResource TextPrimaryBrush}">
+
+    <ContentDialog.Resources>
+        <StaticResource x:Key="ContentDialogBackground" ResourceKey="DialogSurfaceBrush" />
+        <StaticResource x:Key="ContentDialogForeground" ResourceKey="TextPrimaryBrush" />
+        <StaticResource x:Key="ContentDialogBorderBrush" ResourceKey="ControlStrokeBrush" />
+        <StaticResource x:Key="OverlayCornerRadius" ResourceKey="RadiusCard" />
+    </ContentDialog.Resources>
+
+    <TextBlock x:Name="MessageText" Style="{StaticResource BodyLargeStyle}" TextWrapping="Wrap" />
+</ContentDialog>

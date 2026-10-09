@@ -140,14 +140,7 @@ public sealed partial class MainWindow : Window
         if (!result.IsUpdateAvailable)
             return;
 
-        var dialog = new ContentDialog
-        {
-            XamlRoot = Content.XamlRoot,
-            Title = Strings.Get("UpdateDialog.Title"),
-            Content = Strings.Format("UpdateDialog.Content", result.AvailableVersion),
-            PrimaryButtonText = Strings.Get("UpdateDialog.Install"),
-            CloseButtonText = Strings.Get("UpdateDialog.Later")
-        };
+        var dialog = new UpdateDialog(result.AvailableVersion) { XamlRoot = Content.XamlRoot };
 
         var choice = await dialog.ShowAsync();
         if (choice == ContentDialogResult.Primary)
