@@ -15,7 +15,7 @@ public sealed class ProcessMonitorService : IProcessMonitorService
         DateTime now = DateTime.UtcNow;
         int processorCount = Environment.ProcessorCount;
         var currentSamples = new Dictionary<int, (TimeSpan CpuTime, DateTime Timestamp)>();
-        var results = new List<ProcessSnapshot>();
+        var results = new List<(int Id, string Name, double CpuPercent, double FallbackMemoryMb)>();
 
         foreach (Process process in Process.GetProcesses())
         {
@@ -32,8 +32,7 @@ public sealed class ProcessMonitorService : IProcessMonitorService
                     if (elapsedWallMs > 0)
                     {
                         double cpuPercent = elapsedCpuMs / elapsedWallMs / processorCount * 100.0;
-                        double memoryMb = process.WorkingSet64 / 1024d / 1024d;
-                        results.Add(new ProcessSnapshot(process.ProcessName, cpuPercent, memoryMb));
+                        results.Add((process.Id, process.ProcessName, cpuPercent, process.WorkingSet64 / 1024d / 1024d));
                     }
                 }
             }
@@ -50,6 +49,10 @@ public sealed class ProcessMonitorService : IProcessMonitorService
 
         _previousSamples = currentSamples;
 
-        return results.OrderByDescending(p => p.CpuPercent).Take(count).ToList();
+        return results
+            .OrderByDescending(p => p.CpuPercent)
+            .Take(count)
+            .Select(p => new ProcessSnapshot(p.Name, p.CpuPercent, ProcessMemory.PrivateWorkingSetMb(p.Id) ?? p.FallbackMemoryMb))
+            .ToList();
     }
 }
