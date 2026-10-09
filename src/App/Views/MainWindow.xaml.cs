@@ -14,7 +14,7 @@ public sealed partial class MainWindow : Window
     private readonly IUpdateService _updateService = new VelopackUpdateService();
 
     private AppPage _currentPage = AppPage.Dashboard;
-    private int _navigationVersion;
+    private readonly HashSet<AppPage> _visitedPages = [AppPage.Dashboard];
 
     public MainWindow()
     {
@@ -72,29 +72,32 @@ public sealed partial class MainWindow : Window
 
     private void OnGameSessionRequested(object sender, EventArgs e) => ShowPage(AppPage.GameSession);
 
-    // Old page fades out, then the new one enters in a cascade. A newer navigation
-    // started during the fade-out supersedes this one.
+    // The cascade only plays the first time a page is shown: replaying it on a page seen
+    // before makes its cards blink. The incoming page stays transparent until the cascade's
+    // initial values are in place. Fading the whole host is avoided on purpose, it forces an
+    // offscreen layer that glitches the text.
     private async void ShowPage(AppPage page)
     {
         NavSidebar.SetActivePage(page);
 
         if (page != _currentPage)
         {
-            int version = ++_navigationVersion;
-            await Motion.AnimateScalarAsync(PageHost, "Opacity", 0f, Motion.Duration("MotionDurationPageExit"), "MotionEasingExit");
-            if (version != _navigationVersion)
-                return;
-
             _currentPage = page;
+            FrameworkElement target = PageFor(page);
+            target.Opacity = 0;
+
             DashboardPage.Visibility = page == AppPage.Dashboard ? Visibility.Visible : Visibility.Collapsed;
             AuditPage.Visibility = page == AppPage.Audit ? Visibility.Visible : Visibility.Collapsed;
             GameSessionPage.Visibility = page == AppPage.GameSession ? Visibility.Visible : Visibility.Collapsed;
             ParametresPage.Visibility = page == AppPage.Parametres ? Visibility.Visible : Visibility.Collapsed;
 
-            FrameworkElement target = PageFor(page);
             target.UpdateLayout();
-            Motion.AnimateScalar(PageHost, "Opacity", null, 1f, TimeSpan.Zero, TimeSpan.Zero, "MotionEasingEnter");
-            Entrance.Play(target);
+            if (_visitedPages.Add(page))
+            {
+                Entrance.Play(target);
+                await NextFrameAsync();
+            }
+            target.Opacity = 1;
         }
 
         if (page == AppPage.Audit)
@@ -105,6 +108,18 @@ public sealed partial class MainWindow : Window
             ParametresPage.OnNavigatedTo();
         else if (page == AppPage.GameSession)
             GameSessionPage.OnNavigatedTo();
+    }
+
+    private static Task NextFrameAsync()
+    {
+        var completion = new TaskCompletionSource();
+        void OnRendering(object? sender, object e)
+        {
+            CompositionTarget.Rendering -= OnRendering;
+            completion.TrySetResult();
+        }
+        CompositionTarget.Rendering += OnRendering;
+        return completion.Task;
     }
 
     private FrameworkElement PageFor(AppPage page) => page switch
