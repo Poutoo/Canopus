@@ -209,7 +209,7 @@
             <StackPanel anim:Entrance.Order="5" Orientation="Horizontal" Spacing="16" Padding="4,6">
                 <TextBlock Text="{x:Bind ViewModel.AuditSummaryText, Mode=OneWay}" Style="{StaticResource CardTitleStyle}"
                            Foreground="{x:Bind ViewModel.AuditSummaryBrush, Mode=OneWay}" VerticalAlignment="Center" />
-                <TextBlock Text="{loc:Loc Key=Dashboard.AuditSummary.Source}" Style="{StaticResource BodyStyle}"
+                <TextBlock Text="{x:Bind ViewModel.AuditSourceText, Mode=OneWay}" Style="{StaticResource BodyStyle}"
                            Visibility="{x:Bind ViewModel.AuditSourceVisibility, Mode=OneWay}" VerticalAlignment="Center" />
                 <Button Style="{StaticResource LinkButtonStyle}" Click="OnAuditClick" VerticalAlignment="Center"
                         AutomationProperties.Name="{loc:Loc Key=Dashboard.AuditSummary.ViewAudit}">

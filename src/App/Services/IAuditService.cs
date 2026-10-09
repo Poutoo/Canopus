@@ -16,4 +16,7 @@ public interface IAuditService
     /// forcing another WMI sweep.
     /// </summary>
     Task<IReadOnlyList<AuditItem>> GetOrRunAuditAsync();
+
+    /// <summary>When the last completed audit finished, or null before the first one.</summary>
+    DateTime? LastRunAt { get; }
 }

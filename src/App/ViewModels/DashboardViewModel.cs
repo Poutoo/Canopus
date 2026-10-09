@@ -190,6 +190,9 @@ public sealed class DashboardViewModel : ViewModelBase, IDisposable
     private Brush _auditSummaryBrush = GetBrush("TextPrimaryBrush");
     public Brush AuditSummaryBrush { get => _auditSummaryBrush; private set => SetProperty(ref _auditSummaryBrush, value); }
 
+    private string _auditSourceText = string.Empty;
+    public string AuditSourceText { get => _auditSourceText; private set => SetProperty(ref _auditSourceText, value); }
+
     private Visibility _auditSourceVisibility = Visibility.Collapsed;
     public Visibility AuditSourceVisibility { get => _auditSourceVisibility; private set => SetProperty(ref _auditSourceVisibility, value); }
 
@@ -200,6 +203,7 @@ public sealed class DashboardViewModel : ViewModelBase, IDisposable
 
         AuditSummaryText = AuditSummary.Text(toCheck);
         AuditSummaryBrush = GetBrush(toCheck == 0 ? "TextPrimaryBrush" : "StatusWarnTextBrush");
+        AuditSourceText = Strings.Format("Dashboard.AuditSummary.Source", Formats.Time(_auditService.LastRunAt ?? DateTime.Now));
         AuditSourceVisibility = Visibility.Visible;
     }
 
