@@ -43,9 +43,6 @@
             <tb:TaskbarIcon x:Key="TrayIcon"
                              ToolTipText="{loc:Loc Key=App.Name}"
                              ContextMenuMode="SecondWindow">
-                <tb:TaskbarIcon.IconSource>
-                    <tb:GeneratedIconSource Text="✦" Foreground="{StaticResource AccentBrush}" />
-                </tb:TaskbarIcon.IconSource>
                 <tb:TaskbarIcon.ContextFlyout>
                     <MenuFlyout>
                         <MenuFlyoutItem Text="{loc:Loc Key=Tray.Open}" Command="{StaticResource TrayOpenCommand}" />

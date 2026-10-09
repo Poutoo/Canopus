@@ -22,7 +22,7 @@ Ordre indicatif, sans date. Les étapes « Prochaines » sont des propositions �
 
 ### Finitions de la v5
 - [ ] Dialogue de mise à jour au lancement habillé au design v5
-- [ ] Vrai logo (le « ✦ » est provisoire) et icône d'application
+- [x] Vrai logo et icône d'application
 - [ ] Heure du dernier audit (« d'après l'audit de 14 h 32 »), absente faute de donnée
 - [ ] Choisir le GPU dédié plutôt que le premier GPU trouvé (risque d'afficher l'iGPU)
 - [ ] Réintégrer les limites des réglages de session retirées par la v5 (souris reprise par un logiciel tiers, plan USB)

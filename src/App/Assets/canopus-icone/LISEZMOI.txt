@@ -1,0 +1,15 @@
+Canopus — icône (Repère, goutte compacte)
+
+Masters vectoriels (svg/) : 16, 24, 32, 48. Chaque taille raster utilise le master le plus proche :
+  16–20 px -> master 16 · 21–28 px -> master 24 · 29–40 px -> master 32 · 41 px et plus -> master 48.
+
+Couleurs :
+  couleur-clair   anneau #3E1240, goutte #C25AB0 (fonds clairs)
+  couleur-sombre  anneau #FFD6F9, goutte #C25AB0 (fonds sombres)
+  mono-encre      tout #3E1240
+  mono-blanc      tout #FFFFFF
+
+png/<couleur>/  PNG transparents : 16, 20, 24, 30, 32, 36, 40, 48, 60, 64, 72, 80, 96, 128, 256.
+msix/           Square44x44Logo.targetsize-N : .png = défaut (clair), _altform-unplated = barre sombre,
+                _altform-lightunplated = barre claire. Tuiles 150x150, Wide310x150, StoreLogo, SplashScreen non incluses.
+ico/            canopus-clair.ico / canopus-sombre.ico : 16, 20, 24, 32, 40, 48, 64, 256.

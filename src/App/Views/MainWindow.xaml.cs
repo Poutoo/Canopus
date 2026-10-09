@@ -22,6 +22,7 @@ public sealed partial class MainWindow : Window
         Title = Strings.Get("App.Name");
         ConfigureBackdrop();
         ConfigureTitleBar();
+        AppWindow.SetIcon(AppIcon.TaskbarIconPath);
         Motion.AttachWindow(AppWindow);
         Activated += OnActivated;
         RootGrid.Loaded += (_, _) => Entrance.Play(DashboardPage);

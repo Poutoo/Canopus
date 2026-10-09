@@ -64,6 +64,7 @@ public partial class App : Application
         // ForceCreate is required in unpackaged apps -- without it the Win32 tray icon
         // handle isn't reliably created before the first interaction with it.
         _trayIcon = (TaskbarIcon)Resources["TrayIcon"];
+        _trayIcon.Icon = new System.Drawing.Icon(AppIcon.TaskbarIconPath);
         _trayIcon.DoubleClickCommand = new RelayCommand(ShowMainWindow);
         _trayIcon.ForceCreate();
 

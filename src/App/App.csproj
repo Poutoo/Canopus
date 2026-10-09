@@ -6,6 +6,7 @@
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <RootNamespace>Canopus</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\canopus-icone\ico\canopus-clair.ico</ApplicationIcon>
     <Platforms>x64</Platforms>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
@@ -48,6 +49,8 @@
   <ItemGroup>
     <Content Include="Assets\Fonts\*.ttf" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="Assets\Fonts\OFL.txt" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Assets\canopus-icone\ico\*.ico" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Assets\canopus-icone\png\couleur-clair\canopus-48.png" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <!-- Dictionnaires de traduction FR/EN, embarqués dans l'assembly (pas Content copié à
