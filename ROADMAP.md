@@ -28,5 +28,5 @@ Ordre indicatif, sans date. Les étapes « Prochaines » sont des propositions �
 - [x] Réintégrer les limites des réglages de session retirées par la v5 (souris reprise par un logiciel tiers, plan USB)
 
 ### Distribution
-- [ ] Première release Velopack publiée depuis la v5 (`v0.2.0`)
+- [x] Première release Velopack publiée depuis la v5 (`v0.2.0` plantait au démarrage, corrigée en `v0.2.1`)
 - [ ] Signature de code, si l'avertissement SmartScreen devient un frein

@@ -59,4 +59,15 @@
     <EmbeddedResource Include="Resources\Strings\*.json" />
   </ItemGroup>
 
+  <!-- `dotnet publish` of an unpackaged WinUI app leaves out App.pri and the compiled XAML
+       (.xbf): the published exe then crashes at startup with a stowed XAML exception. -->
+  <Target Name="IncludeXamlOutputsInPublish" BeforeTargets="ComputeResolvedFilesToPublishList">
+    <ItemGroup>
+      <XamlOutput Include="$(OutDir)App.pri;$(OutDir)**\*.xbf" />
+      <ResolvedFileToPublish Include="@(XamlOutput)"
+                             RelativePath="$([MSBuild]::MakeRelative('$(OutDir)', '%(XamlOutput.FullPath)'))"
+                             CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
+
 </Project>
