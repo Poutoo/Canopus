@@ -23,13 +23,13 @@ public sealed class AuditViewModel : ViewModelBase
 
     /// <summary>Warnings and problems: the main element of the screen.</summary>
     private IReadOnlyList<AuditDisplayItem> _attentionItems = [];
-    public IReadOnlyList<AuditDisplayItem> AttentionItems { get => _attentionItems; private set => SetProperty(ref _attentionItems, value); }
+    public IReadOnlyList<AuditDisplayItem> AttentionItems { get => _attentionItems; private set => SetItems(ref _attentionItems, value); }
 
     private IReadOnlyList<AuditDisplayItem> _confirmedItems = [];
-    public IReadOnlyList<AuditDisplayItem> ConfirmedItems { get => _confirmedItems; private set => SetProperty(ref _confirmedItems, value); }
+    public IReadOnlyList<AuditDisplayItem> ConfirmedItems { get => _confirmedItems; private set => SetItems(ref _confirmedItems, value); }
 
     private IReadOnlyList<AuditDisplayItem> _infoItems = [];
-    public IReadOnlyList<AuditDisplayItem> InfoItems { get => _infoItems; private set => SetProperty(ref _infoItems, value); }
+    public IReadOnlyList<AuditDisplayItem> InfoItems { get => _infoItems; private set => SetItems(ref _infoItems, value); }
 
     private string _summaryText = Strings.Get("Audit.Running");
     public string SummaryText { get => _summaryText; private set => SetProperty(ref _summaryText, value); }

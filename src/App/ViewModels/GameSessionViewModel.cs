@@ -46,7 +46,7 @@ public sealed class GameSessionViewModel : ViewModelBase
     public string ToggleButtonText { get => _toggleButtonText; private set => SetProperty(ref _toggleButtonText, value); }
 
     private IReadOnlyList<TweakStatusDisplayItem> _tweakStatuses;
-    public IReadOnlyList<TweakStatusDisplayItem> TweakStatuses { get => _tweakStatuses; private set => SetProperty(ref _tweakStatuses, value); }
+    public IReadOnlyList<TweakStatusDisplayItem> TweakStatuses { get => _tweakStatuses; private set => SetItems(ref _tweakStatuses, value); }
 
     private string _feedbackMessage = Strings.Get("GameSession.DefaultFeedback");
     public string FeedbackMessage { get => _feedbackMessage; private set => SetProperty(ref _feedbackMessage, value); }
