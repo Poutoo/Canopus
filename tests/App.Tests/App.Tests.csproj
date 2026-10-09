@@ -38,6 +38,7 @@
     <Compile Include="..\..\src\App\Services\MousePrecisionTweak.cs" Link="Linked\Services\MousePrecisionTweak.cs" />
     <Compile Include="..\..\src\App\Services\UsbSelectiveSuspendTweak.cs" Link="Linked\Services\UsbSelectiveSuspendTweak.cs" />
     <Compile Include="..\..\src\App\Services\PowerSchemeInterop.cs" Link="Linked\Services\PowerSchemeInterop.cs" />
+    <Compile Include="..\..\src\App\Services\GpuChoice.cs" Link="Linked\Services\GpuChoice.cs" />
     <Compile Include="..\..\src\App\Services\ISettingsService.cs" Link="Linked\Services\ISettingsService.cs" />
     <Compile Include="..\..\src\App\Services\JsonSettingsService.cs" Link="Linked\Services\JsonSettingsService.cs" />
   </ItemGroup>
